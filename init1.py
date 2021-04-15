@@ -69,8 +69,8 @@ def customerLoginAuth():
 	if(data):
 		#creates a session for the the user
 		#session is a built in
-		session['email'] = email
-		return redirect(url_for('home'))
+		session['username'] = email
+		return redirect(url_for('customerHome'))
 	else:
 		#returns an error message to the html page
 		error = 'Invalid login or username'
@@ -97,8 +97,8 @@ def agentLoginAuth():
 	if(data):
 		#creates a session for the the user
 		#session is a built in
-		session['email'] = email
-		return redirect(url_for('home'))
+		session['username'] = email
+		return redirect(url_for('agentHome'))
 	else:
 		#returns an error message to the html page
 		error = 'Invalid login or username'
@@ -126,7 +126,7 @@ def staffLoginAuth():
 		#creates a session for the the user
 		#session is a built in
 		session['username'] = username
-		return redirect(url_for('home'))
+		return redirect(url_for('staffHome'))
 	else:
 		#returns an error message to the html page
 		error = 'Invalid login or username'
@@ -239,8 +239,23 @@ def home():
     #     print(each['blog_post'])
     # cursor.close()
     # return render_template('home.html', username=username, posts=data1)
+	# return render_template('home.html', username=username)
 	return render_template('home.html')
 
+@app.route('/customerHome')
+def customerHome():
+	username = session['username']
+	return render_template('customerHome.html')
+
+@app.route('/agentHome')
+def agentHome():
+	username = session['username']
+	return render_template('agentHome.html')
+
+@app.route('/staffHome')
+def staffHome():
+	username = session['username']
+	return render_template('staffHome.html')
 
 @app.route('/post', methods=['GET', 'POST'])
 def post():
