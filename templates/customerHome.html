@@ -11,7 +11,7 @@
 		<!-- <p> Flights: {{flights}} </p>
 		<p> Flights Info: {{flights_info}} </p> -->
 
-		<h3> View My Flights</h3>
+		<h3> View My Flights </h3>
 
 		{% for flight in flights %}
 
@@ -39,15 +39,15 @@
 
 					{% if flight['flight_num'] == flight_info['flight_num'] %}
 
-					<td>{{flights_info['airline_name']}}</td>
-					<td>{{flights_info['airplane_ID']}}</td>
-					<td>{{flights_info['departure_airport']}}</td>
-					<td>{{flights_info['departure_date']}}</td>
-					<td>{{flights_info['departure_time']}}</td>
-					<td>{{flights_info['arrival_airport']}}</td>
-					<td>{{flights_info['arrival_date']}}</td>
-					<td>{{flights_info['arrival_time']}}</td>
-					<td>{{flights_info['flight_status']}}</td>
+					<td>{{flight_info['airline_name']}}</td>
+					<td>{{flight_info['airplane_ID']}}</td>
+					<td>{{flight_info['departure_airport']}}</td>
+					<td>{{flight_info['departure_date']}}</td>
+					<td>{{flight_info['departure_time']}}</td>
+					<td>{{flight_info['arrival_airport']}}</td>
+					<td>{{flight_info['arrival_date']}}</td>
+					<td>{{flight_info['arrival_time']}}</td>
+					<td>{{flight_info['flight_status']}}</td>
 					
 					{% endif %}
 					
@@ -58,6 +58,10 @@
 		</table>
 
 		{% endfor %}
+
+		<h3> View My Future Flights </h3>
+
+		<h3> View My Past Flights</h3>
 
 		<h3> Search for Flights </h3>
 

@@ -10,6 +10,10 @@ p {
     font-size: 12px;  
 }
 
-table, tr, td{
+table, tr, td {
     border: 1px solid black;
+}
+
+td {
+    padding: 15px;
 }

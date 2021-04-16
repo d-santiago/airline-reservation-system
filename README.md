@@ -19,6 +19,11 @@
 
 ## Customer Use Cases
 
+### Complete
+
+1. View My Flights (All)
+
 ### In Progress
 
-1. View My Flights
+1. View My Flights (Future)
+1. View My Flights (Past)
