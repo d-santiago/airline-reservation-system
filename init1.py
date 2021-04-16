@@ -144,6 +144,7 @@ def customerRegistrationAuth():
 	city = request.form['city']
 	state = request.form['state']
 	phone = request.form['phone']
+	dob = request.form['dob']
 	passportNum = request.form['passportNum']
 	passportExp = request.form['passportExp']
 	passportCountry = request.form['passportCountry']
@@ -162,8 +163,8 @@ def customerRegistrationAuth():
 		error = "This customer already exists"
 		return render_template('customerRegistration.html', error = error)
 	else:
-		ins = 'INSERT INTO Customer VALUES(%s, %s, %s, %s, %s, %s, $s, %s, %d, %s, %d)'
-		cursor.execute(ins, (email, password, name, buildingNum, street, city, state, phone, passportNum, passportExp, passportCountry))
+		ins = 'INSERT INTO Customer VALUES(%s, %s, %s, %s, %s, %s, $s, %s, %s, %s, %s, %s)'
+		cursor.execute(ins, (email, password, name, buildingNum, street, city, state, phone, dob, passportNum, passportExp, passportCountry))
 		conn.commit()
 		cursor.close()
 		return render_template('index.html')
@@ -172,10 +173,10 @@ def customerRegistrationAuth():
 @app.route('/agentRegistrationAuth', methods=['GET', 'POST'])
 def agentRegistrationAuth():
 	#grabs information from the forms
-	airline = request.form['airline']
+	agentID = request.form['agentID']
 	email = request.form['email']
 	password = request.form['password']
-	agentID = request.form['agentID']
+	airline = request.form['airline']
 
 	#cursor used to send queries
 	cursor = conn.cursor()
@@ -192,7 +193,7 @@ def agentRegistrationAuth():
 		return render_template('agentRegistration.html', error = error)
 	else:
 		ins = 'INSERT INTO Booking_Agent VALUES(%s, %s, %s, %s)'
-		cursor.execute(ins, (airline, email, password, agentID))
+		cursor.execute(ins, (agentID, email, password, airline))
 		conn.commit()
 		cursor.close()
 		return render_template('index.html')
@@ -201,12 +202,13 @@ def agentRegistrationAuth():
 @app.route('/staffRegistrationAuth', methods=['GET', 'POST'])
 def staffRegistrationAuth():
 	#grabs information from the forms
-	airline = request.form['airline']
-	username = request.form['username']
-	password = request.form['password']
 	firstName = request.form['firstName']
 	lastName = request.form['lastName']
+	password = request.form['password']
+	username = request.form['username']
 	dob = request.form['dob']
+	phone = request.form['phone']
+	airline = request.form['airline']
 
 	#cursor used to send queries
 	cursor = conn.cursor()
@@ -222,8 +224,8 @@ def staffRegistrationAuth():
 		error = "This airline stafff member already exists"
 		return render_template('staffRegistration.html', error = error)
 	else:
-		ins = 'INSERT INTO user VALUES(%s, %s, %s, %s, %s, %d)'
-		cursor.execute(ins, (airline, username, password, firstName, lastName, dob))
+		ins = 'INSERT INTO user VALUES(%s, %s, %s, %s, %s, %s, %s)'
+		cursor.execute(ins, (firstName, lastName, username, password, dob, phone, airline))
 		conn.commit()
 		cursor.close()
 		return render_template('index.html')

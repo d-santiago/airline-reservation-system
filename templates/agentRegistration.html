@@ -6,10 +6,10 @@
 	<body>
 
 		<form action="/agentRegistrationAuth" method="POST">
-			<input type="text" name="airline" placeholder="Airline" required/> </br>
+			<input type="text" name="agentID" placeholder="Agent ID" required/> </br>
 			<input type="text" name="email" placeholder="Email" required/> </br>
 			<input type="password" name="password" placeholder="Password" required/> </br>
-			<input type="text" name="agentID" placeholder="Agent ID" required/> </br>
+			<input type="text" name="airline" placeholder="Airline" required/> </br>
 			<input type="submit" value=Register />
 
 			{% if error %}

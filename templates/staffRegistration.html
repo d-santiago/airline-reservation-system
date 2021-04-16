@@ -6,12 +6,13 @@
 	<body>
 
 		<form action="/staffRegistrationAuth" method="POST">
-			<input type="text" name="airline" placeholder="Airline" required/> </br>
-			<input type="text" name="username" placeholder="Username" required/> </br>
-			<input type="password" name="password" placeholder="Password" required/> </br>
 			<input type="text" name="firstName" placeholder="First Name" required/> </br>
 			<input type="text" name="lastName" placeholder="Last Name" required/> </br>
-			<input type="text" name="dob" placeholder="DOB" required/> </br>
+			<input type="text" name="username" placeholder="Username" required/> </br>
+			<input type="password" name="password" placeholder="Password" required/> </br>
+			<input type="text" name="dob" placeholder="DOB: YYYYDDMM" required/> </br>
+			<input type="text" name="phone" placeholder="Phone Number" required/> </br>
+			<input type="text" name="airline" placeholder="Airline" required/> </br>
 			<input type="submit" value = Register />
 			{% if error %}
 				<p class="error"><strong>Error:</strong> {{error}}</p>
