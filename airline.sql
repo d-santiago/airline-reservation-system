@@ -91,6 +91,7 @@ CREATE TABLE Customer_Purchases(
     purchase_ID VARCHAR(50),
     cus_email VARCHAR(50) NOT NULL,
     ticket_ID VARCHAR(50) NOT NULL,
+    flight_num VARCHAR(50) NOT NULL,
     sold_price VARCHAR(8) NOT NULL,
     card_type VARCHAR(50) NOT NULL,
     card_num VARCHAR(50) NOT NULL,
@@ -101,7 +102,8 @@ CREATE TABLE Customer_Purchases(
     agent_ID VARCHAR(50),
     PRIMARY KEY(purchase_ID),
     FOREIGN KEY(cus_email) REFERENCES Customer(cus_email),
-    FOREIGN KEY(ticket_ID) REFERENCES Ticket(ticket_ID)
+    FOREIGN KEY(ticket_ID) REFERENCES Ticket(ticket_ID),
+    FOREIGN KEY(flight_num) REFERENCES Flight(flight_num)
 );
 
 CREATE TABLE Booking_Agent_Commission(
@@ -164,8 +166,8 @@ VALUES ("T-1", "FN-1", 20210330, 120000, "China Eastern", "Yes"),
 ("T-6", "FN-1", 20210330, 120000, "China Eastern", "No");
 
 INSERT INTO CUSTOMER_PURCHASES
-VALUES ("PID-1", "des538@nyu.edu", "T-1", "750.00", "VISA", "6350-3566-2738-8744", "Damaris Santiago", 20240130, 20210228, 100000, NULL),
-("PID-2", "tm3083@nyu.edu", "T-2", "750.00", "VISA", "8943-8852-8197-4346", "Thomas Molina", 20240430, 20210228, 100100, "BAID-1");
+VALUES ("PID-1", "des538@nyu.edu", "T-1", "FN-1", "750.00", "VISA", "6350-3566-2738-8744", "Damaris Santiago", 20240130, 20210228, 100000, NULL),
+("PID-2", "tm3083@nyu.edu", "T-2", "FN-1", "750.00", "VISA", "8943-8852-8197-4346", "Thomas Molina", 20240430, 20210228, 100100, "BAID-1");
 
 -- Queries
 

@@ -1,0 +1,15 @@
+* {
+    font-family: sans-serif;
+}
+
+h1 {
+    text-align: center;
+}
+
+p {
+    font-size: 12px;  
+}
+
+table, tr, td{
+    border: 1px solid black;
+}

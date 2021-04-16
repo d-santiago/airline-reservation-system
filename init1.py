@@ -1,6 +1,7 @@
 #Import Flask Library
 from flask import Flask, render_template, request, session, url_for, redirect
 import pymysql.cursors
+from datetime import date
 
 #Initialize the app from Flask
 app = Flask(__name__)
@@ -247,7 +248,22 @@ def home():
 @app.route('/customerHome')
 def customerHome():
 	username = session['username']
-	return render_template('customerHome.html')
+	cursor = conn.cursor()
+	find_flights = 'SELECT flight_num, ticket_ID FROM Customer_Purchases WHERE cus_email = %s'
+	cursor.execute(find_flights, (username))
+	flights = cursor.fetchall()
+
+	flights_info = []
+	for flight in flights:
+		# print(flight['flight_num'])
+		find_flight_info = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, arrival_airport, arrival_date, arrival_time, flight_status FROM Flight WHERE flight_num = %s'
+		cursor.execute(find_flight_info, (flight['flight_num']))
+		flight_info = cursor.fetchone()
+		flights_info.append(flight_info)
+	
+	# print(flights_info)
+	cursor.close()
+	return render_template('customerHome.html', username=username, flights=flights, flights_info=flights_info)
 
 @app.route('/agentHome')
 def agentHome():
