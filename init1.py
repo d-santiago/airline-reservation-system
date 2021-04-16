@@ -10,7 +10,7 @@ conn = pymysql.connect(host='localhost',
                        port=8889,
                        user='root',
                        password='root',
-                       db='Air_Ticket_Reservation',
+                       db='AirlineReservationSystem',
                        charset='utf8mb4',
                        cursorclass=pymysql.cursors.DictCursor)
 
@@ -238,7 +238,7 @@ def home():
     # for each in data1:
     #     print(each['blog_post'])
     # cursor.close()
-    # return render_template('home.html', username=username, posts=data1)
+	# return render_template('home.html', username=username, posts=data1)
 	# return render_template('home.html', username=username)
 	return render_template('home.html')
 
