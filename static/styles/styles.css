@@ -10,8 +10,12 @@ p {
     font-size: 12px;  
 }
 
-table, tr, td {
+table, tr {
     border: 1px solid black;
+}
+
+table {
+    border-radius: 5px;
 }
 
 td {

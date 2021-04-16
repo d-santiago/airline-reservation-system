@@ -230,7 +230,7 @@ def staffRegistrationAuth():
 		cursor.close()
 		return render_template('index.html')
 
-@app.route('/customerHome')
+@app.route('/customerHome', methods=['GET', 'POST'])
 def customerHome():
 	username = session['username']
 	cursor = conn.cursor()
@@ -278,6 +278,24 @@ def staffHome():
 	username = session['username']
 	return render_template('staffHome.html')
 
+@app.route('/searchFlights', methods=['GET', 'POST'])
+def searchFlights():
+	username = session['username']
+	package = request.form['package']
+	source = request.form['source']
+	destination = request.form['destination']
+	departure = request.form['departure']
+	arrival = request.form['arrival']
+
+	cursor = conn.cursor()
+	search_flights = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
+					arrival_airport, arrival_date, arrival_time, flight_status FROM Flight \
+					WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s'
+	cursor.execute(search_flights, (source, destination, departure, arrival))
+	query_flights = cursor.fetchall()
+	cursor.close()
+	return render_template('customerHome.html', query_flights=query_flights)
+	
 @app.route('/logout')
 def logout():
 	session.pop('username')

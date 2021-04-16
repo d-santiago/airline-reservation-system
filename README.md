@@ -24,3 +24,7 @@
 1. View My Flights (All)
 1. View My Flights (Future)
 1. View My Flights (Past)
+
+### In Progress
+1. Search for flights
+    1. This works. However, when the search form is submitted, previous data (all flights, past flights, future flights) is not displayed.
