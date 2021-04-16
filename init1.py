@@ -1,7 +1,6 @@
 #Import Flask Library
 from flask import Flask, render_template, request, session, url_for, redirect
 import pymysql.cursors
-from datetime import date
 
 #Initialize the app from Flask
 app = Flask(__name__)
@@ -231,20 +230,6 @@ def staffRegistrationAuth():
 		cursor.close()
 		return render_template('index.html')
 
-@app.route('/home')
-def home():
-    # username = session['username']
-    # cursor = conn.cursor();
-    # query = 'SELECT ts, blog_post FROM blog WHERE username = %s ORDER BY ts DESC'
-    # cursor.execute(query, (username))
-    # data1 = cursor.fetchall()
-    # for each in data1:
-    #     print(each['blog_post'])
-    # cursor.close()
-	# return render_template('home.html', username=username, posts=data1)
-	# return render_template('home.html', username=username)
-	return render_template('home.html')
-
 @app.route('/customerHome')
 def customerHome():
 	username = session['username']
@@ -274,17 +259,6 @@ def agentHome():
 def staffHome():
 	username = session['username']
 	return render_template('staffHome.html')
-
-@app.route('/post', methods=['GET', 'POST'])
-def post():
-	# username = session['username']
-	# cursor = conn.cursor();
-	# blog = request.form['blog']
-	# query = 'INSERT INTO blog (blog_post, username) VALUES(%s, %s)'
-	# cursor.execute(query, (blog, username))
-	# conn.commit()
-	# cursor.close()
-	return redirect(url_for('home'))
 
 @app.route('/logout')
 def logout():
