@@ -234,21 +234,39 @@ def staffRegistrationAuth():
 def customerHome():
 	username = session['username']
 	cursor = conn.cursor()
+	
 	find_flights = 'SELECT flight_num, ticket_ID FROM Customer_Purchases WHERE cus_email = %s'
 	cursor.execute(find_flights, (username))
 	flights = cursor.fetchall()
 
-	flights_info = []
+	all_flights_info = []
+	past_flights_info = []
+	future_flights_info = []
+
 	for flight in flights:
-		# print(flight['flight_num'])
-		find_flight_info = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, arrival_airport, arrival_date, arrival_time, flight_status FROM Flight WHERE flight_num = %s'
-		cursor.execute(find_flight_info, (flight['flight_num']))
+		find_all_flights_info = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
+								arrival_airport, arrival_date, arrival_time, flight_status FROM Flight WHERE flight_num = %s'
+		cursor.execute(find_all_flights_info, (flight['flight_num']))
 		flight_info = cursor.fetchone()
-		flights_info.append(flight_info)
+		all_flights_info.append(flight_info)
+
+		find_past_flights_info = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
+								arrival_airport, arrival_date, arrival_time, flight_status FROM Flight WHERE flight_num = %s \
+								AND departure_date < DATE(NOW()) '
+		cursor.execute(find_past_flights_info, (flight['flight_num']))
+		flight_info = cursor.fetchone()
+		past_flights_info.append(flight_info)
+
+		find_future_flights_info = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
+								arrival_airport, arrival_date, arrival_time, flight_status FROM Flight WHERE flight_num = %s \
+								AND departure_date > DATE(NOW())'
+		cursor.execute(find_future_flights_info, (flight['flight_num']))
+		flight_info = cursor.fetchone()
+		future_flights_info.append(flight_info)
 	
-	# print(flights_info)
 	cursor.close()
-	return render_template('customerHome.html', username=username, flights=flights, flights_info=flights_info)
+	return render_template('customerHome.html', username=username, flights=flights, all_flights_info=all_flights_info, \
+							past_flights_info=past_flights_info, future_flights_info=future_flights_info)
 
 @app.route('/agentHome')
 def agentHome():

@@ -6,52 +6,49 @@
 
 	<body>
 
-		<h1>Welcome, {{username}} </h1>
+		<h1>Welcome, {{ username }} </h1>
 
-		<!-- <p> Flights: {{flights}} </p>
-		<p> Flights Info: {{flights_info}} </p> -->
-
-		<h3> View My Flights </h3>
+		<h3> View All My Flights </h3>
 
 		{% for flight in flights %}
 
 		<table>
 
 			<tr>
-				<td>Flight Number</td>
-				<td>Ticket ID</td>
-				<td>Airline Name</td>
-				<td>Airplane ID</td>
-				<td>Departure Airport</td>
-				<td>Departure Date</td>
-				<td>Departure Time</td>
-				<td>Arrival Airport</td>
-				<td>Arrival Date</td>
-				<td>Arrival Time</td>
-				<td>Flight Status</td>
+				<td> Flight Number </td>
+				<td> Ticket ID </td>
+				<td> Airline Name </td>
+				<td> Airplane ID </td>
+				<td> Departure Airport </td>
+				<td> Departure Date </td>
+				<td> Departure Time </td>
+				<td> Arrival Airport </td>
+				<td> Arrival Date </td>
+				<td> Arrival Time </td>
+				<td> Flight Status </td>
 			</tr>
 
 			<tr>
-				<td>{{flight['flight_num']}}</td>
-				<td>{{flight['ticket_ID']}}</td>
 
-				{% for flight_info in flights_info %}
+			{% for flight_info in all_flights_info %}
 
-					{% if flight['flight_num'] == flight_info['flight_num'] %}
+				{% if flight['flight_num'] == flight_info['flight_num'] %}
 
-					<td>{{flight_info['airline_name']}}</td>
-					<td>{{flight_info['airplane_ID']}}</td>
-					<td>{{flight_info['departure_airport']}}</td>
-					<td>{{flight_info['departure_date']}}</td>
-					<td>{{flight_info['departure_time']}}</td>
-					<td>{{flight_info['arrival_airport']}}</td>
-					<td>{{flight_info['arrival_date']}}</td>
-					<td>{{flight_info['arrival_time']}}</td>
-					<td>{{flight_info['flight_status']}}</td>
-					
-					{% endif %}
-					
-				{% endfor %}	
+					<td> {{ flight['flight_num'] }} </td>
+					<td> {{ flight['ticket_ID'] }} </td>
+					<td> {{ flight_info['airline_name'] }} </td>
+					<td> {{ flight_info['airplane_ID'] }} </td>
+					<td> {{ flight_info['departure_airport'] }} </td>
+					<td> {{ flight_info['departure_date'] }} </td>
+					<td> {{ flight_info['departure_time'] }} </td>
+					<td> {{ flight_info['arrival_airport'] }} </td>
+					<td> {{ flight_info['arrival_date'] }} </td>
+					<td> {{ flight_info['arrival_time'] }} </td>
+					<td> {{ flight_info['flight_status'] }} </td>
+				
+				{% endif %}
+				
+			{% endfor %}	
 
 			</tr>
 
@@ -59,9 +56,101 @@
 
 		{% endfor %}
 
-		<h3> View My Future Flights </h3>
+		<h3> View My Past Flights </h3>
+	
+		{% for flight in flights %}
 
-		<h3> View My Past Flights</h3>
+		<table>
+
+			<tr>
+				<td> Flight Number </td>
+				<td> Ticket ID </td>
+				<td> Airline Name </td>
+				<td> Airplane ID </td>
+				<td> Departure Airport </td>
+				<td> Departure Date </td>
+				<td> Departure Time </td>
+				<td> Arrival Airport </td>
+				<td> Arrival Date </td>
+				<td> Arrival Time </td>
+				<td> Flight Status </td>
+			</tr>
+
+			<tr>
+
+			{% for flight_info in past_flights_info %}
+
+				{% if flight['flight_num'] == flight_info['flight_num'] %}
+
+					<td> {{ flight['flight_num'] }} </td>
+					<td> {{ flight['ticket_ID'] }} </td>
+					<td> {{ flight_info['airline_name'] }} </td>
+					<td> {{ flight_info['airplane_ID'] }} </td>
+					<td> {{ flight_info['departure_airport'] }} </td>
+					<td> {{ flight_info['departure_date'] }} </td>
+					<td> {{ flight_info['departure_time'] }} </td>
+					<td> {{ flight_info['arrival_airport'] }} </td>
+					<td> {{ flight_info['arrival_date'] }} </td>
+					<td> {{ flight_info['arrival_time'] }} </td>
+					<td> {{ flight_info['flight_status'] }} </td>
+					
+				{% endif %}
+				
+			{% endfor %}	
+
+			</tr>
+
+		</table>
+
+		{% endfor %}
+
+		<h3> View My Future Flights</h3>
+
+		{% for flight in flights %}
+
+		<table>
+
+			<tr>
+				<td> Flight Number </td>
+				<td> Ticket ID </td>
+				<td> Airline Name </td>
+				<td> Airplane ID </td>
+				<td> Departure Airport </td>
+				<td> Departure Date </td>
+				<td> Departure Time </td>
+				<td> Arrival Airport </td>
+				<td> Arrival Date </td>
+				<td> Arrival Time </td>
+				<td> Flight Status </td>
+			</tr>
+
+			<tr>
+
+			{% for flight_info in future_flights_info %}
+
+				{% if flight['flight_num'] == flight_info['flight_num'] %}
+
+					<td> {{ flight['flight_num'] }} </td>
+					<td> {{ flight['ticket_ID'] }} </td>
+					<td> {{ flight_info['airline_name'] }} </td>
+					<td> {{ flight_info['airplane_ID'] }} </td>
+					<td> {{ flight_info['departure_airport'] }} </td>
+					<td> {{ flight_info['departure_date'] }} </td>
+					<td> {{ flight_info['departure_time'] }} </td>
+					<td> {{ flight_info['arrival_airport'] }} </td>
+					<td> {{ flight_info['arrival_date'] }} </td>
+					<td> {{ flight_info['arrival_time'] }} </td>
+					<td> {{ flight_info['flight_status'] }} </td>
+					
+				{% endif %}
+				
+			{% endfor %}	
+
+			</tr>
+
+		</table>
+
+		{% endfor %}
 
 		<h3> Search for Flights </h3>
 
