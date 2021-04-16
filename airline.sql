@@ -148,8 +148,8 @@ INSERT INTO Booking_Agent
 VALUES ("BA-1", "joebiden@chinaeastern.com", "pswd!", "China Eastern");
 
 INSERT INTO Customer
-VALUES ("Damaris Santiago", "des538@nyu.edu", "des538", "6", "MetroTech", "Brooklyn", "NY", "1(987)526-0298", 20000318, "PN-4767", 20280504, "United States of America"), 
-("Thomas Molina", "tm3083@nyu.edu", "tm3083", "6", "MetroTech", "Brooklyn", "NY", "1(350)098-6696", 20000714, "PN-2254", 20270429, "United States of America");
+VALUES ("Damaris Santiago", "des538@nyu.edu", "des538", "6", "MetroTech", "Brooklyn", "NY", "1(987)526-0298", 20000318, "PN-1", 20280504, "United States of America"), 
+("Thomas Molina", "tm3083@nyu.edu", "tm3083", "6", "MetroTech", "Brooklyn", "NY", "1(350)098-6696", 20000714, "PN-2", 20270429, "United States of America");
 
 INSERT INTO Flight
 VALUES ("FN-1", "China Eastern", "APID-1", "JFK", 20210330, 120000, "PVG", 20210331, 150000, "750.00", "100", "On Time"),
@@ -164,8 +164,8 @@ VALUES ("T-1", "FN-1", 20210330, 120000, "China Eastern", "Yes"),
 ("T-6", "FN-1", 20210330, 120000, "China Eastern", "No");
 
 INSERT INTO CUSTOMER_PURCHASES
-VALUES ("P-1", "des538@nyu.edu", "T-1", "750.00", "VISA", "6350-3566-2738-8744", "Damaris Santiago", 20240130, 20210228, 100000, NULL),
-("P-2", "tm3083@nyu.edu", "T-2", "750.00", "VISA", "8943-8852-8197-4346", "Thomas Molina", 20240430, 20210228, 100100, "BAID-1");
+VALUES ("PID-1", "des538@nyu.edu", "T-1", "750.00", "VISA", "6350-3566-2738-8744", "Damaris Santiago", 20240130, 20210228, 100000, NULL),
+("PID-2", "tm3083@nyu.edu", "T-2", "750.00", "VISA", "8943-8852-8197-4346", "Thomas Molina", 20240430, 20210228, 100100, "BAID-1");
 
 -- Queries
 
