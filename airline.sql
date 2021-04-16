@@ -15,7 +15,7 @@ CREATE TABLE Airline(
 CREATE TABLE Airplane(
     airplane_ID VARCHAR(50) NOT NULL,
     airline_name VARCHAR(50) NOT NULL,
-    seats INT NOT NULL,
+    seats VARCHAR(3) NOT NULL,
     PRIMARY KEY(airplane_ID),
     FOREIGN KEY(airline_name) REFERENCES Airline(airline_name)
 );
@@ -68,7 +68,7 @@ CREATE TABLE Flight(
     arrival_date DATE NOT NULL,
     arrival_time TIME NOT NULL,
     base_price VARCHAR(8) NOT NULL,
-    seats_available INT NOT NULL,
+    seats_available VARCHAR(3) NOT NULL,
     flight_status VARCHAR(50) NOT NULL,
     PRIMARY KEY(flight_num, departure_date, departure_time),
     FOREIGN KEY(airline_name) REFERENCES Airline(airline_name),
@@ -88,10 +88,10 @@ CREATE TABLE Ticket(
 );
 
 CREATE TABLE Customer_Purchases(
-    purchase_ID INT AUTO_INCREMENT,
+    purchase_ID VARCHAR(50),
     cus_email VARCHAR(50) NOT NULL,
     ticket_ID VARCHAR(50) NOT NULL,
-    sold_price VARCHAR(10) NOT NULL,
+    sold_price VARCHAR(8) NOT NULL,
     card_type VARCHAR(50) NOT NULL,
     card_num VARCHAR(50) NOT NULL,
     card_name VARCHAR(50) NOT NULL,
@@ -118,10 +118,10 @@ CREATE TABLE Booking_Agent_Commission(
 );
 
 CREATE TABLE Review(
-    review_ID INT AUTO_INCREMENT,					
+    review_ID VARCHAR(50),					
     cus_email VARCHAR(50) NOT NULL,
     flight_num VARCHAR(50) NOT NULL,
-    rating NUMERIC(1) NOT NULL,
+    rating VARCHAR(1) NOT NULL,
     comment VARCHAR(1000) NOT NULL,
     PRIMARY KEY(review_ID),
     FOREIGN KEY(cus_email) REFERENCES Customer(cus_email),
@@ -138,35 +138,34 @@ INSERT INTO Airline
 VALUES ("China Eastern");
 
 INSERT INTO Airplane
-VALUES ("APID-5502", "China Eastern", 100),
-("APID-9629", "China Eastern", 100);
+VALUES ("APID-1", "China Eastern", "100"),
+("APID-2", "China Eastern", "100");
 
 INSERT INTO Airline_Staff
 VALUES ("Kamala", "Harris", "KHarris2020", "qwerty23", 19641020, "1(504)000-5322", "China Eastern");
 
 INSERT INTO Booking_Agent
-VALUES ("BA-4792", "joebiden@chinaeastern.com", "pswd!", "China Eastern");
+VALUES ("BA-1", "joebiden@chinaeastern.com", "pswd!", "China Eastern");
 
 INSERT INTO Customer
 VALUES ("Damaris Santiago", "des538@nyu.edu", "des538", "6", "MetroTech", "Brooklyn", "NY", "1(987)526-0298", 20000318, "PN-4767", 20280504, "United States of America"), 
 ("Thomas Molina", "tm3083@nyu.edu", "tm3083", "6", "MetroTech", "Brooklyn", "NY", "1(350)098-6696", 20000714, "PN-2254", 20270429, "United States of America");
 
 INSERT INTO Flight
-VALUES ("FN-8107", "China Eastern", "APID-5502", "JFK", 20210330, 120000, "PVG", 20210331, 150000, "750.00", 100, "On Time"),
-("FN-1076", "China Eastern", "APID-9629", "JFK", 20210331, 150000, "PVG", 20210401, 180000, "750.00", 100, "On Time"),
-("FN-5585", "China Eastern", "APID-5502", "JFK", 20210401, 180000, "PVG", 20210402, 210000, "750.00", 100, "Delayed");
+VALUES ("FN-1", "China Eastern", "APID-1", "JFK", 20210330, 120000, "PVG", 20210331, 150000, "750.00", "100", "On Time"),
+("FN-2", "China Eastern", "APID-2", "JFK", 20210331, 150000, "PVG", 20210401, 180000, "750.00", "100", "Delayed");
 
 INSERT INTO TICKET
-VALUES ("T-1", "FN-8107", 20210330, 120000, "China Eastern", "Yes"),
-("T-2", "FN-8107", 20210330, 120000, "China Eastern", "Yes"),
-("T-3", "FN-8107", 20210330, 120000, "China Eastern", "No"),
-("T-4", "FN-8107", 20210330, 120000, "China Eastern", "No"),
-("T-5", "FN-8107", 20210330, 120000, "China Eastern", "No"),
-("T-6", "FN-8107", 20210330, 120000, "China Eastern", "No");
+VALUES ("T-1", "FN-1", 20210330, 120000, "China Eastern", "Yes"),
+("T-2", "FN-1", 20210330, 120000, "China Eastern", "Yes"),
+("T-3", "FN-1", 20210330, 120000, "China Eastern", "No"),
+("T-4", "FN-1", 20210330, 120000, "China Eastern", "No"),
+("T-5", "FN-1", 20210330, 120000, "China Eastern", "No"),
+("T-6", "FN-1", 20210330, 120000, "China Eastern", "No");
 
 INSERT INTO CUSTOMER_PURCHASES
-VALUES (1, "des538@nyu.edu", "T-1", "750.00", "VISA", "6350-3566-2738-8744", "Damaris Santiago", 20240130, 20210228, 100000, NULL),
-(2, "tm3083@nyu.edu", "T-2", "750.00", "VISA", "8943-8852-8197-4346", "Thomas Molina", 20240430, 20210228, 100100, "BAID-4792");
+VALUES ("P-1", "des538@nyu.edu", "T-1", "750.00", "VISA", "6350-3566-2738-8744", "Damaris Santiago", 20240130, 20210228, 100000, NULL),
+("P-2", "tm3083@nyu.edu", "T-2", "750.00", "VISA", "8943-8852-8197-4346", "Thomas Molina", 20240430, 20210228, 100100, "BAID-1");
 
 -- Queries
 
