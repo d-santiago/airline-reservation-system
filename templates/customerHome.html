@@ -23,12 +23,11 @@
 				<td> Arrival Airport </td>
 				<td> Arrival Date </td>
 				<td> Arrival Time </td>
-				<td> Flight Status </td>
 			</tr>
 
 			<tr>
 
-			{% for flight in flights %}
+			{% for flight in all_flights %}
 
 				{% for flight_info in all_flights_info %}
 
@@ -44,7 +43,6 @@
 						<td> {{ flight_info['arrival_airport'] }} </td>
 						<td> {{ flight_info['arrival_date'] }} </td>
 						<td> {{ flight_info['arrival_time'] }} </td>
-						<td> {{ flight_info['flight_status'] }} </td>
 					
 					{% endif %}
 					
@@ -73,12 +71,11 @@
 				<td> Arrival Airport </td>
 				<td> Arrival Date </td>
 				<td> Arrival Time </td>
-				<td> Flight Status </td>
 			</tr>
 
 			<tr>
 
-			{% for flight in flights %}
+			{% for flight in all_flights %}
 
 				{% for flight_info in past_flights_info %}
 
@@ -94,7 +91,6 @@
 						<td> {{ flight_info['arrival_airport'] }} </td>
 						<td> {{ flight_info['arrival_date'] }} </td>
 						<td> {{ flight_info['arrival_time'] }} </td>
-						<td> {{ flight_info['flight_status'] }} </td>
 						
 					{% endif %}
 					
@@ -128,7 +124,7 @@
 
 			<tr>
 
-			{% for flight in flights %}
+			{% for flight in all_flights %}
 
 				{% for flight_info in future_flights_info %}
 
@@ -160,7 +156,7 @@
 
 		<h3> Search for Flights </h3>
 
-		<form action="/searchFlights" method="POST">
+		<form action="/customerHome" method="POST">
 			Flight Package:
 			<select name="package" required>
 				<option value="select"> Select </option>

@@ -233,25 +233,35 @@ def staffRegistrationAuth():
 @app.route('/customerHome', methods=['GET', 'POST'])
 def customerHome():
 	username = session['username']
+
+	conduct_search = False;
+	if ('package' in request.form and 'source' in request.form and'destination' in request.form and 'departure' in request.form and 'arrival' in request.form):	
+		conduct_search = True;
+		package = request.form['package']
+		source = request.form['source']
+		destination = request.form['destination']	
+		departure = request.form['departure']
+		arrival = request.form['arrival']
+
 	cursor = conn.cursor()
 	
 	find_flights = 'SELECT flight_num, ticket_ID FROM Customer_Purchases WHERE cus_email = %s'
 	cursor.execute(find_flights, (username))
-	flights = cursor.fetchall()
+	all_flights = cursor.fetchall()
 
 	all_flights_info = []
 	past_flights_info = []
 	future_flights_info = []
 
-	for flight in flights:
+	for flight in all_flights:
 		find_all_flights_info = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
-								arrival_airport, arrival_date, arrival_time, flight_status FROM Flight WHERE flight_num = %s'
+								arrival_airport, arrival_date, arrival_time FROM Flight WHERE flight_num = %s'
 		cursor.execute(find_all_flights_info, (flight['flight_num']))
 		flight_info = cursor.fetchone()
 		all_flights_info.append(flight_info)
 
 		find_past_flights_info = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
-								arrival_airport, arrival_date, arrival_time, flight_status FROM Flight WHERE flight_num = %s \
+								arrival_airport, arrival_date, arrival_time FROM Flight WHERE flight_num = %s \
 								AND departure_date < DATE(NOW()) '
 		cursor.execute(find_past_flights_info, (flight['flight_num']))
 		flight_info = cursor.fetchone()
@@ -263,9 +273,18 @@ def customerHome():
 		cursor.execute(find_future_flights_info, (flight['flight_num']))
 		flight_info = cursor.fetchone()
 		future_flights_info.append(flight_info)
+
+	if (conduct_search == True):
+		search_flights = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
+					arrival_airport, arrival_date, arrival_time, flight_status FROM Flight \
+					WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s'
+		cursor.execute(search_flights, (source, destination, departure, arrival))
+		query_flights = cursor.fetchall()
+		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+							past_flights_info=past_flights_info, future_flights_info=future_flights_info, query_flights=query_flights)
 	
 	cursor.close()
-	return render_template('customerHome.html', username=username, flights=flights, all_flights_info=all_flights_info, \
+	return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
 							past_flights_info=past_flights_info, future_flights_info=future_flights_info)
 
 @app.route('/agentHome')
@@ -278,24 +297,6 @@ def staffHome():
 	username = session['username']
 	return render_template('staffHome.html')
 
-@app.route('/searchFlights', methods=['GET', 'POST'])
-def searchFlights():
-	username = session['username']
-	package = request.form['package']
-	source = request.form['source']
-	destination = request.form['destination']
-	departure = request.form['departure']
-	arrival = request.form['arrival']
-
-	cursor = conn.cursor()
-	search_flights = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
-					arrival_airport, arrival_date, arrival_time, flight_status FROM Flight \
-					WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s'
-	cursor.execute(search_flights, (source, destination, departure, arrival))
-	query_flights = cursor.fetchall()
-	cursor.close()
-	return render_template('customerHome.html', query_flights=query_flights)
-	
 @app.route('/logout')
 def logout():
 	session.pop('username')
