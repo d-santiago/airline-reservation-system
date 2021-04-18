@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
 	</head>
 
 	<body>
 
+		<h1> Customer Registration </h1>
+
 		<form action="/customerRegistrationAuth" method="POST">
-			<input type="text" name="email" placeholder="Email" required/> </br>
-			<input type="password" name="password" placeholder="Password" required/> </br>
-			<input type="text" name="name" placeholder="Name" required/> </br>
-			<input type="text" name="buildingNum" placeholder="Building Number" required/> </br>
-			<input type="text" name="street" placeholder="Street" required/> </br>
-			<input type="text" name="city" placeholder="City" required/> </br>
-			<input type="text" name="state" placeholder="State" required/> </br>
-			<input type="text" name="phone" placeholder="Phone Number" required/> </br>
-			<input type="text" name="dob" placeholder="DOB: YYYYDDMM" required/> </br>
-			<input type="text" name="passportNum" placeholder="Passport Number" required/> </br>
-			<input type="text" name="passportExp" placeholder="Passport Expiration: YYYYDDMM" required/> </br>
-			<input type="text" name="passportCountry" placeholder="Passport Country" required/> </br>
+			Email: <br> <input type="text" name="email" placeholder="Email" required/> </br> <br>
+			Password: <br> <input type="password" name="password" placeholder="Password" required/> </br> <br>
+			Name: <br> <input type="text" name="name" placeholder="Name" required/> </br> <br>
+			Building Nmuber: <br> <input type="text" name="buildingNum" placeholder="Building Number" required/> </br> <br>
+			Street: <br> <input type="text" name="street" placeholder="Street" required/> </br> <br>
+			City: <br> <input type="text" name="city" placeholder="City" required/> </br> <br>
+			State: <br> <input type="text" name="state" placeholder="State" required/> </br> <br>
+			Phone Number: <br> <input type="text" name="phone" placeholder="Phone Number" required/> </br> <br>
+			Date of Birth: <br> <input type="date" name="dob" placeholder="DOB" required/> </br> <br>
+			Passport Number: <br> <input type="text" name="passportNum" placeholder="Passport Number" required/> </br> <br>
+			Passport Expiration: <br> <input type="date" name="passportExp" placeholder="Passport Expiration" required/> </br> <br>
+			Passport Country: <br> <input type="text" name="passportCountry" placeholder="Passport Country" required/> </br> <br>
 
 			<input type="submit" value = Register />
 			{% if error %}
