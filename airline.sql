@@ -76,7 +76,7 @@ CREATE TABLE Flight(
 );
 
 CREATE TABLE Ticket(
-    ticket_ID VARCHAR(50),
+    ticket_ID INT AUTO_INCREMENT,
     flight_num VARCHAR(50) NOT NULL,
     departure_date DATE NOT NULL,
     departure_time TIME NOT NULL,
@@ -88,9 +88,9 @@ CREATE TABLE Ticket(
 );
 
 CREATE TABLE Customer_Purchases(
-    purchase_ID VARCHAR(50),
+    purchase_ID INT AUTO_INCREMENT,
     cus_email VARCHAR(50) NOT NULL,
-    ticket_ID VARCHAR(50) NOT NULL,
+    ticket_ID INT NOT NULL,
     flight_num VARCHAR(50) NOT NULL,
     sold_price VARCHAR(8) NOT NULL,
     card_type VARCHAR(50) NOT NULL,
@@ -104,19 +104,6 @@ CREATE TABLE Customer_Purchases(
     FOREIGN KEY(cus_email) REFERENCES Customer(cus_email),
     FOREIGN KEY(ticket_ID) REFERENCES Ticket(ticket_ID),
     FOREIGN KEY(flight_num) REFERENCES Flight(flight_num)
-);
-
-CREATE TABLE Booking_Agent_Commission(
-    ticket_ID VARCHAR(50) NOT NULL,
-    agent_email VARCHAR(50) NOT NULL,
-    agent_password VARCHAR(50) NOT NULL,
-    agent_ID VARCHAR(50) NOT NULL,
-    tickets_sold VARCHAR(10) NOT NULL,
-    comm_total VARCHAR(10) NOT NULL,
-    comm_per_ticket VARCHAR(10) NOT NULL,
-    comm_ticket_avg VARCHAR(10) NOT NULL,
-    FOREIGN KEY(ticket_ID) REFERENCES Ticket(ticket_ID),
-    FOREIGN KEY(agent_email, agent_password, agent_ID) REFERENCES Booking_Agent(agent_email, agent_password, agent_ID)
 );
 
 CREATE TABLE Review(
@@ -155,19 +142,26 @@ VALUES ("Damaris Santiago", "des538@nyu.edu", "des538", "6", "MetroTech", "Brook
 
 INSERT INTO Flight
 VALUES ("FN-1", "China Eastern", "APID-1", "JFK", 20210330, 120000, "PVG", 20210331, 150000, "750.00", "100", "On Time"),
-("FN-2", "China Eastern", "APID-2", "JFK", 20210331, 150000, "PVG", 20210401, 180000, "750.00", "100", "Delayed");
+("FN-2", "China Eastern", "APID-2", "JFK", 20210331, 150000, "PVG", 20210401, 180000, "750.00", "100", "Delayed"),
+("FN-3", "China Eastern", "APID-2", "JFK", 20211201, 150000, "PVG", 20211202, 180000, "750.00", "100", "On Time");
 
-INSERT INTO TICKET
-VALUES ("T-1", "FN-1", 20210330, 120000, "China Eastern", "Yes"),
-("T-2", "FN-1", 20210330, 120000, "China Eastern", "Yes"),
-("T-3", "FN-1", 20210330, 120000, "China Eastern", "No"),
-("T-4", "FN-1", 20210330, 120000, "China Eastern", "No"),
-("T-5", "FN-1", 20210330, 120000, "China Eastern", "No"),
-("T-6", "FN-1", 20210330, 120000, "China Eastern", "No");
+INSERT INTO TICKET (flight_num, departure_date, departure_time, airline_name, is_purchased)
+VALUES ("FN-1", 20210330, 120000, "China Eastern", "Yes"),
+("FN-1", 20210330, 120000, "China Eastern", "Yes"),
+("FN-1", 20210330, 120000, "China Eastern", "No"),
+("FN-1", 20210330, 120000, "China Eastern", "No"),
+("FN-1", 20210330, 120000, "China Eastern", "No"),
+("FN-1", 20210330, 120000, "China Eastern", "No"),
+("FN-3", 20211201, 150000, "China Eastern", "Yes"),
+("FN-3", 20211201, 150000, "China Eastern", "No"),
+("FN-3", 20211201, 150000, "China Eastern", "No"),
+("FN-3", 20211201, 150000, "China Eastern", "No"),
+("FN-3", 20211201, 150000, "China Eastern", "No");
 
-INSERT INTO CUSTOMER_PURCHASES
-VALUES ("PID-1", "des538@nyu.edu", "T-1", "FN-1", "750.00", "VISA", "6350-3566-2738-8744", "Damaris Santiago", 20240130, 20210228, 100000, NULL),
-("PID-2", "tm3083@nyu.edu", "T-2", "FN-1", "750.00", "VISA", "8943-8852-8197-4346", "Thomas Molina", 20240430, 20210228, 100100, "BAID-1");
+INSERT INTO CUSTOMER_PURCHASES (cus_email, ticket_ID, flight_num, sold_price, card_type, card_num, card_name, card_exp_date, purchase_date, purchase_time, agent_ID)
+VALUES ("des538@nyu.edu", 1, "FN-1", "750.00", "VISA", "6350-3566-2738-8744", "Damaris Santiago", 20240130, 20210228, 100000, NULL),
+("tm3083@nyu.edu", 2, "FN-1", "750.00", "VISA", "8943-8852-8197-4346", "Thomas Molina", 20240430, 20210228, 100100, "BAID-1"),
+("des538@nyu.edu", 7, "FN-3", "750.00", "VISA", "6350-3566-2738-8744", "Damaris Santiago", 20240130, 20210417, 190000, NULL);
 
 -- Queries
 
@@ -192,6 +186,19 @@ VALUES ("PID-1", "des538@nyu.edu", "T-1", "FN-1", "750.00", "VISA", "6350-3566-2
 -- WHERE airline_name = "China Eastern"
 
 -- More Tables (Unnecessary)
+
+-- CREATE TABLE Booking_Agent_Commission(
+--     ticket_ID INT AUTO_INCREMENT NOT NULL,
+--     agent_email VARCHAR(50) NOT NULL,
+--     agent_password VARCHAR(50) NOT NULL,
+--     agent_ID VARCHAR(50) NOT NULL,
+--     tickets_sold VARCHAR(10) NOT NULL,
+--     comm_total VARCHAR(10) NOT NULL,
+--     comm_per_ticket VARCHAR(10) NOT NULL,
+--     comm_ticket_avg VARCHAR(10) NOT NULL,
+--     FOREIGN KEY(ticket_ID) REFERENCES Ticket(ticket_ID),
+--     FOREIGN KEY(agent_email, agent_password, agent_ID) REFERENCES Booking_Agent(agent_email, agent_password, agent_ID)
+-- );
 
 -- CREATE TABLE Customer_Flight_Log(
 --     cus_flight_log_ID INT AUTO_INCREMENT,

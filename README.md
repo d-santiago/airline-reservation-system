@@ -25,3 +25,8 @@
 1. View My Flights (Future)
 1. View My Flights (Past)
 1. Search for flights
+
+### In Progress
+1. Purchase Tickets
+    1. Sold price calculation needs to be implemented
+    1. After purchase, each time the the page is refreshed the number of flights displayed duplicates

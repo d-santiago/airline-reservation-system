@@ -25,14 +25,13 @@
 				<td> Arrival Time </td>
 			</tr>
 
-			<tr>
-
 			{% for flight in all_flights %}
 
 				{% for flight_info in all_flights_info %}
 
 					{% if flight['flight_num'] == flight_info['flight_num'] %}
 
+					<tr>
 						<td> {{ flight['flight_num'] }} </td>
 						<td> {{ flight['ticket_ID'] }} </td>
 						<td> {{ flight_info['airline_name'] }} </td>
@@ -43,14 +42,13 @@
 						<td> {{ flight_info['arrival_airport'] }} </td>
 						<td> {{ flight_info['arrival_date'] }} </td>
 						<td> {{ flight_info['arrival_time'] }} </td>
-					
+					<tr>
+
 					{% endif %}
 					
 				{% endfor %}
 				
 			{% endfor %}
-
-			</tr>
 
 		</table>
 
@@ -73,7 +71,6 @@
 				<td> Arrival Time </td>
 			</tr>
 
-			<tr>
 
 			{% for flight in all_flights %}
 
@@ -81,6 +78,7 @@
 
 					{% if flight['flight_num'] == flight_info['flight_num'] %}
 
+					<tr>
 						<td> {{ flight['flight_num'] }} </td>
 						<td> {{ flight['ticket_ID'] }} </td>
 						<td> {{ flight_info['airline_name'] }} </td>
@@ -91,7 +89,8 @@
 						<td> {{ flight_info['arrival_airport'] }} </td>
 						<td> {{ flight_info['arrival_date'] }} </td>
 						<td> {{ flight_info['arrival_time'] }} </td>
-						
+					<tr>
+
 					{% endif %}
 					
 				{% endfor %}	
@@ -130,6 +129,7 @@
 
 					{% if flight['flight_num'] == flight_info['flight_num'] %}
 
+					<tr>
 						<td> {{ flight['flight_num'] }} </td>
 						<td> {{ flight['ticket_ID'] }} </td>
 						<td> {{ flight_info['airline_name'] }} </td>
@@ -141,7 +141,8 @@
 						<td> {{ flight_info['arrival_date'] }} </td>
 						<td> {{ flight_info['arrival_time'] }} </td>
 						<td> {{ flight_info['flight_status'] }} </td>
-						
+					<tr>
+
 					{% endif %}
 					
 				{% endfor %}	
@@ -179,10 +180,10 @@
 			</select>
 
 			Departure Date:
-			<input type="date" name="departure" required>
+			<input type="date" min="2021-04-17" name="departure" required>
 
 			Arrival Date:
-			<input type="date" name="arrival" required>
+			<input type="date" min="2021-04-17" name="arrival" required>
 
 			<input type="submit" value=Search />
 			
@@ -202,13 +203,14 @@
 				<td> Arrival Airport </td>
 				<td> Arrival Date </td>
 				<td> Arrival Time </td>
+				<td> Price </td>
 				<td> Flight Status </td>
+				<td> Check Availability? </td>
 			</tr>
-
-			<tr>
 
 			{% for flight in query_flights %}
 
+			<tr>
 				<td> {{ flight['flight_num'] }} </td>
 				<td> {{ flight['airline_name'] }} </td>
 				<td> {{ flight['airplane_ID'] }} </td>
@@ -218,17 +220,64 @@
 				<td> {{ flight['arrival_airport'] }} </td>
 				<td> {{ flight['arrival_date'] }} </td>
 				<td> {{ flight['arrival_time'] }} </td>
-				<td> {{ flight['flight_status'] }} </td>	
-				
-			{% endfor %}	
+				<td> {{ flight['base_price'] }} </td>	
+				<td> {{ flight['flight_status'] }} </td>
+				<td>
+					<form action="/customerHome" method="POST">
 
+						<select name="flight_select" required>
+							<option value= {{ flight['flight_num'] }} > Yes </option>
+							<option value="no"> No </option>
+						</select>
+						<input type="submit" value="Check Availability" />
+
+					<form>
+
+				</td>	
 			</tr>
+
+			{% endfor %}	
 
 		</table>
 
 		{% endif %}
 
-		<h3> Purchase Tickets </h3>
+		{% if tickets %}
+
+			<h4 style="color: green"> Complete Your Purchase Below for Flight: {{flight_select}} </h4>
+
+			<form action="/customerHome" method="POST">
+				<select name="flight_purchase" required>
+					<option value= {{ flight_select }} > {{ flight_select }} </option>
+				</select> </br>
+
+				{% for ticket in tickets%}
+
+					<input type="checkbox" name="ticket" value= {{ ticket['ticket_ID'] }} />
+					TN-{{ ticket['ticket_ID'] }} </br>
+
+				{% endfor %}
+
+				</select>  </br>
+				<input type="text" name="type" placeholder="Card Type" required/> </br>
+				<input type="text" name="num" placeholder="Card Number" required/> </br>
+				<input type="text" name="security" placeholder="Security Code" required/> </br>
+				<input type="text" name="name" placeholder="Card Name" required/> </br>
+				<input type="date" min="2021-04-17" name="exp" placeholder="Card Expiration Date" required/> </br>
+				<input type="submit" value="Complete Transaction" />
+			<form>
+
+		{% elif tickets == "No Tickets" %}
+
+			<h4 style="color: red"> No Tickets Avaiable for Flight: {{check}} </h4>
+
+		{% endif %}
+
+		{% if purchase == "Complete" %}
+
+			<h4 style="color: green"> Purchase Complete </h4>
+
+		{% endif %}
 
 		<h3> Rate and Comment on Previous Flights </h3>
 
