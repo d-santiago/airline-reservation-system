@@ -9,15 +9,20 @@
 		<h1> Customer Login </h1>
 
 		<form action="/customerLoginAuth" method="POST">
-			<input type="text" name="email" placeholder="Email" required/> </br>
-			<input type="password" name="password" placeholder="Password" required/> </br>
+			Email:
+			</br> <input type="text" name="email" placeholder="Email" required/> </br> </br>
+
+			Password:
+			</br> <input type="password" name="password" placeholder="Password" required/> </br> </br>
+
 			<input type="submit" value=Login />
+
 			{% if error %}
 				<p class="error"><strong>Error:</strong> {{error}}</p>
 			{% endif %}
 		</form>
 
-		<a href="/">Go back</a>
+		</br> <a href="/">Go back</a>
 
 	</body>
 
