@@ -150,27 +150,6 @@ def customerRegistrationAuth():
 	passportExp = request.form['passportExp']
 	passportCountry = request.form['passportCountry']
 
-	print("dob", dob, type(dob))
-	print("passportExp", dob, type(passportExp))
-
-	# dob = dob.strip("-")
-	# passportExp = passportExp.strip("-")
-
-	# print("dob", dob, type(dob))
-	# print("passportExp", dob, type(passportExp))
-
-	# dob = datetime.strptime(dob, '%Y-%m-%d')
-	# passportExp = datetime.strptime(passportExp, '%Y-%m-%d')
-
-	# print("dob", dob, type(dob))
-	# print("passportExp", dob, type(passportExp))
-
-	# dob = dob.strftime('%Y-%m-%d %H:%M:%S')
-	# passportExp = passportExp.strftime('%Y-%m-%d %H:%M:%S')
-
-	# print("dob", dob, type(dob))
-	# print("passportExp", dob, type(passportExp))
-
 	#cursor used to send queries
 	cursor = conn.cursor()
 	#executes query
@@ -185,7 +164,7 @@ def customerRegistrationAuth():
 		error = "This customer already exists"
 		return render_template('customerRegistration.html', error = error)
 	else:
-		ins = 'INSERT INTO Customer VALUES(%s, %s, %s, %s, %s, %s, $s, %s, %s, %s, %s, %s)'
+		ins = 'INSERT INTO Customer VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 		cursor.execute(ins, (name, email, password, buildingNum, street, city, state, phone, dob, passportNum, passportExp, passportCountry))
 		conn.commit()
 		cursor.close()
@@ -246,7 +225,7 @@ def staffRegistrationAuth():
 		error = "This airline stafff member already exists"
 		return render_template('staffRegistration.html', error = error)
 	else:
-		ins = 'INSERT INTO user VALUES(%s, %s, %s, %s, %s, %s, %s)'
+		ins = 'INSERT INTO Airline_Staff VALUES(%s, %s, %s, %s, %s, %s, %s)'
 		cursor.execute(ins, (firstName, lastName, username, password, dob, phone, airline))
 		conn.commit()
 		cursor.close()

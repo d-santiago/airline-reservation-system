@@ -8,14 +8,9 @@
 1. Booking Agent Login
 1. Airline Staff Login
 1. Logout (Customer, Booking Agent, Airline Staff)
-1. Booking Agent Registration
-
-### In Progress
-
 1. Customer Registration
-    1. Does not work because of DOB (Type: DATE) and Passport Expiration (Type: DATE)
+1. Booking Agent Registration
 1. Airline Staff Registration
-    1. Does not work because of DOB (Type: DATE)
 
 ## Customer Use Cases
 
