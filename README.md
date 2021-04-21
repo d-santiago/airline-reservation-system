@@ -7,14 +7,15 @@
 1. Customer Login
 1. Booking Agent Login
 1. Airline Staff Login
-1. Logout (Customer, Booking Agent, Airline Staff)
 1. Customer Registration
 1. Booking Agent Registration
 1. Airline Staff Registration
+1. Customer Logout
+1. Booking Agent Logout
+1. Airline Staff Logout
 
 ### To Do
 1. Login (Customer, Booking Agent, and Airline Staff): Implement MD5(Password)
-1. Logout (Customer, Booking Agent, and Airline Staff): Send back to their respective login pages when they logout
 
 ## Customer Use Cases
 

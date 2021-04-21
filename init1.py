@@ -428,10 +428,20 @@ def staffHome():
 	username = session['username']
 	return render_template('staffHome.html')
 
-@app.route('/logout')
-def logout():
+@app.route('/customerLogout')
+def customerLogout():
 	session.pop('username')
-	return redirect('/')
+	return redirect('/customerLogin')
+
+@app.route('/agentLogout')
+def agentLogout():
+	session.pop('username')
+	return redirect('/agentLogin')
+
+@app.route('/staffLogout')
+def staffLogout():
+	session.pop('username')
+	return redirect('/staffLogin')
 
 app.secret_key = 'some key that you will never guess'
 #Run the app on localhost port 8888
