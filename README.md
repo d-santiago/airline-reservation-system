@@ -13,8 +13,8 @@
 1. Airline Staff Registration
 
 ### To Do
-1. Implement MD5(Password) for Customer, Booking Agent, and Airline Satff
-1. Send Customers, Booking Agents, and Airline Staff to their respective login pages when they logout
+1. Login (Customer, Booking Agent, and Airline Staff): Implement MD5(Password)
+1. Logout (Customer, Booking Agent, and Airline Staff): Send back to their respective login pages when they logout
 
 ## Customer Use Cases
 
@@ -23,12 +23,12 @@
 1. View My Flights
 1. Search for Flights
 1. Purchase Tickets
+1. Review Previously Taken Flights
 
 ### In Progress
-1. Give Ratings and Comment on previous flights
+1. Track My Spending
 
 ### To Do
-1. Track My Spending
 1. Search for Flights: Implement One Way/Round Trip
 1. Purchase Tickets: Implement Sold Price Calculation
 

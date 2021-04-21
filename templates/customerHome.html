@@ -93,16 +93,8 @@
 						<td> {{ flight_info['arrival_time'] }} </td>
 						<td>
 							<form action="/customerHome" method="POST">
-								<select name="rating" required>
-									<option value="5"> 5 Stars </option>
-									<option value="4"> 4 Stars </option>
-									<option value="3"> 3 Star </option>
-									<option value="2"> 2 Stars </option>
-									<option value="1"> 1 Star </option>
-								</select>
-								<input type="text" name="review" placeholder="Review"/>
-								<input type="submit" value=Post />
-							<form>
+								<button type="submit" name="flight_to_rate" value={{ flight['flight_num'] }}> Yes </button>
+							</form>
 						</td>
 					<tr>
 
@@ -256,32 +248,45 @@
 		{% if tickets and tickets != "No Tickets" %}
 
 			<h2> Purchase Tickets </h2>
-			<h4 style="color: green"> Tickets are Available for Flight: {{flight_select}}. Complete Your Purchase Below </h4>
-
+			<!-- <h3 style="color: green"> Tickets are Available for Flight: {{flight_select}}. Complete Your Purchase Below </h3> -->
+			
 			<form action="/customerHome" method="POST">
+				Flight:
 				<select name="flight_purchase" required>
 					<option value= {{ flight_select }} > {{ flight_select }} </option>
-				</select> </br>
+				</select>
+				
+				</br> </br>
 
+				Tickets (Select One or Multiple):
 				{% for ticket in tickets%}
-
 					<input type="checkbox" name="ticket" value= {{ ticket['ticket_ID'] }} />
-					TN-{{ ticket['ticket_ID'] }} </br>
-
+					TN-{{ ticket['ticket_ID'] }}
 				{% endfor %}
 
-				</select>  </br>
-				<input type="text" name="type" placeholder="Card Type" required/> </br>
-				<input type="text" name="num" placeholder="Card Number" required/> </br>
-				<input type="text" name="security" placeholder="Security Code" required/> </br>
-				<input type="text" name="name" placeholder="Card Name" required/> </br>
-				<input type="date" min="2021-04-17" name="exp" placeholder="Card Expiration Date" required/> </br>
-				<input type="submit" value="Complete Transaction" />
+				</br> </br>
+
+				Card Type:
+				<input type="text" name="type" placeholder="Card Type" required/>
+
+				Card Number:
+				<input type="text" name="num" placeholder="Card Number" required/>
+
+				Card Security Code:
+				<input type="text" name="security" placeholder="Security Code" required/>
+
+				Card Name:
+				<input type="text" name="name" placeholder="Card Name" required/>
+				
+				Card Expiration Date:
+				<input type="date" min="2021-04-17" name="exp" placeholder="Card Expiration Date" required/> </br>  </br>
+
+				<input type="submit" value="Purchase Ticket" />
 			<form>
 
 		{% elif tickets == "No Tickets" %}
 
-			<h4 style="color: red"> No Tickets Avaiable for Flight: {{flight_select}} </h4>
+			<h3 style="color: red"> No Tickets Avaiable for Flight: {{flight_select}} </h3>
 
 		{% endif %}
 
@@ -290,11 +295,43 @@
 		{% if purchase == "Complete" %}
 
 			<h2> Purchase Tickets </h2>
-			<h4 style="color: green"> Purchase Complete </h4>
+			<h3 style="color: green"> Purchase Complete </h3>
 
 		{% endif %}
 
+		{% if flight_to_rate %}
 
+			<h2> Review Previously Taken Flights  </h2>
+
+			<form action="/customerHome" method="POST">
+				Flight:
+				<select name="flight_rated" required>
+					<option value= {{ flight_to_rate }} > {{flight_to_rate}} </option>
+				</select>
+			
+				Rating:
+				<select name="rating" required>
+					<option value="5"> 5 Stars </option>
+					<option value="4"> 4 Stars </option>
+					<option value="3"> 3 Stars </option>
+					<option value="2"> 2 Stars </option>
+					<option value="1"> 1 Star </option>
+				</select> </br> </br>
+
+				Comment: </br>
+				<textarea name="comment" rows="6" cols="30"> </textarea> </br> </br>
+				<input type="submit" value="Submit" />
+			</form>
+
+		{% endif %}
+
+		{% if review == "Complete" %}
+			<h2> Review Previously Taken Flights </h2>
+			<h3 style="color: green"> Review Complete </h3>
+		{% elif review == "Already Complete"%}
+			<h2> Review Previously Taken Flights </h2>
+			<h3 style="color: green"> You Have Already Reviewed Flight: {{flight_rated}}</h3>
+		{% endif %}
 
 		<h2> Track My Spending </h2>
 

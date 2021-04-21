@@ -107,7 +107,7 @@ CREATE TABLE Customer_Purchases(
 );
 
 CREATE TABLE Review(
-    review_ID VARCHAR(50),					
+    review_ID INT AUTO_INCREMENT,					
     cus_email VARCHAR(50) NOT NULL,
     flight_num VARCHAR(50) NOT NULL,
     rating VARCHAR(1) NOT NULL,

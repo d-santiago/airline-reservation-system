@@ -238,7 +238,7 @@ def customerHome():
 	# When a customer searches for flights
 	conduct_flight_search = False;
 	if ('package' in request.form and 'source' in request.form and'destination' in request.form and 'departure' in request.form and 'arrival' in request.form):	
-		conduct_flight_search = True;
+		conduct_flight_search = True
 		package = request.form['package']
 		source = request.form['source']
 		destination = request.form['destination']	
@@ -246,21 +246,35 @@ def customerHome():
 		arrival = request.form['arrival']
 
 	# When books a customer flight that showed up in their search
-	conduct_ticket_search = False;
+	conduct_ticket_search = False
 	if ('flight_select' in request.form):
-		conduct_ticket_search = True;	
+		conduct_ticket_search = True
 		flight_select = request.form['flight_select']
 
 	# When customer completes the purchase for a flight that showed up in their search
 	conduct_ticket_purchase = False;
 	if ('flight_purchase' in request.form and 'ticket' in request.form and 'type' in request.form and 'num' in request.form and 'name' in request.form and 'exp' in request.form):	
-		conduct_ticket_purchase = True;
+		conduct_ticket_purchase = True
 		flight_purchase = request.form['flight_purchase']
 		ticket_IDs = request.form.getlist('ticket')
 		card_type = request.form['type']
 		card_num = request.form['num']
 		card_name = request.form['name']
 		card_exp = request.form['exp']	
+
+	reveal_rating_form = False
+	if ('flight_to_rate' in request.form):	
+		reveal_rating_form = True
+		flight_to_rate = request.form['flight_to_rate']
+
+	submit_rating = False;
+	if ('flight_rated' in request.form and 'rating' in request.form and 'comment' in request.form):	
+		submit_rating = True;
+		flight_rated = request.form['flight_rated']
+		rating = request.form['rating']
+		comment = request.form['comment']
+
+
 
 	cursor = conn.cursor()
 	
@@ -355,7 +369,6 @@ def customerHome():
 		# Need to implement: calculating the sold price
 
 		for ticket_ID in ticket_IDs:
-
 			search_tickets = 'SELECT is_Purchased FROM Ticket WHERE ticket_ID = %s'
 			cursor.execute(search_tickets, (ticket_ID))
 			is_Purchased = cursor.fetchone()
@@ -376,6 +389,31 @@ def customerHome():
 		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
 								past_flights_info=past_flights_info, future_flights_info=future_flights_info, purchase="Complete")
 
+	# Reveals a purchase form for the ticket if one is avaiable for the flight selected
+	if (reveal_rating_form == True):
+		search_tickets = 'SELECT * FROM Review WHERE flight_num = %s AND cus_email = %s'
+		cursor.execute(search_tickets, (flight_to_rate, username))
+		isFlightRated = cursor.fetchall()
+
+		if (not isFlightRated):
+			cursor.close()
+			return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+									past_flights_info=past_flights_info, future_flights_info=future_flights_info, flight_to_rate=flight_to_rate)
+		else:
+			cursor.close()
+			return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+									past_flights_info=past_flights_info, future_flights_info=future_flights_info, flight_rated=flight_to_rate, review="Already Complete")
+
+
+	if (submit_rating == True):
+		change_ticket_status = 'INSERT INTO Review(cus_email, flight_num, rating, comment) VALUES(%s, %s, %s, %s)'
+		cursor.execute(change_ticket_status, (username, flight_rated, rating, comment))
+		conn.commit()
+
+		cursor.close()
+		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+							past_flights_info=past_flights_info, future_flights_info=future_flights_info, review="Complete")
+	
 	cursor.close()
 	return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
 							past_flights_info=past_flights_info, future_flights_info=future_flights_info)
