@@ -14,9 +14,6 @@
 1. Booking Agent Logout
 1. Airline Staff Logout
 
-### To Do
-1. Login (Customer, Booking Agent, and Airline Staff): Implement MD5(Password)
-
 ## Customer Use Cases
 
 ### Complete

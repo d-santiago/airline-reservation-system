@@ -131,14 +131,14 @@ VALUES ("APID-1", "China Eastern", "100"),
 ("APID-2", "China Eastern", "100");
 
 INSERT INTO Airline_Staff
-VALUES ("Kamala", "Harris", "KHarris2020", "qwerty23", 19641020, "1(504)000-5322", "China Eastern");
+VALUES ("Kamala", "Harris", "KHarris2020", MD5("qwerty23"), 19641020, "1(504)000-5322", "China Eastern");
 
 INSERT INTO Booking_Agent
-VALUES ("BA-1", "joebiden@chinaeastern.com", "pswd!", "China Eastern");
+VALUES ("BA-1", "joebiden@chinaeastern.com", MD5("pswd!"), "China Eastern");
 
 INSERT INTO Customer
-VALUES ("Damaris Santiago", "des538@nyu.edu", "des538", "6", "MetroTech", "Brooklyn", "NY", "1(987)526-0298", 20000318, "PN-1", 20280504, "United States of America"), 
-("Thomas Molina", "tm3083@nyu.edu", "tm3083", "6", "MetroTech", "Brooklyn", "NY", "1(350)098-6696", 20000714, "PN-2", 20270429, "United States of America");
+VALUES ("Damaris Santiago", "des538@nyu.edu", MD5("des538"), "6", "MetroTech", "Brooklyn", "NY", "1(987)526-0298", 20000318, "PN-1", 20280504, "United States of America"), 
+("Thomas Molina", "tm3083@nyu.edu", MD5("tm3083"), "6", "MetroTech", "Brooklyn", "NY", "1(350)098-6696", 20000714, "PN-2", 20270429, "United States of America");
 
 INSERT INTO Flight
 VALUES ("FN-1", "China Eastern", "APID-1", "JFK", 20210330, 120000, "PVG", 20210331, 150000, "750.00", "100", "On Time"),

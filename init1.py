@@ -60,7 +60,7 @@ def customerLoginAuth():
 	#cursor used to send queries
 	cursor = conn.cursor()
 	#executes query
-	query = 'SELECT * FROM Customer WHERE cus_email = %s and cus_password = %s'
+	query = 'SELECT * FROM Customer WHERE cus_email = %s and cus_password = MD5(%s)'
 	cursor.execute(query, (email, password))
 	#stores the results in a variable
 	data = cursor.fetchone()
@@ -88,7 +88,7 @@ def agentLoginAuth():
 	#cursor used to send queries
 	cursor = conn.cursor()
 	#executes query
-	query = 'SELECT * FROM Booking_Agent WHERE agent_email = %s and agent_password = %s'
+	query = 'SELECT * FROM Booking_Agent WHERE agent_email = %s and agent_password = MD5(%s)'
 	cursor.execute(query, (email, password))
 	#stores the results in a variable
 	data = cursor.fetchone()
@@ -116,7 +116,7 @@ def staffLoginAuth():
 	#cursor used to send queries
 	cursor = conn.cursor()
 	#executes query
-	query = 'SELECT * FROM Airline_Staff WHERE staff_username = %s and agent_password = %s'
+	query = 'SELECT * FROM Airline_Staff WHERE staff_username = %s and agent_password = MD5(%s)'
 	cursor.execute(query, (username, password))
 	#stores the results in a variable
 	data = cursor.fetchone()
@@ -164,7 +164,7 @@ def customerRegistrationAuth():
 		error = "This customer already exists"
 		return render_template('customerRegistration.html', error = error)
 	else:
-		ins = 'INSERT INTO Customer VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+		ins = 'INSERT INTO Customer VALUES(%s, %s, MD5(%s), %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 		cursor.execute(ins, (name, email, password, buildingNum, street, city, state, phone, dob, passportNum, passportExp, passportCountry))
 		conn.commit()
 		cursor.close()
@@ -193,7 +193,7 @@ def agentRegistrationAuth():
 		error = "This booking agent already exists"
 		return render_template('agentRegistration.html', error = error)
 	else:
-		ins = 'INSERT INTO Booking_Agent VALUES(%s, %s, %s, %s)'
+		ins = 'INSERT INTO Booking_Agent VALUES(%s, %s, MD5(%s), %s)'
 		cursor.execute(ins, (agentID, email, password, airline))
 		conn.commit()
 		cursor.close()
@@ -225,7 +225,7 @@ def staffRegistrationAuth():
 		error = "This airline stafff member already exists"
 		return render_template('staffRegistration.html', error = error)
 	else:
-		ins = 'INSERT INTO Airline_Staff VALUES(%s, %s, %s, %s, %s, %s, %s)'
+		ins = 'INSERT INTO Airline_Staff VALUES(%s, %s, %s, MD5(%s), %s, %s, %s)'
 		cursor.execute(ins, (firstName, lastName, username, password, dob, phone, airline))
 		conn.commit()
 		cursor.close()
