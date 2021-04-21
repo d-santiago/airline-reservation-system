@@ -55,6 +55,9 @@ def index():
 		cursor.execute(search_flights, (source, destination, departure, arrival))
 		query_flights = cursor.fetchall()
 
+		if (not query_flights):
+			query_flights = "No Results"
+
 		cursor.close()
 		return render_template('index.html', query_flights=query_flights)
 
@@ -66,10 +69,10 @@ def index():
 		flight_status = cursor.fetchone()
 
 		if (not flight_status):
-			cursor.close()
-			return render_template('index.html', flight_num=flight_num, flight_status="No Results")
+			flight_status="No Results"
+		else:
+			flight_status = flight_status['flight_status']
 
-		flight_status = flight_status['flight_status']
 		cursor.close()
 		return render_template('index.html', flight_num=flight_num, flight_status=flight_status)
 
@@ -425,16 +428,14 @@ def customerHome():
 
 
 	# When the page is loaded or refreshed, the program calculates the customer's expenses within the past year by finding the sum of the sold_prices for the tickets in the Customer_Purchases table using their email
-	calc_year_expenses = 'SELECT SUM(sold_price) AS year_expenses FROM Customer_Purchases WHERE cus_email = %s AND purchase_date > DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR)'
+	calc_year_expenses = 'SELECT SUM(sold_price) AS year_expenses FROM Customer_Purchases WHERE cus_email = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR)'
 	cursor.execute(calc_year_expenses, (username))
 	year_expenses = cursor.fetchone()
 	year_expenses = year_expenses['year_expenses']
 
 	if (year_expenses == None):
-		cursor.close()
-		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-							past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses='0.0')
-
+		year_expenses='0.0'
+		
 
 	######################################################################THIS CODE RUNS EVERYTIME THE PAGE IS LOADED OR REFRESHED######################################################################
 
@@ -447,6 +448,9 @@ def customerHome():
 						
 		cursor.execute(search_flights, (source, destination, departure, arrival))
 		query_flights = cursor.fetchall()
+
+		if (not query_flights):
+			query_flights = "No Results"
 
 		cursor.close()
 		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
@@ -529,15 +533,13 @@ def customerHome():
 	
 	# When a customer clicks the "Search" button under 'My Spending', the program will determine how much money that customer spent between two user-specified dates (track_spending = True)
 	if (track_spending == True):
-		calc_date_expenses = 'SELECT SUM(sold_price) AS date_expenses FROM Customer_Purchases WHERE cus_email = %s AND purchase_date > %s AND purchase_date < %s'
+		calc_date_expenses = 'SELECT SUM(sold_price) AS date_expenses FROM Customer_Purchases WHERE cus_email = %s AND purchase_date >= %s AND purchase_date <= %s'
 		cursor.execute(calc_date_expenses, (username, start_date, end_date))
 		date_expenses = cursor.fetchone()
 		date_expenses = date_expenses['date_expenses']
 
 		if (date_expenses == None):
-			cursor.close()
-			return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-									past_flights_info=past_flights_info, future_flights_info=future_flights_info, date_expenses="0.0", start_date=start_date, end_date=end_date)
+			date_expenses="0.0"
 
 		cursor.close()
 		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \

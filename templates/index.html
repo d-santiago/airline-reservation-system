@@ -43,8 +43,9 @@
 
 
 		<!-- Displays the flights generated from the 'Search for and Purchase Flights' form -->
-		{% if query_flights %}
+		{% if query_flights and query_flights != "No Results" %}
 
+		</br>
 		<table>
 
 			<tr>
@@ -79,14 +80,16 @@
 
 			{% endfor %}	
 
-		</table>
+		</table> </br>
+
+		{% elif query_flights == "No Results" %}
+
+			<h4 style="color: red"> {{ query_flights }}</h4>
 
 		{% endif %}
 
 
 		<hr>
-		
-
 		<h2> Get Flight Status </h2>
 
 		<form action="/" method="POST">
@@ -126,11 +129,10 @@
 		{% endif %}
 
 
-		<hr>
-		
 
 		{% if not message %}
 			<!-- <a href="/login.html">Login</a> -->
+			<hr>
 			<a href="/customerLogin">Customer Login</a> <br>
 			<a href="/customerRegistration">Customer Registration</a> <br> <br>
 

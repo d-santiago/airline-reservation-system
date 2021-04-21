@@ -159,10 +159,11 @@
 
 			</tr>
 
-		</table>
+		</table> </br>
 
 
 		<!-- Displays form for the customer to search for future flights -->
+		<hr>
 		<h2> Search for and Purchase Flights </h2>
 
 		<form action="/customerHome" method="POST">
@@ -195,12 +196,13 @@
 
 			<input type="submit" value=Search />
 			
-		</form>
+		</form> 
 
 
 		<!-- Displays the flights generated from the 'Search for and Purchase Flights' form -->
-		{% if query_flights %}
-
+		{% if query_flights and query_flights!= "No Results" %}
+		
+		</br>
 		<table>
 
 			<tr>
@@ -244,12 +246,14 @@
 
 		</table>
 
+		{% elif query_flights == "No Results" %}
+			<h4 style="color: red"> {{ query_flights }}</h4>
 		{% endif %}
 
 		
 		<!-- Displays the tickets avaiable (if any) for the flight that the customer checked the avaiability -->
 		{% if tickets and tickets != "No Tickets" %}
-
+			<hr>
 			<!-- If there are tickets avaiable, display the purchase form -->
 			<h2> Purchase Tickets </h2>
 			<!-- <h3 style="color: green"> Tickets are Available for Flight: {{flight_select}}. Complete Your Purchase Below </h3> -->
@@ -300,7 +304,7 @@
 		
 		<!-- If the purchase is complete, notify the user -->
 		{% if purchase == "Complete" %}
-
+			<hr>
 			<h2> Purchase Tickets </h2>
 			<h4 style="color: green"> Purchase Complete </h4>
 
@@ -309,7 +313,7 @@
 
 		<!-- When a customer clicks the "Yes" button under 'Rate and Review', a form will be revealed to the user -->
 		{% if flight_to_rate %}
-
+			<hr>
 			<h2> Review Previously Taken Flights  </h2>
 
 			<form action="/customerHome" method="POST">
@@ -330,31 +334,31 @@
 				Comment: </br>
 				<textarea name="comment" rows="6" cols="30"> </textarea> </br> </br>
 				<input type="submit" value="Submit" />
-			</form>
+			</form> </br>
 
 		{% endif %}
 
 		
 		<!-- If the customer's review was submitted successfuly complete, they will notified -->
 		{% if review == "Complete" %}
-
+			<hr>
 			<h2> Review Previously Taken Flights </h2>
 			<h4 style="color: green"> Review Complete </h4>
 
 		<!-- If the customer already reviewed the flight, they will notified -->
 		{% elif review == "Already Complete"%}
-
+			<hr>
 			<h2> Review Previously Taken Flights </h2>
-			<h4 style="color: green"> You Have Already Reviewed Flight: {{flight_rated}}</h4>
+			<h4 style="color: green"> You Have Already Reviewed This Flight </h4>
 
 		{% endif %}
 
-
+		<hr>
 		<h2> My Spending </h2>
 
 		<!-- The customer's expenses within the past year is displayed -->
 		{% if year_expenses %}
-			<h4> You Have Spent ${{year_expenses}}0 Within the Past Year: Use the Filter to Track your Spending Across Different Dates </h4>	
+			<h4> You Have Spent ${{year_expenses}}0 Within the Past Year. Use the Filter to Track your Spending Across Different Dates </h4>	
 		{% endif %}
 
 		<!-- If the customer submits the 'My Spending' form, their expenses within the past year will be displayed -->
