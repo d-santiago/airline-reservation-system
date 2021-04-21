@@ -1,4 +1,4 @@
-# Airline Reservation System
+# Air Ticket Reservation System
 
 ## General Use Cases
 
@@ -16,9 +16,6 @@
 1. View Public Information
 1. Get Flight Status
 
-### To Do
-1. View Public Information: Implement One Way/Round Trip
-
 ## Customer Use Cases
 
 ### Complete
@@ -30,7 +27,6 @@
 1. Track My Spending
 
 ### To Do
-1. Search for Flights: Implement One Way/Round Trip
 1. Purchase Tickets: Implement Sold Price Calculation
 1. Track My Spending: Bar Graphs
 

@@ -24,6 +24,7 @@
 				<td> Arrival Airport </td>
 				<td> Arrival Date </td>
 				<td> Arrival Time </td>
+				<td> Trip Type </td>
 			</tr>
 
 			{% for flight in all_flights %}
@@ -43,6 +44,7 @@
 						<td> {{ flight_info['arrival_airport'] }} </td>
 						<td> {{ flight_info['arrival_date'] }} </td>
 						<td> {{ flight_info['arrival_time'] }} </td>
+						<td> {{ flight_info['trip_type'] }} </td>
 					<tr>
 
 					{% endif %}
@@ -70,6 +72,7 @@
 				<td> Arrival Airport </td>
 				<td> Arrival Date </td>
 				<td> Arrival Time </td>
+				<td> Trip Type </td>
 				<td> Rate and Review </td>
 
 			</tr>
@@ -92,6 +95,7 @@
 						<td> {{ flight_info['arrival_airport'] }} </td>
 						<td> {{ flight_info['arrival_date'] }} </td>
 						<td> {{ flight_info['arrival_time'] }} </td>
+						<td> {{ flight_info['trip_type'] }} </td>
 						<td>
 							<form action="/customerHome" method="POST">
 								<button type="submit" name="flight_to_rate" value={{ flight['flight_num'] }}> Yes </button>
@@ -126,6 +130,7 @@
 				<td> Arrival Airport </td>
 				<td> Arrival Date </td>
 				<td> Arrival Time </td>
+				<td> Trip Type </td>
 				<td> Flight Status </td>
 			</tr>
 
@@ -148,6 +153,7 @@
 						<td> {{ flight_info['arrival_airport'] }} </td>
 						<td> {{ flight_info['arrival_date'] }} </td>
 						<td> {{ flight_info['arrival_time'] }} </td>
+						<td> {{ flight_info['trip_type'] }} </td>
 						<td> {{ flight_info['flight_status'] }} </td>
 					<tr>
 
@@ -167,8 +173,8 @@
 		<h2> Search for and Purchase Flights </h2>
 
 		<form action="/customerHome" method="POST">
-			Flight Package:
-			<select name="package" required>
+			Trip Type:
+			<select name="trip_type" required>
 				<option value="select"> Select </option>
 				<option value="One Way"> One Way </option>
 				<option value="Round Trip"> Round Trip </option>
@@ -196,7 +202,7 @@
 
 			<input type="submit" value=Search />
 			
-		</form> 
+		</form>
 
 
 		<!-- Displays the flights generated from the 'Search for and Purchase Flights' form -->
@@ -215,6 +221,7 @@
 				<td> Arrival Airport </td>
 				<td> Arrival Date </td>
 				<td> Arrival Time </td>
+				<td> Trip Type </td>
 				<td> Price </td>
 				<td> Flight Status </td>
 				<td> Check Availability? </td>
@@ -232,6 +239,7 @@
 				<td> {{ flight['arrival_airport'] }} </td>
 				<td> {{ flight['arrival_date'] }} </td>
 				<td> {{ flight['arrival_time'] }} </td>
+				<td> {{ flight['trip_type'] }} </td>	
 				<td> {{ flight['base_price'] }} </td>	
 				<td> {{ flight['flight_status'] }} </td>
 				<td>
@@ -244,7 +252,7 @@
 
 			{% endfor %}	
 
-		</table>
+		</table> </br>
 
 		{% elif query_flights == "No Results" %}
 			<h4 style="color: red"> {{ query_flights }}</h4>

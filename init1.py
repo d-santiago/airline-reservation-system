@@ -11,7 +11,7 @@ conn = pymysql.connect(host='localhost',
                        port=8889,
                        user='root',
                        password='root',
-                       db='AirlineReservationSystem',
+                       db='AirTicketReservationSystem',
                        charset='utf8mb4',
                        cursorclass=pymysql.cursors.DictCursor)
 
@@ -20,11 +20,11 @@ conn = pymysql.connect(host='localhost',
 def index():
 
 	# When a customer clicks the "Search" button under 'Search for Flights', a flight search will be conducted (conduct_flight_search = True)
-	# We know when a customer clicks this button if we recieve 'package', 'source', 'destination', 'departure', and 'arrival' in the the 'POST' Form
+	# We know when a customer clicks this button if we recieve 'trip_type', 'source', 'destination', 'departure', and 'arrival' in the the 'POST' Form
 	conduct_flight_search = False
-	if ('package' in request.form and 'source' in request.form and 'destination' in request.form and 'departure' in request.form and 'arrival' in request.form):	
+	if ('trip_type' in request.form and 'source' in request.form and 'destination' in request.form and 'departure' in request.form and 'arrival' in request.form):	
 		conduct_flight_search = True
-		package = request.form['package']
+		trip_type = request.form['trip_type']
 		source = request.form['source']
 		destination = request.form['destination']	
 		departure = request.form['departure']
@@ -48,11 +48,9 @@ def index():
 
 	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
 	if (conduct_flight_search == True):
-		search_flights = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
-						arrival_airport, arrival_date, arrival_time, base_price, flight_status FROM Flight \
-						WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s'
+		search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s AND trip_type = %s AND departure_date >= DATE(NOW()) AND arrival_date >= DATE(NOW())'
 						
-		cursor.execute(search_flights, (source, destination, departure, arrival))
+		cursor.execute(search_flights, (source, destination, departure, arrival, trip_type))
 		query_flights = cursor.fetchall()
 
 		if (not query_flights):
@@ -296,11 +294,11 @@ def customerHome():
 
 
 	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
-	# We know when a customer clicks this button if we recieve 'package', 'source', 'destination', 'departure', and 'arrival' in the the 'POST' Form
+	# We know when a customer clicks this button if we recieve 'trip_type', 'source', 'destination', 'departure', and 'arrival' in the the 'POST' Form
 	conduct_flight_search = False
-	if ('package' in request.form and 'source' in request.form and 'destination' in request.form and 'departure' in request.form and 'arrival' in request.form):	
+	if ('trip_type' in request.form and 'source' in request.form and 'destination' in request.form and 'departure' in request.form and 'arrival' in request.form):	
 		conduct_flight_search = True
-		package = request.form['package']
+		trip_type = request.form['trip_type']
 		source = request.form['source']
 		destination = request.form['destination']	
 		departure = request.form['departure']
@@ -381,8 +379,7 @@ def customerHome():
 		# Prevents duplicate flight information from being selected
 		if (flight['flight_num'] not in flightsOccured):
 
-			find_all_flights_info = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
-									arrival_airport, arrival_date, arrival_time FROM Flight WHERE flight_num = %s'
+			find_all_flights_info = 'SELECT * FROM Flight WHERE flight_num = %s'
 
 			cursor.execute(find_all_flights_info, (flight['flight_num']))
 			flight_info = cursor.fetchone()
@@ -398,9 +395,7 @@ def customerHome():
 		# Prevents duplicate flight information from being selected
 		if (flight['flight_num'] not in flightsOccured):
 
-			find_past_flights_info = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
-									arrival_airport, arrival_date, arrival_time FROM Flight WHERE flight_num = %s \
-									AND departure_date < DATE(NOW())'
+			find_past_flights_info = 'SELECT * FROM Flight WHERE flight_num = %s AND departure_date < DATE(NOW())'
 
 			cursor.execute(find_past_flights_info, (flight['flight_num']))
 			flight_info = cursor.fetchone()
@@ -416,9 +411,7 @@ def customerHome():
 		# Prevents duplicate flight information from being selected
 		if (flight['flight_num'] not in flightsOccured):
 
-			find_future_flights_info = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
-										arrival_airport, arrival_date, arrival_time, flight_status FROM Flight WHERE flight_num = %s \
-										AND departure_date > DATE(NOW())'
+			find_future_flights_info = 'SELECT * FROM Flight WHERE flight_num = %s AND departure_date > DATE(NOW())'
 
 			cursor.execute(find_future_flights_info, (flight['flight_num']))
 			flight_info = cursor.fetchone()
@@ -442,11 +435,9 @@ def customerHome():
 
 	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
 	if (conduct_flight_search == True):
-		search_flights = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
-						arrival_airport, arrival_date, arrival_time, base_price, flight_status FROM Flight \
-						WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s'
+		search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s AND trip_type = %s AND departure_date >= DATE(NOW()) AND arrival_date >= DATE(NOW())'
 						
-		cursor.execute(search_flights, (source, destination, departure, arrival))
+		cursor.execute(search_flights, (source, destination, departure, arrival, trip_type))
 		query_flights = cursor.fetchall()
 
 		if (not query_flights):
@@ -495,6 +486,7 @@ def customerHome():
 
 				insert_purchase = 'INSERT INTO CUSTOMER_PURCHASES (cus_email, ticket_ID, flight_num, sold_price, card_type, card_num, card_name, card_exp_date, \
 									purchase_date, purchase_time, agent_ID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, DATE(NOW()), TIME(NOW()), NULL)'
+									
 				cursor.execute(insert_purchase, (username, ticket_ID, flight_purchase, base_price, card_type, card_num, card_name, card_exp))
 				conn.commit()
 

@@ -70,6 +70,7 @@ CREATE TABLE Flight(
     base_price VARCHAR(8) NOT NULL,
     seats_available VARCHAR(3) NOT NULL,
     flight_status VARCHAR(50) NOT NULL,
+    trip_type VARCHAR(50) NOT NULL,
     PRIMARY KEY(flight_num, departure_date, departure_time),
     FOREIGN KEY(airline_name) REFERENCES Airline(airline_name),
     FOREIGN KEY(airplane_ID) REFERENCES Airplane(airplane_ID)
@@ -141,9 +142,9 @@ VALUES ("Damaris Santiago", "des538@nyu.edu", MD5("des538"), "6", "MetroTech", "
 ("Thomas Molina", "tm3083@nyu.edu", MD5("tm3083"), "6", "MetroTech", "Brooklyn", "NY", "1(350)098-6696", 20000714, "PN-2", 20270429, "United States of America");
 
 INSERT INTO Flight
-VALUES ("FN-1", "China Eastern", "APID-1", "JFK", 20210330, 120000, "PVG", 20210331, 150000, "750.00", "100", "On Time"),
-("FN-2", "China Eastern", "APID-2", "JFK", 20210331, 150000, "PVG", 20210401, 180000, "750.00", "100", "Delayed"),
-("FN-3", "China Eastern", "APID-2", "JFK", 20211201, 150000, "PVG", 20211202, 180000, "750.00", "100", "On Time");
+VALUES ("FN-1", "China Eastern", "APID-1", "JFK", 20210330, 120000, "PVG", 20210331, 150000, "750.00", "100", "On Time", "One Way"),
+("FN-2", "China Eastern", "APID-2", "JFK", 20210331, 150000, "PVG", 20210401, 180000, "750.00", "100", "Delayed", "One Way"),
+("FN-3", "China Eastern", "APID-2", "JFK", 20211201, 150000, "PVG", 20211202, 180000, "750.00", "100", "On Time", "One Way");
 
 INSERT INTO TICKET (flight_num, departure_date, departure_time, airline_name, is_purchased)
 VALUES ("FN-1", 20210330, 120000, "China Eastern", "Yes"),

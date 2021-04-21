@@ -10,8 +10,8 @@
 		<h2> Search for Flights </h2>
 
 		<form action="/" method="POST">
-			Flight Package:
-			<select name="package" required>
+			Trip Type:
+			<select name="trip_type" required>
 				<option value="select"> Select </option>
 				<option value="One Way"> One Way </option>
 				<option value="Round Trip"> Round Trip </option>
@@ -60,6 +60,7 @@
 				<td> Arrival Time </td>
 				<td> Price </td>
 				<td> Flight Status </td>
+				<td> Trip Type </td>
 			</tr>
 
 			{% for flight in query_flights %}
@@ -76,6 +77,7 @@
 				<td> {{ flight['arrival_time'] }} </td>
 				<td> {{ flight['base_price'] }} </td>	
 				<td> {{ flight['flight_status'] }} </td>
+				<td> {{ flight['trip_type'] }} </td>
 			</tr>
 
 			{% endfor %}	
