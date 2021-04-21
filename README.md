@@ -14,6 +14,9 @@
 1. Booking Agent Logout
 1. Airline Staff Logout
 
+### To Do
+1. View Public Information
+
 ## Customer Use Cases
 
 ### Complete
@@ -22,13 +25,12 @@
 1. Search for Flights
 1. Purchase Tickets
 1. Review Previously Taken Flights
-
-### In Progress
 1. Track My Spending
 
 ### To Do
 1. Search for Flights: Implement One Way/Round Trip
 1. Purchase Tickets: Implement Sold Price Calculation
+1. Track My Spending: Bar Graphs
 
 ------------------------------------------------------------------------------------------------------
 

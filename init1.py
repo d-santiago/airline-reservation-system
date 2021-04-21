@@ -274,7 +274,11 @@ def customerHome():
 		rating = request.form['rating']
 		comment = request.form['comment']
 
-
+	track_spending = False;
+	if ('start_date' in request.form and 'end_date' in request.form):	
+		track_spending = True;
+		start_date = request.form['start_date']
+		end_date = request.form['end_date']
 
 	cursor = conn.cursor()
 	
@@ -414,9 +418,34 @@ def customerHome():
 		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
 							past_flights_info=past_flights_info, future_flights_info=future_flights_info, review="Complete")
 	
+	calc_year_expenses = 'SELECT SUM(sold_price) AS year_expenses FROM Customer_Purchases WHERE cus_email = %s AND purchase_date > DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR)'
+	cursor.execute(calc_year_expenses, (username))
+	year_expenses = cursor.fetchone()
+	year_expenses = year_expenses['year_expenses']
+
+	if (year_expenses == None):
+		cursor.close()
+		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+							past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses='$0.00')
+
+	if (track_spending == True):
+		calc_date_expenses = 'SELECT SUM(sold_price) AS date_expenses FROM Customer_Purchases WHERE cus_email = %s AND purchase_date > %s AND purchase_date < %s'
+		cursor.execute(calc_date_expenses, (username, start_date, end_date))
+		date_expenses = cursor.fetchone()
+		date_expenses = date_expenses['date_expenses']
+
+		if (date_expenses == None):
+			cursor.close()
+			return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+									past_flights_info=past_flights_info, future_flights_info=future_flights_info, date_expenses="$0.00", start_date=start_date, end_date=end_date)
+
+		cursor.close()
+		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+								past_flights_info=past_flights_info, future_flights_info=future_flights_info, date_expenses=date_expenses, start_date=start_date, end_date=end_date)
+
 	cursor.close()
 	return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-							past_flights_info=past_flights_info, future_flights_info=future_flights_info)
+							past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses=year_expenses)
 
 @app.route('/agentHome')
 def agentHome():
