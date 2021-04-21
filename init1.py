@@ -235,9 +235,11 @@ def staffRegistrationAuth():
 def customerHome():
 	username = session['username']
 
-	# When a customer searches for flights
-	conduct_flight_search = False;
-	if ('package' in request.form and 'source' in request.form and'destination' in request.form and 'departure' in request.form and 'arrival' in request.form):	
+
+	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
+	# We know when a customer clicks this button if we recieve 'package', 'source', 'destination', 'departure', and 'arrival' in the the 'POST' Form
+	conduct_flight_search = False
+	if ('package' in request.form and 'source' in request.form and 'destination' in request.form and 'departure' in request.form and 'arrival' in request.form):	
 		conduct_flight_search = True
 		package = request.form['package']
 		source = request.form['source']
@@ -245,13 +247,18 @@ def customerHome():
 		departure = request.form['departure']
 		arrival = request.form['arrival']
 
-	# When books a customer flight that showed up in their search
+
+	# When a customer clicks the "Yes" button under 'Check Availability' for a certain flight, a ticket serarch will be conducted (conduct_ticket_search = True) for that flight.
+	# A purchase form will be revealed if there are tickets avaiable.
+	# We know when a customer clicks this button if we recieve 'flight_select' in the the 'POST' Form
 	conduct_ticket_search = False
 	if ('flight_select' in request.form):
 		conduct_ticket_search = True
 		flight_select = request.form['flight_select']
 
-	# When customer completes the purchase for a flight that showed up in their search
+
+	# When a customer clicks the "Purchase" button under 'Purchase Tickets', a ticket purchase will be conducted (conduct_ticket_purchase = True)
+	# We know when a customer clicks this button if we recieve 'flight_purchase', 'ticket', 'type', 'num', 'name', and 'exp' in the the 'POST' Form
 	conduct_ticket_purchase = False;
 	if ('flight_purchase' in request.form and 'ticket' in request.form and 'type' in request.form and 'num' in request.form and 'name' in request.form and 'exp' in request.form):	
 		conduct_ticket_purchase = True
@@ -262,11 +269,17 @@ def customerHome():
 		card_name = request.form['name']
 		card_exp = request.form['exp']	
 
-	reveal_rating_form = False
+
+	# When a customer clicks the "Yes" button under 'Rate and Review', a form will be revealed to the user under 'Review Previously Taken Flights' (reveal_review_form = True)
+	# We know when a customer clicks this button if we recieve 'flight_to_rate' in the the 'POST' Form
+	reveal_review_form = False
 	if ('flight_to_rate' in request.form):	
-		reveal_rating_form = True
+		reveal_review_form = True
 		flight_to_rate = request.form['flight_to_rate']
 
+
+	# When a customer clicks the "Submit" button under 'Review Previously Taken Flights', their review will be submitted (submit_rating = True)
+	# We know when a customer clicks this button if we recieve 'flight_rated' in the the 'POST' Form
 	submit_rating = False;
 	if ('flight_rated' in request.form and 'rating' in request.form and 'comment' in request.form):	
 		submit_rating = True;
@@ -274,15 +287,24 @@ def customerHome():
 		rating = request.form['rating']
 		comment = request.form['comment']
 
+
+	# When a customer clicks the "Search" button under 'My Spending', the program will determine how much money that customer spent between two user-specified dates (track_spending = True)
+	# We know when a customer clicks this button if we recieve 'start_date' and 'end_date' in the the 'POST' Form
 	track_spending = False;
 	if ('start_date' in request.form and 'end_date' in request.form):	
 		track_spending = True;
 		start_date = request.form['start_date']
 		end_date = request.form['end_date']
 
+
+	######################################################################THIS CODE RUNS EVERYTIME THE PAGE IS LOADED OR REFRESHED######################################################################
+
+
+	# establish connection with PHPMyAdmin
 	cursor = conn.cursor()
 	
-	# Finds all flights that a customer has purchased from Customer_Purchases Table
+
+	# When the page is loaded or refreshed, the program finds all flights that a customer has purchased from Customer_Purchases Table using their email
 	find_flights = 'SELECT flight_num, ticket_ID FROM Customer_Purchases WHERE cus_email = %s'
 	cursor.execute(find_flights, (username))
 	all_flights = cursor.fetchall()
@@ -293,10 +315,11 @@ def customerHome():
 
 	flightsOccured = []
 
-	# Finds additional information about each flight in Flight Table that isn't stored in Cutomer_Purchases Table
-	# Uses this information to also determine which flight is from the past or future
+
+	# When the page is loaded or refreshed, the program finds additinoal information about each flight that isn't stored in the Cutomer_Purchases Table using the Flight Table
 	for flight in all_flights:
 
+		# Prevents duplicate flight information from being selected
 		if (flight['flight_num'] not in flightsOccured):
 
 			find_all_flights_info = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
@@ -308,9 +331,12 @@ def customerHome():
 
 			flightsOccured.append(flight['flight_num'])
 
+
+	# When the page is loaded or refreshed, the program finds additinoal information about each PAST flight that isn't stored in the Cutomer_Purchases Table using the Flight Table
 	flightsOccured = []
 	for flight in all_flights:
 
+		# Prevents duplicate flight information from being selected
 		if (flight['flight_num'] not in flightsOccured):
 
 			find_past_flights_info = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
@@ -323,9 +349,12 @@ def customerHome():
 
 			flightsOccured.append(flight['flight_num'])
 
+
+	# When the page is loaded or refreshed, the program finds additinoal information about each FUTURE flight that isn't stored in the Cutomer_Purchases Table using the Flight Table
 	flightsOccured = []
 	for flight in all_flights:
 
+		# Prevents duplicate flight information from being selected
 		if (flight['flight_num'] not in flightsOccured):
 
 			find_future_flights_info = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
@@ -338,7 +367,23 @@ def customerHome():
 
 			flightsOccured.append(flight['flight_num'])
 
-	# Searches for flights
+
+	# When the page is loaded or refreshed, the program calculates the customer's expenses within the past year by finding the sum of the sold_prices for the tickets in the Customer_Purchases table using their email
+	calc_year_expenses = 'SELECT SUM(sold_price) AS year_expenses FROM Customer_Purchases WHERE cus_email = %s AND purchase_date > DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR)'
+	cursor.execute(calc_year_expenses, (username))
+	year_expenses = cursor.fetchone()
+	year_expenses = year_expenses['year_expenses']
+
+	if (year_expenses == None):
+		cursor.close()
+		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+							past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses='0.0')
+
+
+	######################################################################THIS CODE RUNS EVERYTIME THE PAGE IS LOADED OR REFRESHED######################################################################
+
+
+	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
 	if (conduct_flight_search == True):
 		search_flights = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
 						arrival_airport, arrival_date, arrival_time, base_price, flight_status FROM Flight \
@@ -349,9 +394,11 @@ def customerHome():
 
 		cursor.close()
 		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-								past_flights_info=past_flights_info, future_flights_info=future_flights_info, query_flights=query_flights)
+								past_flights_info=past_flights_info, future_flights_info=future_flights_info, query_flights=query_flights, year_expenses=year_expenses)
 
-	# Reveals a purchase form for the ticket if one is avaiable for the flight selected
+
+	# When a customer clicks the "Yes" button under 'Check Availability' for a certain flight, a ticket serarch will be conducted (conduct_ticket_search = True) for that flight.
+	# A purchase form will be revealed if there are tickets avaiable.
 	if (conduct_ticket_search == True):
 		search_tickets = 'SELECT ticket_ID FROM Ticket WHERE flight_num = %s AND is_purchased = "No"'
 		cursor.execute(search_tickets, (flight_select))
@@ -362,9 +409,11 @@ def customerHome():
 
 		cursor.close()
 		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-								past_flights_info=past_flights_info, future_flights_info=future_flights_info, flight_select=flight_select, tickets=tickets)
+								past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses=year_expenses, flight_select=flight_select, tickets=tickets)
 
-	# Completes purchase by updating the Ticket Table and inserting into Customer Purchases
+
+	# When a customer clicks the "Purchase" button under 'Purchase Tickets', a ticket purchase will be conducted (conduct_ticket_purchase = True)
+	# A purchase is completed by updating the ticket's is_Purchased field from 'No' to 'Yes' in the Ticket Table and inserting the customer's 'POST' form information into the Customer_Purchases table
 	if (conduct_ticket_purchase == True):
 		search_flights = 'SELECT base_price FROM Flight WHERE flight_num = %s'
 		cursor.execute(search_flights, (flight_purchase))
@@ -391,10 +440,12 @@ def customerHome():
 
 		cursor.close()
 		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-								past_flights_info=past_flights_info, future_flights_info=future_flights_info, purchase="Complete")
+								past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses=year_expenses, purchase="Complete")
 
-	# Reveals a purchase form for the ticket if one is avaiable for the flight selected
-	if (reveal_rating_form == True):
+
+	# When a customer clicks the "Yes" button under 'Rate and Review', a form will be revealed to the user under 'Review Previously Taken Flights' (reveal_review_form = True)
+	# A customer who has already reviewed a flight will not be able to review it again
+	if (reveal_review_form == True):
 		search_tickets = 'SELECT * FROM Review WHERE flight_num = %s AND cus_email = %s'
 		cursor.execute(search_tickets, (flight_to_rate, username))
 		isFlightRated = cursor.fetchall()
@@ -402,13 +453,14 @@ def customerHome():
 		if (not isFlightRated):
 			cursor.close()
 			return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-									past_flights_info=past_flights_info, future_flights_info=future_flights_info, flight_to_rate=flight_to_rate)
+									past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses=year_expenses, flight_to_rate=flight_to_rate)
 		else:
 			cursor.close()
 			return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-									past_flights_info=past_flights_info, future_flights_info=future_flights_info, flight_rated=flight_to_rate, review="Already Complete")
+									past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses=year_expenses, flight_rated=flight_to_rate, review="Already Complete")
 
 
+	# When a customer clicks the "Submit" button under 'Review Previously Taken Flights', their review will be submitted (submit_rating = True)
 	if (submit_rating == True):
 		change_ticket_status = 'INSERT INTO Review(cus_email, flight_num, rating, comment) VALUES(%s, %s, %s, %s)'
 		cursor.execute(change_ticket_status, (username, flight_rated, rating, comment))
@@ -416,18 +468,10 @@ def customerHome():
 
 		cursor.close()
 		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-							past_flights_info=past_flights_info, future_flights_info=future_flights_info, review="Complete")
+							past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses=year_expenses, review="Complete")
 	
-	calc_year_expenses = 'SELECT SUM(sold_price) AS year_expenses FROM Customer_Purchases WHERE cus_email = %s AND purchase_date > DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR)'
-	cursor.execute(calc_year_expenses, (username))
-	year_expenses = cursor.fetchone()
-	year_expenses = year_expenses['year_expenses']
-
-	if (year_expenses == None):
-		cursor.close()
-		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-							past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses='$0.00')
-
+	
+	# When a customer clicks the "Search" button under 'My Spending', the program will determine how much money that customer spent between two user-specified dates (track_spending = True)
 	if (track_spending == True):
 		calc_date_expenses = 'SELECT SUM(sold_price) AS date_expenses FROM Customer_Purchases WHERE cus_email = %s AND purchase_date > %s AND purchase_date < %s'
 		cursor.execute(calc_date_expenses, (username, start_date, end_date))
@@ -437,7 +481,7 @@ def customerHome():
 		if (date_expenses == None):
 			cursor.close()
 			return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-									past_flights_info=past_flights_info, future_flights_info=future_flights_info, date_expenses="$0.00", start_date=start_date, end_date=end_date)
+									past_flights_info=past_flights_info, future_flights_info=future_flights_info, date_expenses="0.0", start_date=start_date, end_date=end_date)
 
 		cursor.close()
 		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \

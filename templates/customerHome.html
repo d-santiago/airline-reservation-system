@@ -8,6 +8,7 @@
 
 		<h1>Welcome, {{ username }} </h1>
 
+		<!-- Displays all flights that the customer has purchased tickets for -->
 		<h2> All of My Flights </h2>
 
 		<table>
@@ -53,7 +54,7 @@
 		</table>
 
 
-
+		<!-- Displays all PAST flights that the customer has purchased tickets for -->
 		<h2> My Past Flights </h2>
 	
 		<table>
@@ -109,7 +110,7 @@
 		</table>
 
 
-
+		<!-- Displays all FUTURE flights that the customer has purchased tickets for -->
 		<h2> My Future Flights</h2>
 
 		<table>
@@ -161,7 +162,7 @@
 		</table>
 
 
-
+		<!-- Displays form for the customer to search for future flights -->
 		<h2> Search for and Purchase Flights </h2>
 
 		<form action="/customerHome" method="POST">
@@ -196,6 +197,8 @@
 			
 		</form>
 
+
+		<!-- Displays the flights generated from the 'Search for and Purchase Flights' form -->
 		{% if query_flights %}
 
 		<table>
@@ -232,7 +235,7 @@
 				<td>
 					<form action="/customerHome" method="POST">
 						<button type="submit" name="flight_select" value= {{ flight['flight_num'] }} > Yes </button>
-					<form>
+					</form>
 
 				</td>	
 			</tr>
@@ -244,9 +247,10 @@
 		{% endif %}
 
 		
-
+		<!-- Displays the tickets avaiable (if any) for the flight that the customer checked the avaiability -->
 		{% if tickets and tickets != "No Tickets" %}
 
+			<!-- If there are tickets avaiable, display the purchase form -->
 			<h2> Purchase Tickets </h2>
 			<!-- <h3 style="color: green"> Tickets are Available for Flight: {{flight_select}}. Complete Your Purchase Below </h3> -->
 			
@@ -260,8 +264,10 @@
 
 				Tickets (Select One or Multiple):
 				{% for ticket in tickets%}
+
 					<input type="checkbox" name="ticket" value= {{ ticket['ticket_ID'] }} />
 					TN-{{ ticket['ticket_ID'] }}
+
 				{% endfor %}
 
 				</br> </br>
@@ -281,9 +287,10 @@
 				Card Expiration Date:
 				<input type="date" min="2021-04-17" name="exp" placeholder="Card Expiration Date" required/> </br>  </br>
 
-				<input type="submit" value="Purchase Ticket" />
-			<form>
+				<input type="submit" value="Purchase" />
+			</form>
 
+		<!-- If there are no tickets avaiable, notify the user -->
 		{% elif tickets == "No Tickets" %}
 
 			<h4 style="color: red"> No Tickets Avaiable for Flight: {{flight_select}} </h4>
@@ -291,7 +298,7 @@
 		{% endif %}
 
 		
-
+		<!-- If the purchase is complete, notify the user -->
 		{% if purchase == "Complete" %}
 
 			<h2> Purchase Tickets </h2>
@@ -299,6 +306,8 @@
 
 		{% endif %}
 
+
+		<!-- When a customer clicks the "Yes" button under 'Rate and Review', a form will be revealed to the user -->
 		{% if flight_to_rate %}
 
 			<h2> Review Previously Taken Flights  </h2>
@@ -325,22 +334,32 @@
 
 		{% endif %}
 
+		
+		<!-- If the customer's review was submitted successfuly complete, they will notified -->
 		{% if review == "Complete" %}
+
 			<h2> Review Previously Taken Flights </h2>
 			<h4 style="color: green"> Review Complete </h4>
+
+		<!-- If the customer already reviewed the flight, they will notified -->
 		{% elif review == "Already Complete"%}
+
 			<h2> Review Previously Taken Flights </h2>
 			<h4 style="color: green"> You Have Already Reviewed Flight: {{flight_rated}}</h4>
+
 		{% endif %}
+
 
 		<h2> My Spending </h2>
 
+		<!-- The customer's expenses within the past year is displayed -->
 		{% if year_expenses %}
-			<h4> You Have Spent ${{year_expenses}} Within the Past Year: Use the Filter to Track your Spending Across Different Dates </h4>	
+			<h4> You Have Spent ${{year_expenses}}0 Within the Past Year: Use the Filter to Track your Spending Across Different Dates </h4>	
 		{% endif %}
 
+		<!-- If the customer submits the 'My Spending' form, their expenses within the past year will be displayed -->
 		{% if date_expenses %}
-			<h4> You Have Spent ${{date_expenses}} Between {{start_date}} and {{end_date}} </h4>
+			<h4> You Have Spent ${{date_expenses}}0 Between {{start_date}} and {{end_date}} </h4>
 		{% endif %}
 
 		<form action="/customerHome" method="POST">
