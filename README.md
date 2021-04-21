@@ -13,9 +13,11 @@
 1. Customer Logout
 1. Booking Agent Logout
 1. Airline Staff Logout
+1. View Public Information
+1. Get Flight Status
 
 ### To Do
-1. View Public Information
+1. View Public Information: Implement One Way/Round Trip
 
 ## Customer Use Cases
 

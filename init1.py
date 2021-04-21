@@ -15,9 +15,65 @@ conn = pymysql.connect(host='localhost',
                        charset='utf8mb4',
                        cursorclass=pymysql.cursors.DictCursor)
 
-#Define a route to hello function
-@app.route('/')
-def hello():
+#Define a route to index page
+@app.route('/', methods=['GET', 'POST'])
+def index():
+
+	# When a customer clicks the "Search" button under 'Search for Flights', a flight search will be conducted (conduct_flight_search = True)
+	# We know when a customer clicks this button if we recieve 'package', 'source', 'destination', 'departure', and 'arrival' in the the 'POST' Form
+	conduct_flight_search = False
+	if ('package' in request.form and 'source' in request.form and 'destination' in request.form and 'departure' in request.form and 'arrival' in request.form):	
+		conduct_flight_search = True
+		package = request.form['package']
+		source = request.form['source']
+		destination = request.form['destination']	
+		departure = request.form['departure']
+		arrival = request.form['arrival']
+
+
+	# When a customer clicks the "Search" button under 'Get Flight Status', a flight status search will be conducted (conduct_get_status = True)
+	# We know when a customer clicks this button if we recieve 'airline_name', 'flight_num', 'departure', and 'arrival' in the the 'POST' Form
+	get_flight_status = False
+	if ('airline_name' in request.form and 'flight_num' in request.form and 'departure' in request.form and 'arrival' in request.form):	
+		get_flight_status = True
+		airline_name = request.form['airline_name']
+		flight_num = request.form['flight_num']
+		departure = request.form['departure']
+		arrival = request.form['arrival']
+	
+
+	# establish connection with PHPMyAdmin
+	cursor = conn.cursor()
+
+
+	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
+	if (conduct_flight_search == True):
+		search_flights = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
+						arrival_airport, arrival_date, arrival_time, base_price, flight_status FROM Flight \
+						WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s'
+						
+		cursor.execute(search_flights, (source, destination, departure, arrival))
+		query_flights = cursor.fetchall()
+
+		cursor.close()
+		return render_template('index.html', query_flights=query_flights)
+
+
+	# When a customer clicks the "Search" button under 'Get Flight Status', a flight status search will be conducted (conduct_get_status = True)
+	if (get_flight_status == True):
+		search_flights = 'SELECT flight_status FROM Flight WHERE airline_name = %s AND flight_num = %s AND departure_date = %s AND arrival_date = %s'				
+		cursor.execute(search_flights, (airline_name, flight_num, departure, arrival))
+		flight_status = cursor.fetchone()
+
+		if (not flight_status):
+			cursor.close()
+			return render_template('index.html', flight_num=flight_num, flight_status="No Results")
+
+		flight_status = flight_status['flight_status']
+		cursor.close()
+		return render_template('index.html', flight_num=flight_num, flight_status=flight_status)
+
+
 	return render_template('index.html')
 
 #Define route for the Customer's login
@@ -487,6 +543,8 @@ def customerHome():
 		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
 								past_flights_info=past_flights_info, future_flights_info=future_flights_info, date_expenses=date_expenses, start_date=start_date, end_date=end_date)
 
+
+	# Returns default information that is displayed each time the page is loaded or refreshed
 	cursor.close()
 	return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
 							past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses=year_expenses)

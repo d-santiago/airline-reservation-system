@@ -6,6 +6,129 @@
 
 	<body>
 
+		<!-- Displays form for the customer to search for future flights -->
+		<h2> Search for Flights </h2>
+
+		<form action="/" method="POST">
+			Flight Package:
+			<select name="package" required>
+				<option value="select"> Select </option>
+				<option value="One Way"> One Way </option>
+				<option value="Round Trip"> Round Trip </option>
+			</select>
+
+			Departure City:
+			<select name="source" required>
+				<option value="select"> Select </option>
+				<option value="JFK"> New York / JFK </option>
+				<option value="PVG"> Shanghai / PVG </option>
+			</select>
+
+			Destination City:
+			<select name="destination" required>
+				<option value="select"> Select </option>
+				<option value="JFK"> New York / JFK </option>
+				<option value="PVG"> Shanghai / PVG </option>
+			</select>
+
+			Departure Date:
+			<input type="date" min="2021-04-20" name="departure" required>
+
+			Arrival Date:
+			<input type="date" min="2021-04-20" name="arrival" required>
+
+			<input type="submit" value=Search />
+			
+		</form>
+
+
+		<!-- Displays the flights generated from the 'Search for and Purchase Flights' form -->
+		{% if query_flights %}
+
+		<table>
+
+			<tr>
+				<td> Flight Number </td>
+				<td> Airline Name </td>
+				<td> Airplane ID </td>
+				<td> Departure Airport </td>
+				<td> Departure Date </td>
+				<td> Departure Time </td>
+				<td> Arrival Airport </td>
+				<td> Arrival Date </td>
+				<td> Arrival Time </td>
+				<td> Price </td>
+				<td> Flight Status </td>
+			</tr>
+
+			{% for flight in query_flights %}
+
+			<tr>
+				<td> {{ flight['flight_num'] }} </td>
+				<td> {{ flight['airline_name'] }} </td>
+				<td> {{ flight['airplane_ID'] }} </td>
+				<td> {{ flight['departure_airport'] }} </td>
+				<td> {{ flight['departure_date'] }} </td>
+				<td> {{ flight['departure_time'] }} </td>
+				<td> {{ flight['arrival_airport'] }} </td>
+				<td> {{ flight['arrival_date'] }} </td>
+				<td> {{ flight['arrival_time'] }} </td>
+				<td> {{ flight['base_price'] }} </td>	
+				<td> {{ flight['flight_status'] }} </td>
+			</tr>
+
+			{% endfor %}	
+
+		</table>
+
+		{% endif %}
+
+
+		<hr>
+		
+
+		<h2> Get Flight Status </h2>
+
+		<form action="/" method="POST">
+
+			Airline Name:
+			<select name="airline_name" required>
+				<option value="select"> Select </option>
+				<option value="China Eastern"> China Eastern </option>
+			</select>
+
+			Flight Number:
+			<select name="flight_num" required>
+				<option value="select"> Select </option>
+				<option value="FN-1"> FN-1 </option>
+				<option value="FN-2"> FN-2 </option>
+				<option value="FN-3"> FN-3 </option>
+			</select>
+
+			Departure Date:
+			<input type="date" min="2021-04-20" name="departure" required>
+
+			Arrival Date:
+			<input type="date" min="2021-04-20" name="arrival" required>
+
+			<input type="submit" value=Search />
+			
+		</form>
+
+		<!-- Displays the flight_status of a specified flight (if valid) -->
+		{% if flight_status == "On Time" or flight_status == "Delayed" %}
+			<h4 style="color: green"> Flight {{flight_num}} is {{flight_status}} </h4>
+				
+		<!-- Notfies the user if the flight is not valid -->
+		{% elif flight_status == "No Results" %}
+			<h4 style="color: red"> {{flight_status}} </h4>
+
+		{% endif %}
+
+
+		<hr>
+		
+
 		{% if not message %}
 			<!-- <a href="/login.html">Login</a> -->
 			<a href="/customerLogin">Customer Login</a> <br>
