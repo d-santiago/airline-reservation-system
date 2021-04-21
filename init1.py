@@ -274,31 +274,52 @@ def customerHome():
 	past_flights_info = []
 	future_flights_info = []
 
-	# Finds additional information about each flight in Flight Table that ism't stores in Cutomer_Purchases Table
+	flightsOccured = [];
+
+	# Finds additional information about each flight in Flight Table that isn't stored in Cutomer_Purchases Table
 	# Uses this information to also determine which flight is from the past or future
 	for flight in all_flights:
-		find_all_flights_info = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
-								arrival_airport, arrival_date, arrival_time FROM Flight WHERE flight_num = %s'
 
-		cursor.execute(find_all_flights_info, (flight['flight_num']))
-		flight_info = cursor.fetchone()
-		all_flights_info.append(flight_info)
+		if (flight['flight_num'] not in flightsOccured):
 
-		find_past_flights_info = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
-								arrival_airport, arrival_date, arrival_time FROM Flight WHERE flight_num = %s \
-								AND departure_date < DATE(NOW())'
+			find_all_flights_info = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
+									arrival_airport, arrival_date, arrival_time FROM Flight WHERE flight_num = %s'
 
-		cursor.execute(find_past_flights_info, (flight['flight_num']))
-		flight_info = cursor.fetchone()
-		past_flights_info.append(flight_info)
+			cursor.execute(find_all_flights_info, (flight['flight_num']))
+			flight_info = cursor.fetchone()
+			all_flights_info.append(flight_info)
 
-		find_future_flights_info = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
-									arrival_airport, arrival_date, arrival_time, flight_status FROM Flight WHERE flight_num = %s \
-									AND departure_date > DATE(NOW())'
+			flightsOccured.append(flight['flight_num']);
 
-		cursor.execute(find_future_flights_info, (flight['flight_num']))
-		flight_info = cursor.fetchone()
-		future_flights_info.append(flight_info)
+	flightsOccured = [];
+	for flight in all_flights:
+
+		if (flight['flight_num'] not in flightsOccured):
+
+			find_past_flights_info = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
+									arrival_airport, arrival_date, arrival_time FROM Flight WHERE flight_num = %s \
+									AND departure_date < DATE(NOW())'
+
+			cursor.execute(find_past_flights_info, (flight['flight_num']))
+			flight_info = cursor.fetchone()
+			past_flights_info.append(flight_info)
+
+			flightsOccured.append(flight['flight_num']);
+
+	flightsOccured = [];
+	for flight in all_flights:
+
+		if (flight['flight_num'] not in flightsOccured):
+
+			find_future_flights_info = 'SELECT flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
+										arrival_airport, arrival_date, arrival_time, flight_status FROM Flight WHERE flight_num = %s \
+										AND departure_date > DATE(NOW())'
+
+			cursor.execute(find_future_flights_info, (flight['flight_num']))
+			flight_info = cursor.fetchone()
+			future_flights_info.append(flight_info)
+
+			flightsOccured.append(flight['flight_num']);
 
 	# Searches for flights
 	if (conduct_flight_search == True):
@@ -335,14 +356,22 @@ def customerHome():
 		# Need to implement: calculating the sold price
 
 		for ticket_ID in ticket_IDs:
-			change_ticket_status = 'UPDATE Ticket SET is_purchased = "Yes" WHERE ticket_ID = %s'
-			cursor.execute(change_ticket_status, (ticket_ID))
-			conn.commit()
 
-			insert_purchase = 'INSERT INTO CUSTOMER_PURCHASES (cus_email, ticket_ID, flight_num, sold_price, card_type, card_num, card_name, card_exp_date, \
-								purchase_date, purchase_time, agent_ID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, DATE(NOW()), TIME(NOW()), NULL)'
-			cursor.execute(insert_purchase, (username, ticket_ID, flight_purchase, base_price, card_type, card_num, card_name, card_exp))
-			conn.commit()
+			search_tickets = 'SELECT is_Purchased FROM Ticket WHERE ticket_ID = %s'
+			cursor.execute(search_tickets, (ticket_ID))
+			is_Purchased = cursor.fetchone()
+			is_Purchased = is_Purchased['is_Purchased']
+
+			if(is_Purchased == "No"):
+
+				change_ticket_status = 'UPDATE Ticket SET is_purchased = "Yes" WHERE ticket_ID = %s AND is_purchased = "No"'
+				cursor.execute(change_ticket_status, (ticket_ID))
+				conn.commit()
+
+				insert_purchase = 'INSERT INTO CUSTOMER_PURCHASES (cus_email, ticket_ID, flight_num, sold_price, card_type, card_num, card_name, card_exp_date, \
+									purchase_date, purchase_time, agent_ID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, DATE(NOW()), TIME(NOW()), NULL)'
+				cursor.execute(insert_purchase, (username, ticket_ID, flight_purchase, base_price, card_type, card_num, card_name, card_exp))
+				conn.commit()
 
 		cursor.close()
 		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \

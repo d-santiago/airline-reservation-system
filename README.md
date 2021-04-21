@@ -20,32 +20,34 @@
 
 ### Complete
 
-1. View My Flights (All, Future, Past)
-1. Search for flights (Did not implement One Way/Round Trip Option)
+1. View My Flights
+1. Search for Flights (Did not implement One Way/Round Trip Option)
+1. Purchase Tickets (Did not implement sold price calculation)
 
 ### In Progress
-1. Purchase Tickets
-    1. Sold price calculation needs to be implemented
-    1. After purchase, each time the the page is refreshed the number of flights displayed duplicates
+1. Give Ratings and Comment on previous flights
 
 ### To Do
 1. Give Ratings and Comment on previous flights
 1. Track My Spending
+1. Implement One Way/Round Trip Option for Search for Flights
+1. Implement 
 
 ------------------------------------------------------------------------------------------------------
 
 ## Booking Agent Use Cases
 
 ### To Do
-1. View My Flights (All, Future, Past)
+1. View My Flights
 1. Search for Flights
+1. Purchase Tickets
 1. View my Commission
 1. View Top Customers
 
 ## Airline Staff Use Cases
 
 ### To Do
-1. View Flights (All, Past, Future)
+1. View Flights
 1. Create New Flights
 1. Change Status of Flights
 1. Add Airplane in the System

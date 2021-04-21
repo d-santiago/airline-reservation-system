@@ -45,7 +45,7 @@
 					<tr>
 
 					{% endif %}
-					
+
 				{% endfor %}
 				
 			{% endfor %}
@@ -180,10 +180,10 @@
 			</select>
 
 			Departure Date:
-			<input type="date" min="2021-04-17" name="departure" required>
+			<input type="date" min="2021-04-19" name="departure" required>
 
 			Arrival Date:
-			<input type="date" min="2021-04-17" name="arrival" required>
+			<input type="date" min="2021-04-19" name="arrival" required>
 
 			<input type="submit" value=Search />
 			
@@ -242,7 +242,7 @@
 
 		{% endif %}
 
-		{% if tickets %}
+		{% if tickets and tickets != "No Tickets" %}
 
 			<h4 style="color: green"> Tickets are Available for Flight: {{flight_select}} </h4>
 			<h4 style="color: green"> Complete Your Purchase Below for Flight: {{flight_select}} </h4>
@@ -270,7 +270,7 @@
 
 		{% elif tickets == "No Tickets" %}
 
-			<h4 style="color: red"> No Tickets Avaiable for Flight: {{check}} </h4>
+			<h4 style="color: red"> No Tickets Avaiable for Flight: {{flight_select}} </h4>
 
 		{% endif %}
 
