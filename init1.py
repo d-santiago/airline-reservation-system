@@ -247,10 +247,9 @@ def customerHome():
 
 	# When books a customer flight that showed up in their search
 	conduct_ticket_search = False;
-	if ('flight_select' in request.form):	
+	if ('flight_select' in request.form):
+		conduct_ticket_search = True;	
 		flight_select = request.form['flight_select']
-		if (flight_select != "no"):
-			conduct_ticket_search = True;
 
 	# When customer completes the purchase for a flight that showed up in their search
 	conduct_ticket_purchase = False;
@@ -274,7 +273,7 @@ def customerHome():
 	past_flights_info = []
 	future_flights_info = []
 
-	flightsOccured = [];
+	flightsOccured = []
 
 	# Finds additional information about each flight in Flight Table that isn't stored in Cutomer_Purchases Table
 	# Uses this information to also determine which flight is from the past or future
@@ -289,9 +288,9 @@ def customerHome():
 			flight_info = cursor.fetchone()
 			all_flights_info.append(flight_info)
 
-			flightsOccured.append(flight['flight_num']);
+			flightsOccured.append(flight['flight_num'])
 
-	flightsOccured = [];
+	flightsOccured = []
 	for flight in all_flights:
 
 		if (flight['flight_num'] not in flightsOccured):
@@ -304,9 +303,9 @@ def customerHome():
 			flight_info = cursor.fetchone()
 			past_flights_info.append(flight_info)
 
-			flightsOccured.append(flight['flight_num']);
+			flightsOccured.append(flight['flight_num'])
 
-	flightsOccured = [];
+	flightsOccured = []
 	for flight in all_flights:
 
 		if (flight['flight_num'] not in flightsOccured):
@@ -319,7 +318,7 @@ def customerHome():
 			flight_info = cursor.fetchone()
 			future_flights_info.append(flight_info)
 
-			flightsOccured.append(flight['flight_num']);
+			flightsOccured.append(flight['flight_num'])
 
 	# Searches for flights
 	if (conduct_flight_search == True):

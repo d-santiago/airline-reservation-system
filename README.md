@@ -21,17 +21,16 @@
 ### Complete
 
 1. View My Flights
-1. Search for Flights (Did not implement One Way/Round Trip Option)
-1. Purchase Tickets (Did not implement sold price calculation)
+1. Search for Flights
+1. Purchase Tickets
 
 ### In Progress
 1. Give Ratings and Comment on previous flights
 
 ### To Do
-1. Give Ratings and Comment on previous flights
 1. Track My Spending
-1. Implement One Way/Round Trip Option for Search for Flights
-1. Implement 
+1. Search for Flights: Implement One Way/Round Trip
+1. Purchase Tickets: Implement Sold Price Calculation
 
 ------------------------------------------------------------------------------------------------------
 

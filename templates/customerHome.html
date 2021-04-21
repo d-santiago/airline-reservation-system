@@ -8,7 +8,7 @@
 
 		<h1>Welcome, {{ username }} </h1>
 
-		<h3> View All My Flights </h3>
+		<h2> View All My Flights </h2>
 
 		<table>
 
@@ -54,7 +54,7 @@
 
 
 
-		<h3> View My Past Flights </h3>
+		<h2> View My Past Flights </h2>
 	
 		<table>
 
@@ -69,6 +69,8 @@
 				<td> Arrival Airport </td>
 				<td> Arrival Date </td>
 				<td> Arrival Time </td>
+				<td> Rate and Review </td>
+
 			</tr>
 
 
@@ -89,6 +91,19 @@
 						<td> {{ flight_info['arrival_airport'] }} </td>
 						<td> {{ flight_info['arrival_date'] }} </td>
 						<td> {{ flight_info['arrival_time'] }} </td>
+						<td>
+							<form action="/customerHome" method="POST">
+								<select name="rating" required>
+									<option value="5"> 5 Stars </option>
+									<option value="4"> 4 Stars </option>
+									<option value="3"> 3 Star </option>
+									<option value="2"> 2 Stars </option>
+									<option value="1"> 1 Star </option>
+								</select>
+								<input type="text" name="review" placeholder="Review"/>
+								<input type="submit" value=Post />
+							<form>
+						</td>
 					<tr>
 
 					{% endif %}
@@ -103,7 +118,7 @@
 
 
 
-		<h3> View My Future Flights</h3>
+		<h2> View My Future Flights</h2>
 
 		<table>
 
@@ -155,7 +170,7 @@
 
 
 
-		<h3> Search for Flights </h3>
+		<h2> Search for Flights </h2>
 
 		<form action="/customerHome" method="POST">
 			Flight Package:
@@ -224,13 +239,7 @@
 				<td> {{ flight['flight_status'] }} </td>
 				<td>
 					<form action="/customerHome" method="POST">
-
-						<select name="flight_select" required>
-							<option value= {{ flight['flight_num'] }} > Yes </option>
-							<option value="no"> No </option>
-						</select>
-						<input type="submit" value="Check Availability" />
-
+						<button type="submit" name="flight_select" value= {{ flight['flight_num'] }} > Yes </button>
 					<form>
 
 				</td>	
@@ -242,10 +251,12 @@
 
 		{% endif %}
 
+		
+
 		{% if tickets and tickets != "No Tickets" %}
 
-			<h4 style="color: green"> Tickets are Available for Flight: {{flight_select}} </h4>
-			<h4 style="color: green"> Complete Your Purchase Below for Flight: {{flight_select}} </h4>
+			<h2> Purchase Tickets </h2>
+			<h4 style="color: green"> Tickets are Available for Flight: {{flight_select}}. Complete Your Purchase Below </h4>
 
 			<form action="/customerHome" method="POST">
 				<select name="flight_purchase" required>
@@ -274,15 +285,18 @@
 
 		{% endif %}
 
+		
+
 		{% if purchase == "Complete" %}
 
+			<h2> Purchase Tickets </h2>
 			<h4 style="color: green"> Purchase Complete </h4>
 
 		{% endif %}
 
-		<h3> Rate and Comment on Previous Flights </h3>
 
-		<h3> Track My Spending </h3>
+
+		<h2> Track My Spending </h2>
 
 		<a href="/logout">Logout</a>
 
