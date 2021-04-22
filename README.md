@@ -35,9 +35,9 @@
 1. View My Flights
 1. Search for Flights
 1. Purchase Tickets
+1. View my Commission
 
 ### To Do
-1. View my Commission
 1. View Top Customers
 
 ## Airline Staff Use Cases

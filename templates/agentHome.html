@@ -321,6 +321,33 @@
 
 		</br>
 
+		<!-- Displays form for the customer to search for future flights -->
+		<hr>
+		<h2> My Commission </h2>
+
+
+		<!-- The customer's expenses within the past year is displayed -->
+		{% if year_commission %}
+			<h4> You Have Made ${{year_commission}}0 Within the Past 30 Days. Use the Filter to Track your Commission Across Different Dates </h4>	
+		{% endif %}
+
+		<!-- If the customer submits the 'My Spending' form, their expenses within the past year will be displayed -->
+		{% if date_commission %}
+			<h4> You Have Made ${{date_commission}}0 Between {{start_date}} and {{end_date}} </h4>
+		{% endif %}
+
+		<form action="/agentHome" method="POST">
+			Start Date:
+			<input type="date" name="start_date" required>
+
+			End Date:
+			<input type="date" name="end_date" required>
+
+			<input type="submit" value=Search />		
+		</form> </br>
+
+
+		<hr>
 		<a href="/agentLogout">Logout</a>
 
 	</body>
