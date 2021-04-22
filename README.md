@@ -27,10 +27,7 @@
 1. Track My Spending
 
 ### To Do
-1. Purchase Tickets: Implement Sold Price Calculation
 1. Track My Spending: Bar Graphs
-
-------------------------------------------------------------------------------------------------------
 
 ## Booking Agent Use Cases
 

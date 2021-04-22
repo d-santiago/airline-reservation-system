@@ -466,13 +466,42 @@ def customerHome():
 	# When a customer clicks the "Purchase" button under 'Purchase Tickets', a ticket purchase will be conducted (conduct_ticket_purchase = True)
 	# A purchase is completed by updating the ticket's is_Purchased field from 'No' to 'Yes' in the Ticket Table and inserting the customer's 'POST' form information into the Customer_Purchases table
 	if (conduct_ticket_purchase == True):
-		search_flights = 'SELECT base_price FROM Flight WHERE flight_num = %s'
-		cursor.execute(search_flights, (flight_purchase))
-		base_price = cursor.fetchone()
-		base_price = base_price['base_price']
-		# Need to implement: calculating the sold price
+		
+		# find airplane id for flight num
+		# using airplne id, find seats of that plane
+		# divide tickets/seats * 100
+		# if > 70, sold_price = base price * 1.2, else base_price = base_price
 
 		for ticket_ID in ticket_IDs:
+
+			# Find the base_price and airplane_ID for the flight
+			find_flight_info = 'SELECT base_price, airplane_ID FROM Flight WHERE flight_num = %s'
+			cursor.execute(find_flight_info, (flight_purchase))
+			flight_info = cursor.fetchone()
+			base_price = flight_info['base_price']
+			airplane_ID = flight_info['airplane_ID']
+
+			# Using the airplane_ID, finr the seats on that plane
+			find_seats = 'SELECT seats FROM Airplane WHERE airplane_ID = %s'
+			cursor.execute(find_seats, (airplane_ID))
+			seats = cursor.fetchone()
+			seats = int(seats['seats'])
+
+			# Count the number of tickets purchased for the flight
+			find_seats = 'SELECT COUNT(ticket_ID) AS tickets_purchased FROM Customer_Purchases WHERE flight_num = %s'
+			cursor.execute(find_seats, (flight_purchase))
+			tickets_purchased = cursor.fetchone()
+			tickets_purchased = int(tickets_purchased['tickets_purchased'])
+
+			# Determine the capacity of the flight by dividing the number of tickets purchased by the number of seats on the airplane
+			capacity = (tickets_purchased / seats) * 100
+
+			# If the capacity of the flight> 70, the sold price is 1.2 * base_price
+			if(capacity > 70):
+				sold_price = base_price * 1.2
+			else:
+				sold_price = base_price
+
 			search_tickets = 'SELECT is_Purchased FROM Ticket WHERE ticket_ID = %s'
 			cursor.execute(search_tickets, (ticket_ID))
 			is_Purchased = cursor.fetchone()
@@ -486,8 +515,8 @@ def customerHome():
 
 				insert_purchase = 'INSERT INTO CUSTOMER_PURCHASES (cus_email, ticket_ID, flight_num, sold_price, card_type, card_num, card_name, card_exp_date, \
 									purchase_date, purchase_time, agent_ID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, DATE(NOW()), TIME(NOW()), NULL)'
-									
-				cursor.execute(insert_purchase, (username, ticket_ID, flight_purchase, base_price, card_type, card_num, card_name, card_exp))
+
+				cursor.execute(insert_purchase, (username, ticket_ID, flight_purchase, sold_price, card_type, card_num, card_name, card_exp))
 				conn.commit()
 
 		cursor.close()

@@ -68,7 +68,6 @@ CREATE TABLE Flight(
     arrival_date DATE NOT NULL,
     arrival_time TIME NOT NULL,
     base_price VARCHAR(8) NOT NULL,
-    seats_available VARCHAR(3) NOT NULL,
     flight_status VARCHAR(50) NOT NULL,
     trip_type VARCHAR(50) NOT NULL,
     PRIMARY KEY(flight_num, departure_date, departure_time),
