@@ -31,10 +31,12 @@
 
 ## Booking Agent Use Cases
 
-### To Do
+### Complete
 1. View My Flights
 1. Search for Flights
 1. Purchase Tickets
+
+### To Do
 1. View my Commission
 1. View Top Customers
 

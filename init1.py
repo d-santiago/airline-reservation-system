@@ -356,11 +356,9 @@ def customerHome():
 
 	######################################################################THIS CODE RUNS EVERYTIME THE PAGE IS LOADED OR REFRESHED######################################################################
 
-
 	# establish connection with PHPMyAdmin
 	cursor = conn.cursor()
 	
-
 	# When the page is loaded or refreshed, the program finds all flights that a customer has purchased from Customer_Purchases Table using their email
 	find_flights = 'SELECT flight_num, ticket_ID FROM Customer_Purchases WHERE cus_email = %s'
 	cursor.execute(find_flights, (username))
@@ -371,7 +369,6 @@ def customerHome():
 	future_flights_info = []
 
 	flightsOccured = []
-
 
 	# When the page is loaded or refreshed, the program finds additinoal information about each flight that isn't stored in the Cutomer_Purchases Table using the Flight Table
 	for flight in all_flights:
@@ -429,7 +426,6 @@ def customerHome():
 	if (year_expenses == None):
 		year_expenses='0.0'
 		
-
 	######################################################################THIS CODE RUNS EVERYTIME THE PAGE IS LOADED OR REFRESHED######################################################################
 
 
@@ -466,41 +462,8 @@ def customerHome():
 	# When a customer clicks the "Purchase" button under 'Purchase Tickets', a ticket purchase will be conducted (conduct_ticket_purchase = True)
 	# A purchase is completed by updating the ticket's is_Purchased field from 'No' to 'Yes' in the Ticket Table and inserting the customer's 'POST' form information into the Customer_Purchases table
 	if (conduct_ticket_purchase == True):
-		
-		# find airplane id for flight num
-		# using airplne id, find seats of that plane
-		# divide tickets/seats * 100
-		# if > 70, sold_price = base price * 1.2, else base_price = base_price
 
 		for ticket_ID in ticket_IDs:
-
-			# Find the base_price and airplane_ID for the flight
-			find_flight_info = 'SELECT base_price, airplane_ID FROM Flight WHERE flight_num = %s'
-			cursor.execute(find_flight_info, (flight_purchase))
-			flight_info = cursor.fetchone()
-			base_price = flight_info['base_price']
-			airplane_ID = flight_info['airplane_ID']
-
-			# Using the airplane_ID, finr the seats on that plane
-			find_seats = 'SELECT seats FROM Airplane WHERE airplane_ID = %s'
-			cursor.execute(find_seats, (airplane_ID))
-			seats = cursor.fetchone()
-			seats = int(seats['seats'])
-
-			# Count the number of tickets purchased for the flight
-			find_seats = 'SELECT COUNT(ticket_ID) AS tickets_purchased FROM Customer_Purchases WHERE flight_num = %s'
-			cursor.execute(find_seats, (flight_purchase))
-			tickets_purchased = cursor.fetchone()
-			tickets_purchased = int(tickets_purchased['tickets_purchased'])
-
-			# Determine the capacity of the flight by dividing the number of tickets purchased by the number of seats on the airplane
-			capacity = (tickets_purchased / seats) * 100
-
-			# If the capacity of the flight> 70, the sold price is 1.2 * base_price
-			if(capacity > 70):
-				sold_price = base_price * 1.2
-			else:
-				sold_price = base_price
 
 			search_tickets = 'SELECT is_Purchased FROM Ticket WHERE ticket_ID = %s'
 			cursor.execute(search_tickets, (ticket_ID))
@@ -512,6 +475,34 @@ def customerHome():
 				change_ticket_status = 'UPDATE Ticket SET is_purchased = "Yes" WHERE ticket_ID = %s AND is_purchased = "No"'
 				cursor.execute(change_ticket_status, (ticket_ID))
 				conn.commit()
+
+				# Find the base_price and airplane_ID for the flight
+				find_flight_info = 'SELECT base_price, airplane_ID FROM Flight WHERE flight_num = %s'
+				cursor.execute(find_flight_info, (flight_purchase))
+				flight_info = cursor.fetchone()
+				base_price = flight_info['base_price']
+				airplane_ID = flight_info['airplane_ID']
+
+				# Using the airplane_ID, finr the seats on that plane
+				find_seats = 'SELECT seats FROM Airplane WHERE airplane_ID = %s'
+				cursor.execute(find_seats, (airplane_ID))
+				seats = cursor.fetchone()
+				seats = int(seats['seats'])
+
+				# Count the number of tickets purchased for the flight
+				count_tickets_purchased = 'SELECT COUNT(ticket_ID) AS tickets_purchased FROM Customer_Purchases WHERE flight_num = %s'
+				cursor.execute(count_tickets_purchased, (flight_purchase))
+				tickets_purchased = cursor.fetchone()
+				tickets_purchased = int(tickets_purchased['tickets_purchased'])
+
+				# Determine the capacity of the flight by dividing the number of tickets purchased by the number of seats on the airplane
+				capacity = (tickets_purchased / seats) * 100
+
+				# If the capacity of the flight> 70, the sold price is 1.2 * base_price
+				if(capacity > 70):
+					sold_price = base_price * 1.2
+				else:
+					sold_price = base_price
 
 				insert_purchase = 'INSERT INTO CUSTOMER_PURCHASES (cus_email, ticket_ID, flight_num, sold_price, card_type, card_num, card_name, card_exp_date, \
 									purchase_date, purchase_time, agent_ID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, DATE(NOW()), TIME(NOW()), NULL)'
@@ -572,10 +563,208 @@ def customerHome():
 	return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
 							past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses=year_expenses)
 
-@app.route('/agentHome')
+@app.route('/agentHome', methods=['GET', 'POST'])
 def agentHome():
 	username = session['username']
-	return render_template('agentHome.html')
+
+	# When a booking agent clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
+	# We know when a booking agent clicks this button if we recieve 'trip_type', 'source', 'destination', 'departure', and 'arrival' in the the 'POST' Form
+	conduct_flight_search = False
+	if ('trip_type' in request.form and 'source' in request.form and 'destination' in request.form and 'departure' in request.form and 'arrival' in request.form):	
+		conduct_flight_search = True
+		trip_type = request.form['trip_type']
+		source = request.form['source']
+		destination = request.form['destination']	
+		departure = request.form['departure']
+		arrival = request.form['arrival']
+
+
+	# When a booking agent clicks the "Yes" button under 'Check Availability' for a certain flight, a ticket serarch will be conducted (conduct_ticket_search = True) for that flight.
+	# A purchase form will be revealed if there are tickets avaiable.
+	# We know when a booking agent clicks this button if we recieve 'flight_select' in the the 'POST' Form
+	conduct_ticket_search = False
+	if ('flight_select' in request.form):
+		conduct_ticket_search = True
+		flight_select = request.form['flight_select']
+
+
+	# When a booking agent clicks the "Purchase" button under 'Purchase Tickets', a ticket purchase will be conducted (conduct_ticket_purchase = True)
+	# We know when a booking agent clicks this button if we recieve 'flight_purchase', 'ticket', 'type', 'num', 'name', and 'exp' in the the 'POST' Form
+	conduct_ticket_purchase = False;
+	if ('flight_purchase' in request.form and 'cus_email' in request.form and 'ticket' in request.form and 'type' in request.form and 'num' in request.form and 'name' in request.form and 'exp' in request.form):	
+		conduct_ticket_purchase = True
+		flight_purchase = request.form['flight_purchase']
+		cus_email = request.form['cus_email']
+		ticket_IDs = request.form.getlist('ticket')
+		card_type = request.form['type']
+		card_num = request.form['num']
+		card_name = request.form['name']
+		card_exp = request.form['exp']	
+
+
+	######################################################################THIS CODE RUNS EVERYTIME THE PAGE IS LOADED OR REFRESHED######################################################################
+
+	# establish connection with PHPMyAdmin
+	cursor = conn.cursor()
+	
+	# When the page is loaded or refreshed, the program finds the agent_ID of the booking agent using their email in the Customer_Purchases Table
+	find_agent_ID = 'SELECT agent_ID FROM Booking_Agent WHERE agent_email = %s'
+	cursor.execute(find_agent_ID, (username))
+	agent_ID = cursor.fetchone()
+	agent_ID = agent_ID['agent_ID']	
+
+	# When the page is loaded or refreshed, the program finds all flights that a booking agent has purchased from Customer_Purchases Table using their email
+	find_flights = 'SELECT cus_email, flight_num, ticket_ID FROM Customer_Purchases WHERE agent_ID = %s'
+	cursor.execute(find_flights, (agent_ID))
+	all_flights = cursor.fetchall()
+
+	all_flights_info = []
+	past_flights_info = []
+	future_flights_info = []
+
+	flightsOccured = []
+
+	# When the page is loaded or refreshed, the program finds additinoal information about each flight that isn't stored in the Cutomer_Purchases Table using the Flight Table
+	for flight in all_flights:
+
+		# Prevents duplicate flight information from being selected
+		if (flight['flight_num'] not in flightsOccured):
+
+			find_all_flights_info = 'SELECT * FROM Flight WHERE flight_num = %s'
+
+			cursor.execute(find_all_flights_info, (flight['flight_num']))
+			flight_info = cursor.fetchone()
+			all_flights_info.append(flight_info)
+
+			flightsOccured.append(flight['flight_num'])
+
+
+	# When the page is loaded or refreshed, the program finds additinoal information about each PAST flight that isn't stored in the Cutomer_Purchases Table using the Flight Table
+	flightsOccured = []
+	for flight in all_flights:
+
+		# Prevents duplicate flight information from being selected
+		if (flight['flight_num'] not in flightsOccured):
+
+			find_past_flights_info = 'SELECT * FROM Flight WHERE flight_num = %s AND departure_date < DATE(NOW())'
+
+			cursor.execute(find_past_flights_info, (flight['flight_num']))
+			flight_info = cursor.fetchone()
+			past_flights_info.append(flight_info)
+
+			flightsOccured.append(flight['flight_num'])
+
+
+	# When the page is loaded or refreshed, the program finds additinoal information about each FUTURE flight that isn't stored in the Cutomer_Purchases Table using the Flight Table
+	flightsOccured = []
+	for flight in all_flights:
+
+		# Prevents duplicate flight information from being selected
+		if (flight['flight_num'] not in flightsOccured):
+
+			find_future_flights_info = 'SELECT * FROM Flight WHERE flight_num = %s AND departure_date > DATE(NOW())'
+
+			cursor.execute(find_future_flights_info, (flight['flight_num']))
+			flight_info = cursor.fetchone()
+			future_flights_info.append(flight_info)
+
+			flightsOccured.append(flight['flight_num'])
+
+
+	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
+	if (conduct_flight_search == True):
+		search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s AND trip_type = %s AND departure_date >= DATE(NOW()) AND arrival_date >= DATE(NOW())'
+						
+		cursor.execute(search_flights, (source, destination, departure, arrival, trip_type))
+		query_flights = cursor.fetchall()
+
+		if (not query_flights):
+			query_flights = "No Results"
+
+		cursor.close()
+		return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+								past_flights_info=past_flights_info, future_flights_info=future_flights_info, query_flights=query_flights)
+
+
+	# When a booking agent clicks the "Yes" button under 'Check Availability' for a certain flight, a ticket serarch will be conducted (conduct_ticket_search = True) for that flight.
+	# A purchase form will be revealed if there are tickets avaiable.
+	if (conduct_ticket_search == True):
+		search_tickets = 'SELECT ticket_ID FROM Ticket WHERE flight_num = %s AND is_purchased = "No"'
+		cursor.execute(search_tickets, (flight_select))
+		tickets = cursor.fetchall()
+
+		if (not tickets):
+			tickets = "No Tickets"
+
+		cursor.close()
+		return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+								past_flights_info=past_flights_info, future_flights_info=future_flights_info, flight_select=flight_select, tickets=tickets)
+
+
+	# When a booking agent clicks the "Purchase" button under 'Purchase Tickets', a ticket purchase will be conducted (conduct_ticket_purchase = True)
+	# A purchase is completed by updating the ticket's is_Purchased field from 'No' to 'Yes' in the Ticket Table and inserting the booking agent's 'POST' form information into the Customer_Purchases table
+	if (conduct_ticket_purchase == True):
+
+		for ticket_ID in ticket_IDs:
+
+			search_tickets = 'SELECT is_Purchased FROM Ticket WHERE ticket_ID = %s'
+			cursor.execute(search_tickets, (ticket_ID))
+			is_Purchased = cursor.fetchone()
+			is_Purchased = is_Purchased['is_Purchased']
+
+			if(is_Purchased == "No"):
+
+				change_ticket_status = 'UPDATE Ticket SET is_purchased = "Yes" WHERE ticket_ID = %s AND is_purchased = "No"'
+				cursor.execute(change_ticket_status, (ticket_ID))
+				conn.commit()
+
+				# Find the base_price and airplane_ID for the flight
+				find_flight_info = 'SELECT base_price, airplane_ID FROM Flight WHERE flight_num = %s'
+				cursor.execute(find_flight_info, (flight_purchase))
+				flight_info = cursor.fetchone()
+				base_price = flight_info['base_price']
+				airplane_ID = flight_info['airplane_ID']
+
+				# Using the airplane_ID, finr the seats on that plane
+				find_seats = 'SELECT seats FROM Airplane WHERE airplane_ID = %s'
+				cursor.execute(find_seats, (airplane_ID))
+				seats = cursor.fetchone()
+				seats = int(seats['seats'])
+
+				# Count the number of tickets purchased for the flight
+				count_tickets_purchased = 'SELECT COUNT(ticket_ID) AS tickets_purchased FROM Customer_Purchases WHERE flight_num = %s'
+				cursor.execute(count_tickets_purchased, (flight_purchase))
+				tickets_purchased = cursor.fetchone()
+				tickets_purchased = int(tickets_purchased['tickets_purchased'])
+
+				# Determine the capacity of the flight by dividing the number of tickets purchased by the number of seats on the airplane
+				capacity = (tickets_purchased / seats) * 100
+
+				# If the capacity of the flight> 70, the sold price is 1.2 * base_price
+				if(capacity > 70):
+					sold_price = base_price * 1.2
+				else:
+					sold_price = base_price
+
+				insert_purchase = 'INSERT INTO CUSTOMER_PURCHASES (cus_email, ticket_ID, flight_num, sold_price, card_type, card_num, card_name, card_exp_date, \
+									purchase_date, purchase_time, agent_ID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, DATE(NOW()), TIME(NOW()), %s)'
+
+				cursor.execute(insert_purchase, (cus_email, ticket_ID, flight_purchase, sold_price, card_type, card_num, card_name, card_exp, agent_ID))
+				conn.commit()
+
+		cursor.close()
+		return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+								past_flights_info=past_flights_info, future_flights_info=future_flights_info, purchase="Complete")
+
+
+	# Returns default information that is displayed each time the page is loaded or refreshed
+	cursor.close()
+	return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+							past_flights_info=past_flights_info, future_flights_info=future_flights_info)
+		
+
+	######################################################################THIS CODE RUNS EVERYTIME THE PAGE IS LOADED OR REFRESHED######################################################################
+
 
 @app.route('/staffHome')
 def staffHome():

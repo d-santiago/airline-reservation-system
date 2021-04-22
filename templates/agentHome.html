@@ -7,6 +7,320 @@
 	<body>
 
 		<h1>Welcome {{username}}</h1>
+
+		<h2> All Flight Tickets Purchased </h2>
+
+		<table>
+
+			<tr>
+				<td> Customer Email </td>
+				<td> Flight Number </td>
+				<td> Ticket ID </td>
+				<td> Airline Name </td>
+				<td> Airplane ID </td>
+				<td> Departure Airport </td>
+				<td> Departure Date </td>
+				<td> Departure Time </td>
+				<td> Arrival Airport </td>
+				<td> Arrival Date </td>
+				<td> Arrival Time </td>
+				<td> Trip Type </td>
+			</tr>
+
+			{% for flight in all_flights %}
+
+				{% for flight_info in all_flights_info %}
+
+					{% if flight['flight_num'] == flight_info['flight_num'] %}
+
+					<tr>
+						<td> {{ flight['cus_email'] }} </td>
+						<td> {{ flight['flight_num'] }} </td>
+						<td> {{ flight['ticket_ID'] }} </td>
+						<td> {{ flight_info['airline_name'] }} </td>
+						<td> {{ flight_info['airplane_ID'] }} </td>
+						<td> {{ flight_info['departure_airport'] }} </td>
+						<td> {{ flight_info['departure_date'] }} </td>
+						<td> {{ flight_info['departure_time'] }} </td>
+						<td> {{ flight_info['arrival_airport'] }} </td>
+						<td> {{ flight_info['arrival_date'] }} </td>
+						<td> {{ flight_info['arrival_time'] }} </td>
+						<td> {{ flight_info['trip_type'] }} </td>
+					<tr>
+
+					{% endif %}
+
+				{% endfor %}
+				
+			{% endfor %}
+
+		</table>
+
+
+		<!-- Displays all PAST flights that the customer has purchased tickets for -->
+		<h2> Past Flight Tickets Purchased </h2>
+	
+		<table>
+
+			<tr>
+				<td> Customer Email </td>
+				<td> Flight Number </td>
+				<td> Ticket ID </td>
+				<td> Airline Name </td>
+				<td> Airplane ID </td>
+				<td> Departure Airport </td>
+				<td> Departure Date </td>
+				<td> Departure Time </td>
+				<td> Arrival Airport </td>
+				<td> Arrival Date </td>
+				<td> Arrival Time </td>
+				<td> Trip Type </td>
+			</tr>
+
+
+			{% for flight in all_flights %}
+
+				{% for flight_info in past_flights_info %}
+
+					{% if flight['flight_num'] == flight_info['flight_num'] %}
+
+					<tr>
+						<td> {{ flight['cus_email'] }} </td>
+						<td> {{ flight['flight_num'] }} </td>
+						<td> {{ flight['ticket_ID'] }} </td>
+						<td> {{ flight_info['airline_name'] }} </td>
+						<td> {{ flight_info['airplane_ID'] }} </td>
+						<td> {{ flight_info['departure_airport'] }} </td>
+						<td> {{ flight_info['departure_date'] }} </td>
+						<td> {{ flight_info['departure_time'] }} </td>
+						<td> {{ flight_info['arrival_airport'] }} </td>
+						<td> {{ flight_info['arrival_date'] }} </td>
+						<td> {{ flight_info['arrival_time'] }} </td>
+						<td> {{ flight_info['trip_type'] }} </td>
+					<tr>
+
+					{% endif %}
+					
+				{% endfor %}	
+
+			{% endfor %}
+
+			</tr>
+
+		</table>
+
+
+		<!-- Displays all FUTURE flights that the customer has purchased tickets for -->
+		<h2> Future Flight Tickets Purchased </h2>
+
+		<table>
+
+			<tr>
+				<td> Customer Email </td>
+				<td> Flight Number </td>
+				<td> Ticket ID </td>
+				<td> Airline Name </td>
+				<td> Airplane ID </td>
+				<td> Departure Airport </td>
+				<td> Departure Date </td>
+				<td> Departure Time </td>
+				<td> Arrival Airport </td>
+				<td> Arrival Date </td>
+				<td> Arrival Time </td>
+				<td> Trip Type </td>
+				<td> Flight Status </td>
+			</tr>
+
+			<tr>
+
+			{% for flight in all_flights %}
+
+				{% for flight_info in future_flights_info %}
+
+					{% if flight['flight_num'] == flight_info['flight_num'] %}
+
+					<tr>
+						<td> {{ flight['cus_email'] }} </td>
+						<td> {{ flight['flight_num'] }} </td>
+						<td> {{ flight['ticket_ID'] }} </td>
+						<td> {{ flight_info['airline_name'] }} </td>
+						<td> {{ flight_info['airplane_ID'] }} </td>
+						<td> {{ flight_info['departure_airport'] }} </td>
+						<td> {{ flight_info['departure_date'] }} </td>
+						<td> {{ flight_info['departure_time'] }} </td>
+						<td> {{ flight_info['arrival_airport'] }} </td>
+						<td> {{ flight_info['arrival_date'] }} </td>
+						<td> {{ flight_info['arrival_time'] }} </td>
+						<td> {{ flight_info['trip_type'] }} </td>
+						<td> {{ flight_info['flight_status'] }} </td>
+					<tr>
+
+					{% endif %}
+					
+				{% endfor %}	
+
+			{% endfor %}
+
+			</tr>
+
+		</table> </br>
+
+
+		<!-- Displays form for the customer to search for future flights -->
+		<hr>
+		<h2> Search for and Purchase Flights </h2>
+
+		<form action="/agentHome" method="POST">
+			Trip Type:
+			<select name="trip_type" required>
+				<option value="select"> Select </option>
+				<option value="One Way"> One Way </option>
+				<option value="Round Trip"> Round Trip </option>
+			</select>
+
+			Departure City:
+			<select name="source" required>
+				<option value="select"> Select </option>
+				<option value="JFK"> New York / JFK </option>
+				<option value="PVG"> Shanghai / PVG </option>
+			</select>
+
+			Destination City:
+			<select name="destination" required>
+				<option value="select"> Select </option>
+				<option value="JFK"> New York / JFK </option>
+				<option value="PVG"> Shanghai / PVG </option>
+			</select>
+
+			Departure Date:
+			<input type="date" min="2021-04-20" name="departure" required>
+
+			Arrival Date:
+			<input type="date" min="2021-04-20" name="arrival" required>
+
+			<input type="submit" value=Search />
+			
+		</form>
+
+
+		<!-- Displays the flights generated from the 'Search for and Purchase Flights' form -->
+		{% if query_flights and query_flights!= "No Results" %}
+		
+		</br>
+		<table>
+
+			<tr>
+				<td> Flight Number </td>
+				<td> Airline Name </td>
+				<td> Airplane ID </td>
+				<td> Departure Airport </td>
+				<td> Departure Date </td>
+				<td> Departure Time </td>
+				<td> Arrival Airport </td>
+				<td> Arrival Date </td>
+				<td> Arrival Time </td>
+				<td> Trip Type </td>
+				<td> Price </td>
+				<td> Flight Status </td>
+				<td> Check Availability? </td>
+			</tr>
+
+			{% for flight in query_flights %}
+
+			<tr>
+				<td> {{ flight['flight_num'] }} </td>
+				<td> {{ flight['airline_name'] }} </td>
+				<td> {{ flight['airplane_ID'] }} </td>
+				<td> {{ flight['departure_airport'] }} </td>
+				<td> {{ flight['departure_date'] }} </td>
+				<td> {{ flight['departure_time'] }} </td>
+				<td> {{ flight['arrival_airport'] }} </td>
+				<td> {{ flight['arrival_date'] }} </td>
+				<td> {{ flight['arrival_time'] }} </td>
+				<td> {{ flight['trip_type'] }} </td>	
+				<td> {{ flight['base_price'] }} </td>	
+				<td> {{ flight['flight_status'] }} </td>
+				<td>
+					<form action="/agentHome" method="POST">
+						<button type="submit" name="flight_select" value= {{ flight['flight_num'] }} > Yes </button>
+					</form>
+
+				</td>	
+			</tr>
+
+			{% endfor %}	
+
+		</table> </br>
+
+		{% elif query_flights == "No Results" %}
+			<h4 style="color: red"> {{ query_flights }}</h4>
+		{% endif %}
+
+		
+		<!-- Displays the tickets avaiable (if any) for the flight that the customer checked the avaiability -->
+		{% if tickets and tickets != "No Tickets" %}
+			<hr>
+			<!-- If there are tickets avaiable, display the purchase form -->
+			<h2> Purchase Tickets </h2>
+			<!-- <h3 style="color: green"> Tickets are Available for Flight: {{flight_select}}. Complete Your Purchase Below </h3> -->
+			
+			<form action="/agentHome" method="POST">
+				Flight:
+				<select name="flight_purchase" required>
+					<option value= {{ flight_select }} > {{ flight_select }} </option>
+				</select>
+				
+				</br> </br>
+
+				Tickets (Select One or Multiple):
+				{% for ticket in tickets%}
+
+					<input type="checkbox" name="ticket" value= {{ ticket['ticket_ID'] }} />
+					TN-{{ ticket['ticket_ID'] }}
+
+				{% endfor %}
+
+				</br> </br>
+
+				Customer Email:
+				<input type="text" name="cus_email" placeholder="Customer Email" required/>
+
+				Card Type:
+				<input type="text" name="type" placeholder="Card Type" required/>
+
+				Card Number:
+				<input type="text" name="num" placeholder="Card Number" required/>
+
+				Card Security Code:
+				<input type="text" name="security" placeholder="Security Code" required/>
+
+				Card Name:
+				<input type="text" name="name" placeholder="Card Name" required/>
+				
+				Card Expiration Date:
+				<input type="date" min="2021-04-17" name="exp" placeholder="Card Expiration Date" required/> </br>  </br>
+
+				<input type="submit" value="Purchase" />
+			</form>
+
+		<!-- If there are no tickets avaiable, notify the user -->
+		{% elif tickets == "No Tickets" %}
+
+			<h4 style="color: red"> No Tickets Avaiable for Flight: {{flight_select}} </h4>
+
+		{% endif %}
+
+		
+		<!-- If the purchase is complete, notify the user -->
+		{% if purchase == "Complete" %}
+			<hr>
+			<h2> Purchase Tickets </h2>
+			<h4 style="color: green"> Purchase Complete </h4>
+
+		{% endif %}
+
+		</br>
+
 		<a href="/agentLogout">Logout</a>
 
 	</body>

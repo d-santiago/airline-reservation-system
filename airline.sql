@@ -160,8 +160,8 @@ VALUES ("FN-1", 20210330, 120000, "China Eastern", "Yes"),
 
 INSERT INTO CUSTOMER_PURCHASES (cus_email, ticket_ID, flight_num, sold_price, card_type, card_num, card_name, card_exp_date, purchase_date, purchase_time, agent_ID)
 VALUES ("des538@nyu.edu", 1, "FN-1", "750.00", "VISA", "6350-3566-2738-8744", "Damaris Santiago", 20240130, 20210228, 100000, NULL),
-("tm3083@nyu.edu", 2, "FN-1", "750.00", "VISA", "8943-8852-8197-4346", "Thomas Molina", 20240430, 20210228, 100100, "BAID-1"),
-("des538@nyu.edu", 7, "FN-3", "750.00", "VISA", "6350-3566-2738-8744", "Damaris Santiago", 20240130, 20210417, 190000, NULL);
+("tm3083@nyu.edu", 2, "FN-1", "750.00", "VISA", "8943-8852-8197-4346", "Thomas Molina", 20240430, 20210228, 100100, "BA-1"),
+("des538@nyu.edu", 7, "FN-3", "750.00", "VISA", "6350-3566-2738-8744", "Damaris Santiago", 20240130, 20210417, 190000, "BA-1");
 
 -- Queries
 
