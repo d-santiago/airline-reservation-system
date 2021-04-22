@@ -141,9 +141,9 @@ VALUES ("Damaris Santiago", "des538@nyu.edu", MD5("des538"), "6", "MetroTech", "
 ("Thomas Molina", "tm3083@nyu.edu", MD5("tm3083"), "6", "MetroTech", "Brooklyn", "NY", "1(350)098-6696", 20000714, "PN-2", 20270429, "United States of America");
 
 INSERT INTO Flight
-VALUES ("FN-1", "China Eastern", "APID-1", "JFK", 20210330, 120000, "PVG", 20210331, 150000, "750.00", "100", "On Time", "One Way"),
-("FN-2", "China Eastern", "APID-2", "JFK", 20210331, 150000, "PVG", 20210401, 180000, "750.00", "100", "Delayed", "One Way"),
-("FN-3", "China Eastern", "APID-2", "JFK", 20211201, 150000, "PVG", 20211202, 180000, "750.00", "100", "On Time", "One Way");
+VALUES ("FN-1", "China Eastern", "APID-1", "JFK", 20210330, 120000, "PVG", 20210331, 150000, "750.00","On Time", "One Way"),
+("FN-2", "China Eastern", "APID-2", "JFK", 20210331, 150000, "PVG", 20210401, 180000, "750.00", "Delayed", "One Way"),
+("FN-3", "China Eastern", "APID-2", "JFK", 20211201, 150000, "PVG", 20211202, 180000, "750.00", "On Time", "One Way");
 
 INSERT INTO TICKET (flight_num, departure_date, departure_time, airline_name, is_purchased)
 VALUES ("FN-1", 20210330, 120000, "China Eastern", "Yes"),
@@ -162,89 +162,3 @@ INSERT INTO CUSTOMER_PURCHASES (cus_email, ticket_ID, flight_num, sold_price, ca
 VALUES ("des538@nyu.edu", 1, "FN-1", "750.00", "VISA", "6350-3566-2738-8744", "Damaris Santiago", 20240130, 20210228, 100000, NULL),
 ("tm3083@nyu.edu", 2, "FN-1", "750.00", "VISA", "8943-8852-8197-4346", "Thomas Molina", 20240430, 20210228, 100100, "BA-1"),
 ("des538@nyu.edu", 7, "FN-3", "750.00", "VISA", "6350-3566-2738-8744", "Damaris Santiago", 20240130, 20210417, 190000, "BA-1");
-
--- Queries
-
--- SELECT flight_num
--- FROM Flight
--- WHERE departure_date > (SELECT CURRENT_DATE)
-
--- SELECT flight_num
--- FROM Flight
--- WHERE flight_status = "Delayed"
-
--- SELECT Customer.cus_name
--- FROM Customer, Ticket
--- WHERE Customer.cus_email = Ticket.cus_email
-
--- SELECT Customer.cus_name
--- FROM Customer, Ticket
--- WHERE Ticket.agent_ID IS NOT NULL AND Customer.cus_email = Ticket.cus_email
-
--- SELECT airplane_ID
--- FROM Airplane
--- WHERE airline_name = "China Eastern"
-
--- More Tables (Unnecessary)
-
--- CREATE TABLE Booking_Agent_Commission(
---     ticket_ID INT AUTO_INCREMENT NOT NULL,
---     agent_email VARCHAR(50) NOT NULL,
---     agent_password VARCHAR(50) NOT NULL,
---     agent_ID VARCHAR(50) NOT NULL,
---     tickets_sold VARCHAR(10) NOT NULL,
---     comm_total VARCHAR(10) NOT NULL,
---     comm_per_ticket VARCHAR(10) NOT NULL,
---     comm_ticket_avg VARCHAR(10) NOT NULL,
---     FOREIGN KEY(ticket_ID) REFERENCES Ticket(ticket_ID),
---     FOREIGN KEY(agent_email, agent_password, agent_ID) REFERENCES Booking_Agent(agent_email, agent_password, agent_ID)
--- );
-
--- CREATE TABLE Customer_Flight_Log(
---     cus_flight_log_ID INT AUTO_INCREMENT,
---     cus_email VARCHAR(50) NOT NULL,
---     airline_name VARCHAR(50) NOT NULL,
---     flight_num VARCHAR(50) NOT NULL,
---     ticket_ID VARCHAR(50) NOT NULL,
---     review_ID INT NOT NULL,
---     purchase_ID INT NOT NULL,
---     previous_flights VARCHAR(5) NOT NULL,
---     future_flights VARCHAR(2) NOT NULL,
---     ticks_purchased VARCHAR(5) NOT NULL,
---     PRIMARY KEY(cus_flight_log_ID),
---     FOREIGN KEY(cus_email) REFERENCES Customer(cus_email),
---     FOREIGN KEY(airline_name) REFERENCES Airline(airline_name),
---     FOREIGN KEY(flight_num) REFERENCES Flight(flight_num),
---     FOREIGN KEY(ticket_ID) REFERENCES Ticket(ticket_ID),
---     FOREIGN KEY(review_ID) REFERENCES Review(review_ID),
---     FOREIGN KEY(purchase_ID) REFERENCES Customer_Purchases(purchase_ID)
--- );
-
--- CREATE TABLE Airline_Flight_Log(
---     airline_name VARCHAR(50) NOT NULL,
---     flight_num VARCHAR(50) NOT NULL,
---     ticket_ID VARCHAR(20) NOT NULL,
---     review_ID VARCHAR(10) NOT NULL,
---     cus_flight_log_ID INT NOT NULL,
---     airline_flight_log_ID VARCHAR(10),
---     all_ratings VARCHAR(7) NOT NULL,
---     all_comments VARCHAR(7) NOT NULL,
---     avg_rating NUMERIC(1) NOT NULL,
---     ticks_sold VARCHAR(10) NOT NULL,
---     PRIMARY KEY(airline_flight_log_ID),
---     FOREIGN KEY(airline_name) REFERENCES Airline(airline_name),
---     FOREIGN KEY(flight_num) REFERENCES Flight(flight_num),
---     FOREIGN KEY(ticket_ID) REFERENCES Ticket(ticket_ID),
---     FOREIGN KEY(review_ID) REFERENCES Review(review_ID),
---     FOREIGN KEY(cus_flight_log_ID) REFERENCES Customer_Flight_Log(cus_flight_log_ID)
--- );
-
--- CREATE TABLE Airline_All_Flights_Log(
---     cus_flight_log_ID INT NOT NULL,
---     airline_all_flights_log_ID VARCHAR(10),
---     most_freq_cus_this_year VARCHAR(50) NOT NULL,
---     ticks_sold_each_month VARCHAR(6) NOT NULL,
---     tot_rev VARCHAR(14) NOT NULL,
---     PRIMARY KEY(airline_all_flights_log_ID),
---     FOREIGN KEY(cus_flight_log_ID) REFERENCES Customer_Flight_Log(cus_flight_log_ID)
--- );
