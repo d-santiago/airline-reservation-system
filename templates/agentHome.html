@@ -327,13 +327,19 @@
 
 
 		<!-- The customer's expenses within the past year is displayed -->
-		{% if year_commission %}
-			<h4> You Have Made ${{year_commission}}0 Within the Past 30 Days. Use the Filter to Track your Commission Across Different Dates </h4>	
+		{% if month_commission and month_tickets_sold and month_comm_per_ticket %}
+			<h4> You Have Made ${{month_commission}}0 Within the Past 30 Days </h4>
+			<h4> You Have Sold {{month_tickets_sold}} Tickets Within the Past 30 Days </h4>
+			<h4> You Have Made An Average Commission of ${{month_comm_per_ticket}}0 Per Ticket Within the Past 30 Days </h4>
+			<h4> Use the Filter to Track your Commission Across Different Dates </h4>	
 		{% endif %}
 
 		<!-- If the customer submits the 'My Spending' form, their expenses within the past year will be displayed -->
 		{% if date_commission %}
 			<h4> You Have Made ${{date_commission}}0 Between {{start_date}} and {{end_date}} </h4>
+			<h4> You Have Sold {{date_tickets_sold}} Tickets Between {{start_date}} and {{end_date}} </h4>
+			<h4> You Have Made An Average Commission of ${{date_comm_per_ticket}}0 Per Ticket Between {{start_date}} and {{end_date}} </h4>
+			<h4> Use the Filter to Track your Commission Across Different Dates </h4>
 		{% endif %}
 
 		<form action="/agentHome" method="POST">

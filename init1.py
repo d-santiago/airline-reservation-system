@@ -680,13 +680,20 @@ def agentHome():
 
 
 	# When the page is loaded or refreshed, the program calculates the customer's expenses within the past year by finding the sum of the sold_prices for the tickets in the Customer_Purchases table using their email
-	calc_year_commission = 'SELECT SUM(sold_price) AS year_commission FROM Customer_Purchases WHERE agent_ID = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 30 DAY)'
-	cursor.execute(calc_year_commission, (agent_ID))
-	year_commission = cursor.fetchone()
-	year_commission = int(year_commission['year_commission']) * 0.1
+	calc_commission = 'SELECT SUM(sold_price) AS commission, COUNT(ticket_ID) AS tickets_sold  FROM Customer_Purchases WHERE agent_ID = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 30 DAY)'
+	cursor.execute(calc_commission, (agent_ID))
+	commission_info = cursor.fetchone()
+	commission = commission_info['commission']
 
-	if (year_commission == None):
-		year_commission='0.0'
+	if (commission == None):
+		commission='0.0'
+		comm_per_ticket = '0.0'
+		tickets_sold = 0
+	else:
+		commission = int(commission) * 0.1
+		tickets_sold = int(commission_info['tickets_sold'])
+		comm_per_ticket = commission / tickets_sold
+
 
 	######################################################################THIS CODE RUNS EVERYTIME THE PAGE IS LOADED OR REFRESHED######################################################################
 
@@ -703,7 +710,7 @@ def agentHome():
 
 		cursor.close()
 		return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-								past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_commission=year_commission, query_flights=query_flights)
+								past_flights_info=past_flights_info, future_flights_info=future_flights_info, month_commission=month_commission, month_tickets_sold=tickets_sold, month_comm_per_ticket=comm_per_ticket, query_flights=query_flights)
 
 
 	# When a booking agent clicks the "Yes" button under 'Check Availability' for a certain flight, a ticket serarch will be conducted (conduct_ticket_search = True) for that flight.
@@ -718,7 +725,7 @@ def agentHome():
 
 		cursor.close()
 		return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-								past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_commission=year_commission, flight_select=flight_select, tickets=tickets)
+								past_flights_info=past_flights_info, future_flights_info=future_flights_info, month_commission=month_commission, month_tickets_sold=tickets_sold, month_comm_per_ticket=comm_per_ticket, flight_select=flight_select, tickets=tickets)
 
 
 	# When a booking agent clicks the "Purchase" button under 'Purchase Tickets', a ticket purchase will be conducted (conduct_ticket_purchase = True)
@@ -774,28 +781,34 @@ def agentHome():
 
 		cursor.close()
 		return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-								past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_commission=year_commission, purchase="Complete")
+								past_flights_info=past_flights_info, future_flights_info=future_flights_info, month_commission=month_commission, month_tickets_sold=tickets_sold, month_comm_per_ticket=comm_per_ticket, purchase="Complete")
 
 
 	# When a customer clicks the "Search" button under 'My Spending', the program will determine how much money that customer spent between two user-specified dates (track_spending = True)
 	if (track_commission == True):
-		calc_date_commission = 'SELECT SUM(sold_price) AS date_commission FROM Customer_Purchases WHERE agent_ID = %s AND purchase_date >= %s AND purchase_date <= %s'
-		cursor.execute(calc_date_commission, (agent_ID, start_date, end_date))
-		date_commission = cursor.fetchone()
-		date_commission = int(date_commission['date_commission']) * 0.1
+		calc_commission = 'SELECT SUM(sold_price) AS commission, COUNT(ticket_ID) as tickets_sold FROM Customer_Purchases WHERE agent_ID = %s AND purchase_date >= %s AND purchase_date <= %s'
+		cursor.execute(calc_commission, (agent_ID, start_date, end_date))
+		commission_info = cursor.fetchone()
+		commission = commission_info['commission']
 
-		if (date_commission == None):
-			date_commission="0.0"
+		if (commission == None):
+			commission='0.0'
+			comm_per_ticket = '0.0'
+			tickets_sold = 0
+		else:
+			commission = int(commission) * 0.1
+			tickets_sold = int(commission_info['tickets_sold'])
+			comm_per_ticket = commission / tickets_sold
 
 		cursor.close()
 		return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-								past_flights_info=past_flights_info, future_flights_info=future_flights_info, date_commission=date_commission, start_date=start_date, end_date=end_date)
+								past_flights_info=past_flights_info, future_flights_info=future_flights_info, date_commission=commission, date_tickets_sold=tickets_sold, date_comm_per_ticket=comm_per_ticket, start_date=start_date, end_date=end_date)
 
 
 	# Returns default information that is displayed each time the page is loaded or refreshed
 	cursor.close()
 	return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-							past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_commission=year_commission)
+							past_flights_info=past_flights_info, future_flights_info=future_flights_info, month_commission=commission, month_tickets_sold=tickets_sold, month_comm_per_ticket=comm_per_ticket)
 		
 
 	######################################################################THIS CODE RUNS EVERYTIME THE PAGE IS LOADED OR REFRESHED######################################################################
