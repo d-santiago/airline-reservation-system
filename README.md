@@ -36,9 +36,10 @@
 1. Search for Flights
 1. Purchase Tickets
 1. View my Commission
+1. View Top Customers
 
 ### To Do
-1. View Top Customers
+1. View Top Customers: Bar Charts
 
 ## Airline Staff Use Cases
 

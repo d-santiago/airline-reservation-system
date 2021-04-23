@@ -321,12 +321,11 @@
 
 		</br>
 
-		<!-- Displays form for the customer to search for future flights -->
+		<!-- Displays booking agent's commission -->
 		<hr>
 		<h2> My Commission </h2>
 
-
-		<!-- The customer's expenses within the past year is displayed -->
+		<!-- The booking agent's expenses within the past year is displayed -->
 		{% if month_commission and month_tickets_sold and month_comm_per_ticket %}
 			<h4> You Have Made ${{month_commission}}0 Within the Past 30 Days </h4>
 			<h4> You Have Sold {{month_tickets_sold}} Tickets Within the Past 30 Days </h4>
@@ -334,8 +333,9 @@
 			<h4> Use the Filter to Track your Commission Across Different Dates </h4>	
 		{% endif %}
 
-		<!-- If the customer submits the 'My Spending' form, their expenses within the past year will be displayed -->
-		{% if date_commission %}
+		<!-- If the booking agent submits the 'My Commission' form, their expenses within the past year will be displayed -->
+		{% if date_commission and month_tickets_sold and month_comm_per_ticket%}
+			</br>
 			<h4> You Have Made ${{date_commission}}0 Between {{start_date}} and {{end_date}} </h4>
 			<h4> You Have Sold {{date_tickets_sold}} Tickets Between {{start_date}} and {{end_date}} </h4>
 			<h4> You Have Made An Average Commission of ${{date_comm_per_ticket}}0 Per Ticket Between {{start_date}} and {{end_date}} </h4>
@@ -352,6 +352,57 @@
 			<input type="submit" value=Search />		
 		</form> </br>
 
+
+		<!-- Displays the booking agent's top customers -->
+		<hr>
+		<h2> My Top Customers </h2>
+
+		<!-- The customer's expenses within the past year is displayed -->
+		{% if top_customers_month %}
+			<h4> Top Customers Within the Past 6 Months </h4>
+
+			<table>
+
+				<tr>
+					<td> Customer Email </td>
+					<td> Commission </td>
+				</tr>
+
+				{% for customer in top_customers_month %}
+
+				<tr>
+					<td> {{ customer['cus_email'] }} </td>
+					<td> {{ customer['cus_commission'] }} </td>
+				</tr>
+
+				{% endfor %}	
+
+			</table> </br>
+			
+		{% endif %}
+
+		{% if top_customers_year %}
+			<h4> Top Customers Within the Past Year </h4>
+
+			<table>
+
+				<tr>
+					<td> Customer Email </td>
+					<td> Commission </td>
+				</tr>
+
+				{% for customer in top_customers_year %}
+
+				<tr>
+					<td> {{ customer['cus_email'] }} </td>
+					<td> {{ customer['cus_commission'] }} </td>
+				</tr>
+
+				{% endfor %}	
+
+			</table> </br>
+			
+		{% endif %}
 
 		<hr>
 		<a href="/agentLogout">Logout</a>
