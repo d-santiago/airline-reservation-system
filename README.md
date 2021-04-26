@@ -45,17 +45,19 @@
 
 ### Complete
 1. View Flights
-1. Create New Flights
+1. Add New Flight
     1. Issue #1: Does not prevent staff from using a previous flight number
-    1. Issue #2: Page crashes upon reload becuase the reload triggers the fligh to be added to the database again but it cannot because of a primary key conflict.
-1. Change Status of Flights
+    1. Issue #2: Page crashes upon reload becuase the reload triggers the flight to be added to the database again but it cannot because of a primary key conflict.
+1. Change Flight Status
     1. Issue #1: Printing that the status was successful shows up in each table row.
+1. Add New Airplane
+    1. Issue #1: Does not prevent staff from using a previous airplane ID
+    1. Issue #2: Page crashes upon reload becuase the reload triggers the airplane to be added to the database again but it cannot because of a primary key conflict.
 
 ### To Do
-1. Add Airplane in the System
-1. Add New Airport in the System
+1. Add New Airport
 1. View Flight Ratings
-1. View all the Booking Agents
+1. View Booking Agents
 1. View Frequent Customers
 1. View Reports
 1. Comparison of Revenue Earned

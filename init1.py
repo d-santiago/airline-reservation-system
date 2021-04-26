@@ -838,12 +838,12 @@ def agentHome():
 def staffHome():
 	username = session['username']
 
-	create_flight = False
+	add_flight = False
 	if ('flight_num' in request.form and 'airplane_ID' in request.form and 'trip_type' in request.form and 'departure_airport' in request.form and 'departure_date' in request.form \
 		and 'departure_time' in request.form and 'arrival_airport' in request.form and 'arrival_date' in request.form and 'arrival_time' in request.form \
 		and 'base_price' in request.form and 'flight_status' in request.form):
 
-		create_flight = True
+		add_flight = True
 		flight_num = request.form['flight_num']
 		airplane_ID = request.form['airplane_ID']
 		trip_type = request.form['trip_type']
@@ -861,6 +861,12 @@ def staffHome():
 		change_flight_status = True
 		flight_select = request.form['flight_select']
 		flight_status = request.form['flight_status']
+
+	add_airplane = False
+	if ('airplane_ID' in request.form and 'seats' in request.form):
+		add_airplane = True
+		airplane_ID = request.form['airplane_ID']
+		seats = request.form['seats']
 
 	cursor = conn.cursor()
 
@@ -881,12 +887,12 @@ def staffHome():
 	cursor.execute(find_future_flights, (airline_name))
 	future_flights = cursor.fetchall()
 
-	if (create_flight == True):
+	if (add_flight == True):
 		insert_flight = 'INSERT INTO Flight VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 		cursor.execute(insert_flight, (flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, arrival_airport, arrival_date, arrival_time, base_price, flight_status, trip_type))
 		conn.commit()
 		cursor.close()
-		return render_template('staffHome.html', username=username, all_flights=all_flights, past_flights=past_flights, future_flights=future_flights, create_flight="Complete")
+		return render_template('staffHome.html', username=username, all_flights=all_flights, past_flights=past_flights, future_flights=future_flights, add_flight="Complete")
 
 	if (change_flight_status == True):
 		update_flight = 'UPDATE Flight SET flight_status = %s WHERE flight_num = %s'
@@ -895,6 +901,14 @@ def staffHome():
 		
 		cursor.close()
 		return render_template('staffHome.html', username=username, all_flights=all_flights, past_flights=past_flights, future_flights=future_flights, change_flight_status="Complete", flight_selct=flight_select)
+
+	if (add_airplane == True):
+		insert_airplane = 'INSERT INTO AIRPLANE VALUES (%s, %s, %s)'
+		cursor.execute(insert_airplane, (airplane_ID, airline_name, seats))
+		conn.commit()
+		
+		cursor.close()
+		return render_template('staffHome.html', username=username, all_flights=all_flights, past_flights=past_flights, future_flights=future_flights, add_airplane="Complete")
 
 
 
