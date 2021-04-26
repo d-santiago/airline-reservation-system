@@ -834,9 +834,30 @@ def agentHome():
 	######################################################################THIS CODE RUNS EVERYTIME THE PAGE IS LOADED OR REFRESHED######################################################################
 
 
-@app.route('/staffHome')
+@app.route('/staffHome', methods=['GET', 'POST'])
 def staffHome():
 	username = session['username']
+
+	create_flight = False
+	if ('flight_num' in request.form and 'airplane_ID' in request.form and 'trip_type' in request.form and 'departure_airport' in request.form and 'departure_date' in request.form \
+		and 'departure_time' in request.form and 'arrival_airport' in request.form and 'arrival_date' in request.form and 'arrival_time' in request.form \
+		and 'base_price' in request.form and 'flight_status' in request.form):
+		print("hello")
+
+		create_flight = True
+
+		flight_num = request.form['flight_num']
+		airplane_ID = request.form['airplane_ID']
+		trip_type = request.form['trip_type']
+		departure_airport = request.form['departure_airport']
+		departure_date = request.form['departure_date']
+		departure_time = request.form['departure_time']
+		arrival_airport = request.form['arrival_airport']
+		arrival_date = request.form['arrival_date']
+		arrival_time = request.form['arrival_time']
+		base_price = request.form['base_price']
+		flight_status = request.form['flight_status']
+
 	cursor = conn.cursor()
 
 	staff_airline = 'SELECT airline_name FROM Airline_Staff WHERE staff_username = %s'
@@ -856,6 +877,14 @@ def staffHome():
 	cursor.execute(find_future_flights, (airline_name))
 	future_flights = cursor.fetchall()
 
+	if (create_flight == True):
+		insert_flight = 'INSERT INTO Flight VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+		cursor.execute(insert_flight, (flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, arrival_airport, arrival_date, arrival_time, base_price, flight_status, trip_type))
+		conn.commit()
+		return render_template('staffHome.html', username=username, all_flights=all_flights, past_flights=past_flights, future_flights=future_flights, create_flight="Complete")
+
+	print(create_flight)
+	cursor.close()
 	return render_template('staffHome.html', username=username, all_flights=all_flights, past_flights=past_flights, future_flights=future_flights)
 
 @app.route('/customerLogout')

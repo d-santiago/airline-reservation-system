@@ -43,9 +43,11 @@
 
 ## Airline Staff Use Cases
 
-### To Do
+### Complete
 1. View Flights
-1. Create New Flights
+1. Create New Flights (Does not prevent staff from using a previous flight number)
+
+### To Do
 1. Change Status of Flights
 1. Add Airplane in the System
 1. Add New Airport in the System
