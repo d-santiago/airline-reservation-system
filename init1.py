@@ -173,7 +173,7 @@ def staffLoginAuth():
 	#cursor used to send queries
 	cursor = conn.cursor()
 	#executes query
-	query = 'SELECT * FROM Airline_Staff WHERE staff_username = %s and agent_password = MD5(%s)'
+	query = 'SELECT * FROM Airline_Staff WHERE staff_username = %s and staff_password = MD5(%s)'
 	cursor.execute(query, (username, password))
 	#stores the results in a variable
 	data = cursor.fetchone()
@@ -837,7 +837,26 @@ def agentHome():
 @app.route('/staffHome')
 def staffHome():
 	username = session['username']
-	return render_template('staffHome.html')
+	cursor = conn.cursor()
+
+	staff_airline = 'SELECT airline_name FROM Airline_Staff WHERE staff_username = %s'
+	cursor.execute(staff_airline, (username))
+	airline_name = cursor.fetchone()
+	airline_name = airline_name['airline_name']
+
+	find_all_flights = 'SELECT * FROM Flight WHERE airline_name = %s'
+	cursor.execute(find_all_flights, (airline_name))
+	all_flights = cursor.fetchall()
+
+	find_past_flights = 'SELECT * FROM Flight WHERE airline_name = %s AND departure_date < DATE(NOW())'
+	cursor.execute(find_past_flights, (airline_name))
+	past_flights = cursor.fetchall()
+
+	find_future_flights = 'SELECT * FROM Flight WHERE airline_name = %s AND departure_date > DATE(NOW())'
+	cursor.execute(find_future_flights, (airline_name))
+	future_flights = cursor.fetchall()
+
+	return render_template('staffHome.html', username=username, all_flights=all_flights, past_flights=past_flights, future_flights=future_flights)
 
 @app.route('/customerLogout')
 def customerLogout():

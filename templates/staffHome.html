@@ -6,7 +6,118 @@
 
 	<body>
 
-		<h1>Welcome {{username}}</h1>
+		<h1>Welcome, {{username}}</h1>
+
+		<h2> All Flights </h2>
+
+		<table>
+
+			<tr>
+				<td> Flight Number </td>
+				<td> Airline Name </td>
+				<td> Airplane ID </td>
+				<td> Departure Airport </td>
+				<td> Departure Date </td>
+				<td> Departure Time </td>
+				<td> Arrival Airport </td>
+				<td> Arrival Date </td>
+				<td> Arrival Time </td>
+				<td> Trip Type </td>
+			</tr>
+
+			{% for flight in all_flights %}
+
+				<tr>
+					<td> {{ flight['flight_num'] }} </td>
+					<td> {{ flight['airline_name'] }} </td>
+					<td> {{ flight['airplane_ID'] }} </td>
+					<td> {{ flight['departure_airport'] }} </td>
+					<td> {{ flight['departure_date'] }} </td>
+					<td> {{ flight['departure_time'] }} </td>
+					<td> {{ flight['arrival_airport'] }} </td>
+					<td> {{ flight['arrival_date'] }} </td>
+					<td> {{ flight['arrival_time'] }} </td>
+					<td> {{ flight['trip_type'] }} </td>
+				<tr>
+
+			{% endfor %}
+
+		</table>
+
+		<h2> Past Flights </h2>
+
+		<table>
+
+			<tr>
+				<td> Flight Number </td>
+				<td> Airline Name </td>
+				<td> Airplane ID </td>
+				<td> Departure Airport </td>
+				<td> Departure Date </td>
+				<td> Departure Time </td>
+				<td> Arrival Airport </td>
+				<td> Arrival Date </td>
+				<td> Arrival Time </td>
+				<td> Trip Type </td>
+			</tr>
+
+			{% for flight in past_flights %}
+
+				<tr>
+					<td> {{ flight['flight_num'] }} </td>
+					<td> {{ flight['airline_name'] }} </td>
+					<td> {{ flight['airplane_ID'] }} </td>
+					<td> {{ flight['departure_airport'] }} </td>
+					<td> {{ flight['departure_date'] }} </td>
+					<td> {{ flight['departure_time'] }} </td>
+					<td> {{ flight['arrival_airport'] }} </td>
+					<td> {{ flight['arrival_date'] }} </td>
+					<td> {{ flight['arrival_time'] }} </td>
+					<td> {{ flight['trip_type'] }} </td>
+				<tr>
+
+			{% endfor %}
+
+		</table>
+
+		<h2> Future Flights </h2>
+
+		<table>
+
+			<tr>
+				<td> Flight Number </td>
+				<td> Airline Name </td>
+				<td> Airplane ID </td>
+				<td> Departure Airport </td>
+				<td> Departure Date </td>
+				<td> Departure Time </td>
+				<td> Arrival Airport </td>
+				<td> Arrival Date </td>
+				<td> Arrival Time </td>
+				<td> Trip Type </td>
+			</tr>
+
+			{% for flight in all_flights %}
+
+				<tr>
+					<td> {{ flight['flight_num'] }} </td>
+					<td> {{ flight['airline_name'] }} </td>
+					<td> {{ flight['airplane_ID'] }} </td>
+					<td> {{ flight['departure_airport'] }} </td>
+					<td> {{ flight['departure_date'] }} </td>
+					<td> {{ flight['departure_time'] }} </td>
+					<td> {{ flight['arrival_airport'] }} </td>
+					<td> {{ flight['arrival_date'] }} </td>
+					<td> {{ flight['arrival_time'] }} </td>
+					<td> {{ flight['trip_type'] }} </td>
+				<tr>
+
+			{% endfor %}
+
+		</table>
+
+		</br> <hr>
+
 		<a href="/staffLogout">Logout</a>
 
 	</body>
