@@ -95,6 +95,9 @@
 				<td> Arrival Date </td>
 				<td> Arrival Time </td>
 				<td> Trip Type </td>
+				<td> Flight Status </td>
+				<td> Change Flight Status </td>
+
 			</tr>
 
 			{% for flight in all_flights %}
@@ -110,6 +113,28 @@
 					<td> {{ flight['arrival_date'] }} </td>
 					<td> {{ flight['arrival_time'] }} </td>
 					<td> {{ flight['trip_type'] }} </td>
+					<td> {{ flight['flight_status'] }} </td>
+					<td>
+						<form action="/staffHome" method="POST">
+							<select name="flight_select" value={{ flight['flight_num'] }} required>
+								<option value={{ flight['flight_num'] }}> {{ flight['flight_num'] }} </option>
+							</select>
+
+							<select name="flight_status" required>
+								{% if flight['flight_status'] == "On Time" %}
+									<option value="Delayed"> Delayed</option>
+								{% else %}
+									<option value="On Time"> On Time </option>
+								{% endif %}
+							</select>
+							<input type="submit" value="Change Flight Status" />
+						</form>
+
+						<!-- {% if change_flight_status == "Complete" and flight['flight_num'] == flight_select%} -->
+						{% if change_flight_status == "Complete" and flight['flight_num']%}
+							<h4 style="color: green"> Flight Status Changed </h4>
+						{% endif %}
+					</td>	
 				<tr>
 
 			{% endfor %}
