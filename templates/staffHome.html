@@ -93,10 +93,6 @@
 							</select>
 							<input type="submit" value="Change Flight Status" />
 						</form>
-
-						{% if change_flight_status == "Complete" and flight['flight_num'] == flight_select %}
-							<h4 style="color: green"> Flight Status Changed </h4>
-						{% endif %}
 					</td>	
 				<tr>
 
@@ -139,7 +135,7 @@
 		</form>
 
 		<!-- Displays the flights generated from the 'Search for and Purchase Flights' form -->
-		{% if query_flights and query_flights!= "No Results" %}
+		{% if query_flights and query_flights != "No Results" %}
 		
 		</br>
 		<table>
@@ -177,7 +173,7 @@
 				<td> {{ flight['flight_status'] }} </td>
 				<td>
 					<form action="/staffHome" method="POST">
-						<button type="submit" name="flight_select" value= {{ flight['flight_num'] }} > Yes </button>
+						<button type="submit" name="customer_flight_select" value= {{ flight['flight_num'] }} > Yes </button>
 					</form>
 				</td>	
 			</tr>
@@ -201,7 +197,7 @@
 
 			{% for customer in customers%}
 				<tr>
-					<td> {{ flight_select }} </td>
+					<td> {{ customer_flight_select }} </td>
 					<td> {{ customer['cus_email'] }} </td>
 				</tr>
 			{% endfor %}
@@ -266,10 +262,6 @@
 
 			</form>
 
-			{% if add_flight == "Complete" %}
-				<h4 style="color: green"> Flight Added </h4>
-			{% endif %}
-
 		</br> <hr>
 
 		<h2> Add New Airplane </h2>
@@ -281,27 +273,6 @@
 				<input type="submit" value="Add Airplane" />
 
 			</form>
-
-			{% if add_airplane == "Complete" %}
-				<h4 style="color: green"> Airplane Added. View all airplanes below. </h4>
-
-				<table>
-					<tr>
-						<td> Airplane_ID </td>
-						<td> Airline </td>
-						<td> Seats </td>
-					</tr>
-	
-						{% for airplane in airplanes %}
-							<tr>
-								<td> {{airplane['airplane_ID']}} </td>
-								<td> {{airplane['airline_name']}} </td>
-								<td> {{airplane['seats']}} </td>
-							</tr>
-						{% endfor %}
-				</table>
-
-			{% endif %}
 
 			</br> <hr>
 

@@ -47,7 +47,6 @@
 1. View Flights
 1. Add New Flight (Using Redirect)
 1. Change Flight Status
-    1. Issue #1: Printing that the status was successful shows up in each table row.
 1. Add New Airplane
 
 ### To Do

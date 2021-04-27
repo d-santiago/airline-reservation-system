@@ -540,9 +540,10 @@ def customerHome():
 		conn.commit()
 
 		cursor.close()
-		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-							past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses=year_expenses, review="Complete")
-	
+		# return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+							# past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses=year_expenses, review="Complete")
+		return redirect(url_for('customerHome'))
+
 	
 	# When a customer clicks the "Search" button under 'My Spending', the program will determine how much money that customer spent between two user-specified dates (track_spending = True)
 	if (track_spending == True):
@@ -851,9 +852,9 @@ def staffHome():
 
 
 	conduct_customer_search = False
-	if ('flight_select' in request.form):
+	if ('customer_flight_select' in request.form):
 		conduct_customer_search = True
-		flight_select = request.form['flight_select']
+		customer_flight_select = request.form['customer_flight_select']
 
 
 	add_flight = False
@@ -925,14 +926,14 @@ def staffHome():
 
 	if (conduct_customer_search == True):
 		search_flights = 'SELECT cus_email FROM Customer_Purchases WHERE flight_num = %s'				
-		cursor.execute(search_flights, (flight_select))
+		cursor.execute(search_flights, (customer_flight_select))
 		customers = cursor.fetchall()
 
 		if (not customers):
 			customers = "No Results"
 
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, customers=customers, flight_select=flight_select)
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, customers=customers, customer_flight_select=customer_flight_select)
 
 
 	if (add_flight == True):
@@ -952,17 +953,13 @@ def staffHome():
 		conn.commit()
 		
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, change_flight_status="Complete", flight_selct=flight_select)
-
+		# return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, change_flight_status="Complete", flight_selct=flight_select)
+		return redirect(url_for('staffHome'))
 
 	if (add_airplane == True):
 		insert_airplane = 'INSERT INTO AIRPLANE (airline_name, seats) VALUES (%s, %s)'
 		cursor.execute(insert_airplane, (airline_name, seats))
 		conn.commit()
-
-		find_airplanes = 'SELECT * FROM Airplane WHERE airline_name = %s'
-		cursor.execute(find_airplanes, (airline_name))
-		airplanes = cursor.fetchall()
 		
 		cursor.close()
 		# return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, add_airplane="Complete")

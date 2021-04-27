@@ -346,15 +346,8 @@
 
 		{% endif %}
 
-		
-		<!-- If the customer's review was submitted successfuly complete, they will notified -->
-		{% if review == "Complete" %}
-			<hr>
-			<h2> Review Previously Taken Flights </h2>
-			<h4 style="color: green"> Review Complete </h4>
-
 		<!-- If the customer already reviewed the flight, they will notified -->
-		{% elif review == "Already Complete"%}
+		{% if review == "Already Complete"%}
 			<hr>
 			<h2> Review Previously Taken Flights </h2>
 			<h4 style="color: green"> You Have Already Reviewed This Flight </h4>
