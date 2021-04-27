@@ -942,7 +942,8 @@ def staffHome():
 		cursor.execute(insert_flight, (airline_name, airplane_ID, departure_airport, departure_date, departure_time, arrival_airport, arrival_date, arrival_time, base_price, flight_status, trip_type))
 		conn.commit()
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, add_flight="Complete")
+		# return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, add_flight="Complete")
+		return redirect(url_for('staffHome'))
 
 
 	if (change_flight_status == True):
@@ -958,13 +959,39 @@ def staffHome():
 		insert_airplane = 'INSERT INTO AIRPLANE (airline_name, seats) VALUES (%s, %s)'
 		cursor.execute(insert_airplane, (airline_name, seats))
 		conn.commit()
+
+		find_airplanes = 'SELECT * FROM Airplane WHERE airline_name = %s'
+		cursor.execute(find_airplanes, (airline_name))
+		airplanes = cursor.fetchall()
 		
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, add_airplane="Complete")
+		# return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, add_airplane="Complete")
+		return redirect(url_for('staffConfirmation'))
 
 
 	cursor.close()
 	return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes)
+
+
+@app.route('/staffConfirmation')
+def staffConfirmation():
+	username = session['username']
+
+	cursor = conn.cursor()
+
+	staff_airline = 'SELECT airline_name FROM Airline_Staff WHERE staff_username = %s'
+	cursor.execute(staff_airline, (username))
+	airline_name = cursor.fetchone()
+	airline_name = airline_name['airline_name']
+
+	find_airplanes = 'SELECT * FROM Airplane WHERE airline_name = %s'
+	cursor.execute(find_airplanes, (airline_name))
+	airplanes = cursor.fetchall()
+
+	cursor.close()
+
+	return render_template('staffConfirmation.html', username=username, airplanes=airplanes)
+
 
 @app.route('/customerLogout')
 def customerLogout():

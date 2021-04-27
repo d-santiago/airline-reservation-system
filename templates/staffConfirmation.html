@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+	</head>
+
+	<body>
+
+		<h1>Confirmation: Airplane Added</h1>
+
+		<table style="margin: auto;">
+			<tr>
+				<td> Airplane_ID </td>
+				<td> Airline </td>
+				<td> Seats </td>
+			</tr>
+
+				{% for airplane in airplanes %}
+					<tr>
+						<td> {{airplane['airplane_ID']}} </td>
+						<td> {{airplane['airline_name']}} </td>
+						<td> {{airplane['seats']}} </td>
+					</tr>
+				{% endfor %}
+		</table>
+
+		</br>
+		<center> <a href="/staffHome">Home</a> </center>
+        
+    </body>
+</html>

@@ -45,13 +45,10 @@
 
 ### Complete
 1. View Flights
-1. Add New Flight
-    1. Issue #1: Page adds duplicate flights each time the page is reloaded
+1. Add New Flight (Using Redirect)
 1. Change Flight Status
     1. Issue #1: Printing that the status was successful shows up in each table row.
 1. Add New Airplane
-    1. Issue #1: Page adds duplicate airplanes each time the page is reloaded
-
 
 ### To Do
 1. Add New Airport
