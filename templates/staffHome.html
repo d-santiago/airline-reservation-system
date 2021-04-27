@@ -8,43 +8,7 @@
 
 		<h1>Welcome, {{username}}</h1>
 
-		<h2> All Flights </h2>
-
-		<table>
-
-			<tr>
-				<td> Flight Number </td>
-				<td> Airline Name </td>
-				<td> Airplane ID </td>
-				<td> Departure Airport </td>
-				<td> Departure Date </td>
-				<td> Departure Time </td>
-				<td> Arrival Airport </td>
-				<td> Arrival Date </td>
-				<td> Arrival Time </td>
-				<td> Trip Type </td>
-			</tr>
-
-			{% for flight in all_flights %}
-
-				<tr>
-					<td> {{ flight['flight_num'] }} </td>
-					<td> {{ flight['airline_name'] }} </td>
-					<td> {{ flight['airplane_ID'] }} </td>
-					<td> {{ flight['departure_airport'] }} </td>
-					<td> {{ flight['departure_date'] }} </td>
-					<td> {{ flight['departure_time'] }} </td>
-					<td> {{ flight['arrival_airport'] }} </td>
-					<td> {{ flight['arrival_date'] }} </td>
-					<td> {{ flight['arrival_time'] }} </td>
-					<td> {{ flight['trip_type'] }} </td>
-				<tr>
-
-			{% endfor %}
-
-		</table>
-
-		<h2> Past Flights </h2>
+		<h2> Past Flights (Past 30 Days)</h2>
 
 		<table>
 
@@ -80,7 +44,7 @@
 
 		</table>
 
-		<h2> Future Flights </h2>
+		<h2> Future Flights (Next 30 Days)</h2>
 
 		<table>
 
@@ -100,7 +64,7 @@
 
 			</tr>
 
-			{% for flight in all_flights %}
+			{% for flight in future_flights %}
 
 				<tr>
 					<td> {{ flight['flight_num'] }} </td>
@@ -130,7 +94,7 @@
 							<input type="submit" value="Change Flight Status" />
 						</form>
 
-						{% if change_flight_status == "Complete" and flight['flight_num']%}
+						{% if change_flight_status == "Complete" and flight['flight_num'] == flight_select %}
 							<h4 style="color: green"> Flight Status Changed </h4>
 						{% endif %}
 					</td>	
@@ -140,19 +104,127 @@
 
 		</table>
 
+		<h2> Search for Flights </h2>
+
+		<form action="/staffHome" method="POST">
+			Trip Type:
+			<select name="trip_type" required>
+				<option value="select"> Select </option>
+				<option value="One Way"> One Way </option>
+				<option value="Round Trip"> Round Trip </option>
+			</select>
+
+			Departure City:
+			<select name="source" required>
+				<option value="select"> Select </option>
+				<option value="JFK"> New York / JFK </option>
+				<option value="PVG"> Shanghai / PVG </option>
+			</select>
+
+			Destination City:
+			<select name="destination" required>
+				<option value="select"> Select </option>
+				<option value="JFK"> New York / JFK </option>
+				<option value="PVG"> Shanghai / PVG </option>
+			</select>
+
+			Departure Date:
+			<input type="date" min="2021-04-20" name="departure" required>
+
+			Arrival Date:
+			<input type="date" min="2021-04-20" name="arrival" required>
+
+			<input type="submit" value=Search />
+			
+		</form>
+
+		<!-- Displays the flights generated from the 'Search for and Purchase Flights' form -->
+		{% if query_flights and query_flights!= "No Results" %}
+		
+		</br>
+		<table>
+
+			<tr>
+				<td> Flight Number </td>
+				<td> Airline Name </td>
+				<td> Airplane ID </td>
+				<td> Departure Airport </td>
+				<td> Departure Date </td>
+				<td> Departure Time </td>
+				<td> Arrival Airport </td>
+				<td> Arrival Date </td>
+				<td> Arrival Time </td>
+				<td> Trip Type </td>
+				<td> Price </td>
+				<td> Flight Status </td>
+				<td> View Customers </td>
+			</tr>
+
+			{% for flight in query_flights %}
+
+			<tr>
+				<td> {{ flight['flight_num'] }} </td>
+				<td> {{ flight['airline_name'] }} </td>
+				<td> {{ flight['airplane_ID'] }} </td>
+				<td> {{ flight['departure_airport'] }} </td>
+				<td> {{ flight['departure_date'] }} </td>
+				<td> {{ flight['departure_time'] }} </td>
+				<td> {{ flight['arrival_airport'] }} </td>
+				<td> {{ flight['arrival_date'] }} </td>
+				<td> {{ flight['arrival_time'] }} </td>
+				<td> {{ flight['trip_type'] }} </td>	
+				<td> {{ flight['base_price'] }} </td>	
+				<td> {{ flight['flight_status'] }} </td>
+				<td>
+					<form action="/staffHome" method="POST">
+						<button type="submit" name="flight_select" value= {{ flight['flight_num'] }} > Yes </button>
+					</form>
+				</td>	
+			</tr>
+
+			{% endfor %}	
+
+		</table> </br>
+
+		{% elif query_flights == "No Results" %}
+			<h4 style="color: red"> {{ query_flights }}</h4>
+		{% endif %}
+
+		{% if customers and customer != "No Results" %}
+			
+			</br>
+			<table>
+				<tr>
+					<td> Flight Number </td>
+					<td> Customer Email </td>
+				</tr>
+
+			{% for customer in customers%}
+				<tr>
+					<td> {{ flight_select }} </td>
+					<td> {{ customer['cus_email'] }} </td>
+				</tr>
+			{% endfor %}
+
+			</table>
+
+		{% elif customers == "No Results" %}
+			<h4 style="color: red"> {{ customers }}</h4>
+		{% endif %}
+
 		</br> <hr>
+
 
 		<h2> Add New Flight </h2>
 
 			<form action="/staffHome" method="POST">
-
-				Flight Number: <input type="text" name="flight_num" placeholder="Flight Number (FN-#)" required/>
 				
 				Airlplane ID:
 				<select name="airplane_ID" required>
 					<option value="select"> Select </option>
-					<option value="APID-1"> APID-1 </option>
-					<option value="APID-2"> APID-2 </option>
+					{% for airplane in airplanes %}
+						<option value={{ airplane['airplane_ID'] }}> {{ airplane['airplane_ID'] }} </option>
+					{% endfor %}
 				</select>
 
 				Trip Type:
@@ -195,7 +267,7 @@
 			</form>
 
 			{% if add_flight == "Complete" %}
-			<h4 style="color: green"> Flight Added </h4>
+				<h4 style="color: green"> Flight Added </h4>
 			{% endif %}
 
 		</br> <hr>
@@ -204,7 +276,6 @@
 
 			<form action="/staffHome" method="POST">
 
-				Airlplane ID: <input type="text" name="airplane_ID" placeholder="Airplane ID (APID-#)" required/>
 				Seats: <input type="text" name="seats" placeholder="Seats" required/>
 
 				<input type="submit" value="Add Airplane" />
@@ -212,7 +283,24 @@
 			</form>
 
 			{% if add_airplane == "Complete" %}
-			<h4 style="color: green"> Flight Added </h4>
+				<h4 style="color: green"> Airplane Added. View all airplanes below. </h4>
+
+				<table>
+					<tr>
+						<td> Airplane_ID </td>
+						<td> Airline </td>
+						<td> Seats </td>
+					</tr>
+	
+						{% for airplane in airplanes %}
+							<tr>
+								<td> {{airplane['airplane_ID']}} </td>
+								<td> {{airplane['airline_name']}} </td>
+								<td> {{airplane['seats']}} </td>
+							</tr>
+						{% endfor %}
+				</table>
+
 			{% endif %}
 
 			</br> <hr>

@@ -46,13 +46,12 @@
 ### Complete
 1. View Flights
 1. Add New Flight
-    1. Issue #1: Does not prevent staff from using a previous flight number
-    1. Issue #2: Page crashes upon reload becuase the reload triggers the flight to be added to the database again but it cannot because of a primary key conflict.
+    1. Issue #1: Page adds duplicate flights each time the page is reloaded
 1. Change Flight Status
     1. Issue #1: Printing that the status was successful shows up in each table row.
 1. Add New Airplane
-    1. Issue #1: Does not prevent staff from using a previous airplane ID
-    1. Issue #2: Page crashes upon reload becuase the reload triggers the airplane to be added to the database again but it cannot because of a primary key conflict.
+    1. Issue #1: Page adds duplicate airplanes each time the page is reloaded
+
 
 ### To Do
 1. Add New Airport

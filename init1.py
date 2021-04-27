@@ -48,9 +48,10 @@ def index():
 
 	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
 	if (conduct_flight_search == True):
-		search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s AND trip_type = %s AND departure_date >= DATE(NOW()) AND arrival_date >= DATE(NOW())'
-						
-		cursor.execute(search_flights, (source, destination, departure, arrival, trip_type))
+		# search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s AND trip_type = %s AND departure_date >= DATE(NOW()) AND arrival_date >= DATE(NOW())'
+		# cursor.execute(search_flights, (source, destination, departure, arrival, trip_type))
+		search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND trip_type = %s AND departure_date >= %s AND arrival_date <= %s'				
+		cursor.execute(search_flights, (source, destination, trip_type, departure, arrival))
 		query_flights = cursor.fetchall()
 
 		if (not query_flights):
@@ -231,7 +232,6 @@ def customerRegistrationAuth():
 @app.route('/agentRegistrationAuth', methods=['GET', 'POST'])
 def agentRegistrationAuth():
 	#grabs information from the forms
-	agentID = request.form['agentID']
 	email = request.form['email']
 	password = request.form['password']
 	airline = request.form['airline']
@@ -250,8 +250,8 @@ def agentRegistrationAuth():
 		error = "This booking agent already exists"
 		return render_template('agentRegistration.html', error = error)
 	else:
-		ins = 'INSERT INTO Booking_Agent VALUES(%s, %s, MD5(%s), %s)'
-		cursor.execute(ins, (agentID, email, password, airline))
+		ins = 'INSERT INTO Booking_Agent (agent_email, agent_password, airline_name) VALUES(%s, MD5(%s), %s)'
+		cursor.execute(ins, (email, password, airline))
 		conn.commit()
 		cursor.close()
 		return render_template('index.html')
@@ -431,9 +431,10 @@ def customerHome():
 
 	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
 	if (conduct_flight_search == True):
-		search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s AND trip_type = %s AND departure_date >= DATE(NOW()) AND arrival_date >= DATE(NOW())'
-						
-		cursor.execute(search_flights, (source, destination, departure, arrival, trip_type))
+		# search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s AND trip_type = %s AND departure_date >= DATE(NOW()) AND arrival_date >= DATE(NOW())'
+		# cursor.execute(search_flights, (source, destination, departure, arrival, trip_type))
+		search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND trip_type = %s AND departure_date >= %s AND arrival_date <= %s'				
+		cursor.execute(search_flights, (source, destination, trip_type, departure, arrival))
 		query_flights = cursor.fetchall()
 
 		if (not query_flights):
@@ -710,9 +711,10 @@ def agentHome():
 
 	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
 	if (conduct_flight_search == True):
-		search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s AND trip_type = %s AND departure_date >= DATE(NOW()) AND arrival_date >= DATE(NOW())'
-						
-		cursor.execute(search_flights, (source, destination, departure, arrival, trip_type))
+		# search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s AND trip_type = %s AND departure_date >= DATE(NOW()) AND arrival_date >= DATE(NOW())'			
+		# cursor.execute(search_flights, (source, destination, departure, arrival, trip_type))
+		search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND trip_type = %s AND departure_date >= %s AND arrival_date <= %s'				
+		cursor.execute(search_flights, (source, destination, trip_type, departure, arrival))
 		query_flights = cursor.fetchall()
 
 		if (not query_flights):
@@ -838,13 +840,28 @@ def agentHome():
 def staffHome():
 	username = session['username']
 
+	conduct_flight_search = False
+	if ('trip_type' in request.form and 'source' in request.form and 'destination' in request.form and 'departure' in request.form and 'arrival' in request.form):	
+		conduct_flight_search = True
+		trip_type = request.form['trip_type']
+		source = request.form['source']
+		destination = request.form['destination']	
+		departure = request.form['departure']
+		arrival = request.form['arrival']
+
+
+	conduct_customer_search = False
+	if ('flight_select' in request.form):
+		conduct_customer_search = True
+		flight_select = request.form['flight_select']
+
+
 	add_flight = False
-	if ('flight_num' in request.form and 'airplane_ID' in request.form and 'trip_type' in request.form and 'departure_airport' in request.form and 'departure_date' in request.form \
+	if ('airplane_ID' in request.form and 'trip_type' in request.form and 'departure_airport' in request.form and 'departure_date' in request.form \
 		and 'departure_time' in request.form and 'arrival_airport' in request.form and 'arrival_date' in request.form and 'arrival_time' in request.form \
 		and 'base_price' in request.form and 'flight_status' in request.form):
 
 		add_flight = True
-		flight_num = request.form['flight_num']
 		airplane_ID = request.form['airplane_ID']
 		trip_type = request.form['trip_type']
 		departure_airport = request.form['departure_airport']
@@ -856,16 +873,17 @@ def staffHome():
 		base_price = request.form['base_price']
 		flight_status = request.form['flight_status']
 
+
 	change_flight_status = False
 	if ('flight_select' in request.form and 'flight_status' in request.form):
 		change_flight_status = True
 		flight_select = request.form['flight_select']
 		flight_status = request.form['flight_status']
 
+
 	add_airplane = False
-	if ('airplane_ID' in request.form and 'seats' in request.form):
+	if ('seats' in request.form):
 		add_airplane = True
-		airplane_ID = request.form['airplane_ID']
 		seats = request.form['seats']
 
 	cursor = conn.cursor()
@@ -875,24 +893,57 @@ def staffHome():
 	airline_name = cursor.fetchone()
 	airline_name = airline_name['airline_name']
 
-	find_all_flights = 'SELECT * FROM Flight WHERE airline_name = %s'
-	cursor.execute(find_all_flights, (airline_name))
-	all_flights = cursor.fetchall()
 
-	find_past_flights = 'SELECT * FROM Flight WHERE airline_name = %s AND departure_date < DATE(NOW())'
+	find_airplanes = 'SELECT * FROM Airplane WHERE airline_name = %s'
+	cursor.execute(find_airplanes, (airline_name))
+	airplanes = cursor.fetchall()
+	# later: what if they have no airplanes?
+
+
+	find_past_flights = 'SELECT * FROM Flight WHERE airline_name = %s AND departure_date >= DATE_SUB(DATE(NOW()), INTERVAL 30 DAY) AND departure_date <= DATE(NOW())'
 	cursor.execute(find_past_flights, (airline_name))
 	past_flights = cursor.fetchall()
 
-	find_future_flights = 'SELECT * FROM Flight WHERE airline_name = %s AND departure_date > DATE(NOW())'
+
+	find_future_flights = 'SELECT * FROM Flight WHERE airline_name = %s AND departure_date >= DATE(NOW()) AND departure_date <= DATE_ADD(DATE(NOW()), INTERVAL 30 DAY)'
 	cursor.execute(find_future_flights, (airline_name))
 	future_flights = cursor.fetchall()
 
+
+	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
+	if (conduct_flight_search == True):
+		search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND trip_type = %s AND departure_date >= %s AND arrival_date <= %s'				
+		cursor.execute(search_flights, (source, destination, trip_type, departure, arrival))
+		query_flights = cursor.fetchall()
+
+		if (not query_flights):
+			query_flights = "No Results"
+
+		cursor.close()
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, query_flights=query_flights)
+
+
+	if (conduct_customer_search == True):
+		search_flights = 'SELECT cus_email FROM Customer_Purchases WHERE flight_num = %s'				
+		cursor.execute(search_flights, (flight_select))
+		customers = cursor.fetchall()
+
+		if (not customers):
+			customers = "No Results"
+
+		cursor.close()
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, customers=customers, flight_select=flight_select)
+
+
 	if (add_flight == True):
-		insert_flight = 'INSERT INTO Flight VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
-		cursor.execute(insert_flight, (flight_num, airline_name, airplane_ID, departure_airport, departure_date, departure_time, arrival_airport, arrival_date, arrival_time, base_price, flight_status, trip_type))
+		insert_flight = 'INSERT INTO Flight (airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
+						arrival_airport, arrival_date, arrival_time, base_price, flight_status, trip_type) \
+						VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+		cursor.execute(insert_flight, (airline_name, airplane_ID, departure_airport, departure_date, departure_time, arrival_airport, arrival_date, arrival_time, base_price, flight_status, trip_type))
 		conn.commit()
 		cursor.close()
-		return render_template('staffHome.html', username=username, all_flights=all_flights, past_flights=past_flights, future_flights=future_flights, add_flight="Complete")
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, add_flight="Complete")
+
 
 	if (change_flight_status == True):
 		update_flight = 'UPDATE Flight SET flight_status = %s WHERE flight_num = %s'
@@ -900,20 +951,20 @@ def staffHome():
 		conn.commit()
 		
 		cursor.close()
-		return render_template('staffHome.html', username=username, all_flights=all_flights, past_flights=past_flights, future_flights=future_flights, change_flight_status="Complete", flight_selct=flight_select)
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, change_flight_status="Complete", flight_selct=flight_select)
+
 
 	if (add_airplane == True):
-		insert_airplane = 'INSERT INTO AIRPLANE VALUES (%s, %s, %s)'
-		cursor.execute(insert_airplane, (airplane_ID, airline_name, seats))
+		insert_airplane = 'INSERT INTO AIRPLANE (airline_name, seats) VALUES (%s, %s)'
+		cursor.execute(insert_airplane, (airline_name, seats))
 		conn.commit()
 		
 		cursor.close()
-		return render_template('staffHome.html', username=username, all_flights=all_flights, past_flights=past_flights, future_flights=future_flights, add_airplane="Complete")
-
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, add_airplane="Complete")
 
 
 	cursor.close()
-	return render_template('staffHome.html', username=username, all_flights=all_flights, past_flights=past_flights, future_flights=future_flights)
+	return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes)
 
 @app.route('/customerLogout')
 def customerLogout():
