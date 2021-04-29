@@ -154,6 +154,7 @@
 				<td> Price </td>
 				<td> Flight Status </td>
 				<td> View Customers </td>
+				<td> View Ratings and Reviews </td>
 			</tr>
 
 			{% for flight in query_flights %}
@@ -175,7 +176,12 @@
 					<form action="/staffHome" method="POST">
 						<button type="submit" name="customer_flight_select" value= {{ flight['flight_num'] }} > Yes </button>
 					</form>
-				</td>	
+				</td>
+				<td>
+					<form action="/staffHome" method="POST">
+						<button type="submit" name="review_flight_select" value= {{ flight['flight_num'] }} > Yes </button>
+					</form>
+				</td>		
 			</tr>
 
 			{% endfor %}	
@@ -208,8 +214,35 @@
 			<h4 style="color: red"> {{ customers }}</h4>
 		{% endif %}
 
-		</br> <hr>
 
+		{% if reviews and reviews != "No Reviews" %}
+
+			<h4 style="color: green"> Average Rating: {{ avg_rating }}</h4>
+			
+			</br>
+			<table>
+				<tr>
+					<td> Customer Email </td>
+					<td> Rating </td>
+					<td> Review </td>
+
+				</tr>
+
+			{% for review in reviews %}
+				<tr>
+					<td> {{ review['cus_email'] }} </td>
+					<td> {{ review['rating'] }} </td>
+					<td> {{ review['comment'] }} </td>
+				</tr>
+			{% endfor %}
+
+			</table>
+
+		{% elif reviews == "No Results" %}
+			<h4 style="color: red"> {{ reviews }}</h4>
+		{% endif %}
+
+		</br> <hr>
 
 		<h2> Add New Flight </h2>
 

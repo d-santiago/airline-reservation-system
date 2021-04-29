@@ -49,9 +49,9 @@
 1. Change Flight Status
 1. Add New Airplane
 1. Add New Airport
+1. View Flight Ratings
 
 ### To Do
-1. View Flight Ratings
 1. View Booking Agents
 1. View Frequent Customers
 1. View Reports

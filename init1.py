@@ -887,11 +887,18 @@ def staffHome():
 		add_airplane = True
 		seats = request.form['seats']
 
+
 	add_airport = False
 	if ('airport_name' in request.form and 'city' in request.form):
 		add_airport = True
 		airport_name = request.form['airport_name']
 		city = request.form['city']
+
+
+	view_flight_review = False
+	if ('review_flight_select' in request.form):
+		view_flight_review = True
+		review_flight_select = request.form['review_flight_select']
 
 	cursor = conn.cursor()
 
@@ -978,6 +985,24 @@ def staffHome():
 		
 		cursor.close()
 		return redirect(url_for('staffHome'))
+
+	if (view_flight_review == True):
+		find_flight_review = 'SELECT * FROM REVIEW WHERE flight_num = %s'
+		cursor.execute(find_flight_review, (review_flight_select))
+		reviews = cursor.fetchall()
+		print(reviews)
+
+		if (reviews == ()):
+			reviews = "No Reviews"
+		else:
+			find_avg_rating = 'SELECT AVG(rating) as avg_rating FROM REVIEW WHERE flight_num = %s'
+			cursor.execute(find_avg_rating, (review_flight_select))
+			avg_rating = cursor.fetchone()
+			avg_rating = avg_rating['avg_rating']
+			print(avg_rating)
+		
+		cursor.close()
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, reviews=reviews, avg_rating=avg_rating)
 
 
 	cursor.close()
