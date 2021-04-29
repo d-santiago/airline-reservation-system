@@ -887,6 +887,12 @@ def staffHome():
 		add_airplane = True
 		seats = request.form['seats']
 
+	add_airport = False
+	if ('airport_name' in request.form and 'city' in request.form):
+		add_airport = True
+		airport_name = request.form['airport_name']
+		city = request.form['city']
+
 	cursor = conn.cursor()
 
 	staff_airline = 'SELECT airline_name FROM Airline_Staff WHERE staff_username = %s'
@@ -964,6 +970,14 @@ def staffHome():
 		cursor.close()
 		# return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, add_airplane="Complete")
 		return redirect(url_for('staffConfirmation'))
+
+	if (add_airport == True):
+		insert_airport = 'INSERT INTO AIRPORT (airport_name, city) VALUES (%s, %s)'
+		cursor.execute(insert_airport, (airport_name, city))
+		conn.commit()
+		
+		cursor.close()
+		return redirect(url_for('staffHome'))
 
 
 	cursor.close()

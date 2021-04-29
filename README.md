@@ -45,12 +45,12 @@
 
 ### Complete
 1. View Flights
-1. Add New Flight (Using Redirect)
+1. Add New Flight
 1. Change Flight Status
 1. Add New Airplane
+1. Add New Airport
 
 ### To Do
-1. Add New Airport
 1. View Flight Ratings
 1. View Booking Agents
 1. View Frequent Customers
