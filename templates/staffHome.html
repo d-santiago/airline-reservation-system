@@ -323,7 +323,9 @@
 
 		</br> <hr>
 
-		<h2> View Top 5 Booking Agents: Based on Ticket Sales Within the Last Month </h2>
+		<h2> View Top 5 Booking Agents </h2>
+
+		<h3> View Top 5 Booking Agents: Based on Ticket Sales Within the Last Month </h3>
 		
 		{% if top_agents_month %}
 
@@ -347,7 +349,7 @@
 			
 		{% endif %}
 
-		<h2> View Top 5 Booking Agents: Based on Ticket Sales Within the Last Year </h2>
+		<h3> View Top 5 Booking Agents: Based on Ticket Sales Within the Last Year </h3>
 
 		{% if top_agents_year %}
 
@@ -371,7 +373,7 @@
 			
 		{% endif %}
 		
-		<h2> View Top 5 Booking Agents: Based on Commission Within the Last Year </h2>
+		<h3> View Top 5 Booking Agents: Based on Commission Within the Last Year </h3>
 
 		{% if top_agents_commission%}
 
@@ -393,6 +395,56 @@
 
 			</table> </br>
 			
+		{% endif %}
+
+		</br> <hr>
+
+		<h2> View Top Customer Within the Past Year </h2>
+
+		<table>
+
+			<tr>
+				<td> Customer Email </td>
+				<td> Tickets Purchased </td>
+			</tr>
+
+			<tr>
+				<td> {{ top_customer['cus_email'] }} </td>
+				<td> {{ top_customer['purchases'] }} </td>
+			</tr>
+
+		</table> </br>
+
+		</br> <hr>
+
+		<h2> Find Customer Flights </h2>
+
+		<form action="/staffHome" method="POST">
+
+			Customer Email: <input type="text" name="cus_email" placeholder="Customer Email" required/>
+
+			<input type="submit" value="Find Customer's Flights" />
+
+		</form>
+
+		{% if customer_flights and customer_flights != "No Results" %}
+			
+			</br>
+			<table>
+				<tr>
+					<td> Flight Number </td>
+				</tr>
+
+			{% for flight in customer_flights %}
+				<tr>
+					<td> {{ flight['flight_num'] }} </td>
+				</tr>
+			{% endfor %}
+
+			</table>
+
+		{% elif customer_flights == "No Results" %}
+			<h4 style="color: red"> {{ reviews }}</h4>
 		{% endif %}
 
 		<a href="/staffLogout">Logout</a>

@@ -900,6 +900,11 @@ def staffHome():
 		view_flight_review = True
 		review_flight_select = request.form['review_flight_select']
 
+	view_customer_flights = False
+	if ('cus_email' in request.form):
+		view_customer_flights = True
+		cus_email = request.form['cus_email']
+
 	cursor = conn.cursor()
 
 	staff_airline = 'SELECT airline_name FROM Airline_Staff WHERE staff_username = %s'
@@ -924,26 +929,32 @@ def staffHome():
 	future_flights = cursor.fetchall()
 
 
-	find_top_agents = 'SELECT Customer_Purchases.agent_ID, SUM(purchase_ID) as purchases FROM Customer_Purchases, Booking_Agent WHERE \
+	find_top_agents = 'SELECT Customer_Purchases.agent_ID, COUNT(purchase_ID) as purchases FROM Customer_Purchases, Booking_Agent WHERE \
 						Customer_Purchases.agent_ID = Booking_Agent.agent_ID AND airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 MONTH) \
 						GROUP BY agent_ID ORDER BY purchases DESC LIMIT 0, 5'
 	cursor.execute(find_top_agents, (airline_name))
 	top_agents_month = cursor.fetchall()
-	print(top_agents_month)
 
-	find_top_agents = 'SELECT Customer_Purchases.agent_ID, SUM(purchase_ID) as purchases FROM Customer_Purchases, Booking_Agent WHERE \
+
+	find_top_agents = 'SELECT Customer_Purchases.agent_ID, COUNT(purchase_ID) as purchases FROM Customer_Purchases, Booking_Agent WHERE \
 						Customer_Purchases.agent_ID = Booking_Agent.agent_ID AND airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) \
 						GROUP BY agent_ID ORDER BY purchases DESC LIMIT 0, 5'
 	cursor.execute(find_top_agents, (airline_name))
 	top_agents_year = cursor.fetchall()
-	print(top_agents_year)
+
 
 	find_top_agents = 'SELECT Customer_Purchases.agent_ID, SUM(sold_price) * 0.1 as commission FROM Customer_Purchases, Booking_Agent WHERE \
 						Customer_Purchases.agent_ID = Booking_Agent.agent_ID AND airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) \
 						GROUP BY agent_ID ORDER BY commission DESC LIMIT 0, 5'
 	cursor.execute(find_top_agents, (airline_name))
 	top_agents_commission = cursor.fetchall()
-	print(top_agents_commission)
+
+
+	# find_customers = 'SELECT SUM(sold_price) cus_email FROM Customer_Purchases WHERE agent_ID = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 6 MONTH)'
+	find_customers = 'SELECT cus_email, COUNT(purchase_ID) as purchases FROM Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
+						AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) GROUP BY cus_email ORDER BY purchases DESC LIMIT 0, 1'
+	cursor.execute(find_customers, (airline_name))
+	top_customer = cursor.fetchone()
 
 
 	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
@@ -956,7 +967,7 @@ def staffHome():
 			query_flights = "No Results"
 
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, query_flights=query_flights)
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, query_flights=query_flights)
 
 
 	if (conduct_customer_search == True):
@@ -968,7 +979,7 @@ def staffHome():
 			customers = "No Results"
 
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, customers=customers, customer_flight_select=customer_flight_select)
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, customers=customers, customer_flight_select=customer_flight_select)
 
 
 	if (add_flight == True):
@@ -1022,10 +1033,21 @@ def staffHome():
 			avg_rating = avg_rating['avg_rating']
 		
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, reviews=reviews, avg_rating=avg_rating)
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, reviews=reviews, avg_rating=avg_rating)
+
+	if (view_customer_flights == True):
+		find_customer_flights = 'SELECT Customer_Purchases.flight_num FROM Customer_Purchases, Flight WHERE cus_email = %s AND Customer_Purchases.flight_num = Flight.flight_num AND Flight.airline_name = %s'
+		cursor.execute(find_customer_flights, (cus_email, airline_name))
+		customer_flights = cursor.fetchall()
+
+		if (customer_flights == ()):
+			customer_flights = "No Results"
+		
+		cursor.close()
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, customer_flights=customer_flights)
 
 	cursor.close()
-	return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission)
+	return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer)
 
 
 @app.route('/staffConfirmation')
