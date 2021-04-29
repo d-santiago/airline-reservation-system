@@ -323,6 +323,77 @@
 
 		</br> <hr>
 
+		<h2> View Top 5 Booking Agents: Based on Ticket Sales Within the Last Month </h2>
+		
+		{% if top_agents_month %}
+
+			<table>
+
+				<tr>
+					<td> Booking Agent ID </td>
+					<td> Tickets Sold </td>
+				</tr>
+
+				{% for agent in top_agents_month %}
+
+				<tr>
+					<td> {{ agent['agent_ID'] }} </td>
+					<td> {{ agent['purchases'] }} </td>
+				</tr>
+
+				{% endfor %}	
+
+			</table> </br>
+			
+		{% endif %}
+
+		<h2> View Top 5 Booking Agents: Based on Ticket Sales Within the Last Year </h2>
+
+		{% if top_agents_year %}
+
+			<table>
+
+				<tr>
+					<td> Booking Agent ID </td>
+					<td> Tickets Sold </td>
+				</tr>
+
+				{% for agent in top_agents_year %}
+
+				<tr>
+					<td> {{ agent['agent_ID'] }} </td>
+					<td> {{ agent['purchases'] }} </td>
+				</tr>
+
+				{% endfor %}	
+
+			</table> </br>
+			
+		{% endif %}
+		
+		<h2> View Top 5 Booking Agents: Based on Commission Within the Last Year </h2>
+
+		{% if top_agents_commission%}
+
+			<table>
+
+				<tr>
+					<td> Booking Agent ID </td>
+					<td> Tickets Sold </td>
+				</tr>
+
+				{% for agent in top_agents_commission %}
+
+				<tr>
+					<td> {{ agent['agent_ID'] }} </td>
+					<td> ${{ agent['commission'] }}0 </td>
+				</tr>
+
+				{% endfor %}	
+
+			</table> </br>
+			
+		{% endif %}
 
 		<a href="/staffLogout">Logout</a>
 
