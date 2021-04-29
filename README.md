@@ -52,8 +52,8 @@
 1. View Flight Ratings
 1. View Top Booking Agents
 1. View Top Customer
+1. View Ticket Sales
 
 ### To Do
-1. View Reports
 1. Comparison of Revenue Earned
 1. View Top Destinations

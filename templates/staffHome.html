@@ -323,9 +323,9 @@
 
 		</br> <hr>
 
-		<h2> View Top 5 Booking Agents </h2>
+		<h2> View Top Booking Agents </h2>
 
-		<h3> View Top 5 Booking Agents: Based on Ticket Sales Within the Last Month </h3>
+		<h3> Top 5 Booking Agents: Based on Ticket Sales Within the Last Month </h3>
 		
 		{% if top_agents_month %}
 
@@ -345,11 +345,11 @@
 
 				{% endfor %}	
 
-			</table> </br>
+			</table>
 			
 		{% endif %}
 
-		<h3> View Top 5 Booking Agents: Based on Ticket Sales Within the Last Year </h3>
+		<h3> Top 5 Booking Agents: Based on Ticket Sales Within the Last Year </h3>
 
 		{% if top_agents_year %}
 
@@ -369,11 +369,11 @@
 
 				{% endfor %}	
 
-			</table> </br>
+			</table>
 			
 		{% endif %}
 		
-		<h3> View Top 5 Booking Agents: Based on Commission Within the Last Year </h3>
+		<h3> Top 5 Booking Agents: Based on Commission Within the Last Year </h3>
 
 		{% if top_agents_commission%}
 
@@ -381,7 +381,7 @@
 
 				<tr>
 					<td> Booking Agent ID </td>
-					<td> Tickets Sold </td>
+					<td> Commission </td>
 				</tr>
 
 				{% for agent in top_agents_commission %}
@@ -393,7 +393,7 @@
 
 				{% endfor %}	
 
-			</table> </br>
+			</table>
 			
 		{% endif %}
 
@@ -413,7 +413,7 @@
 				<td> {{ top_customer['purchases'] }} </td>
 			</tr>
 
-		</table> </br>
+		</table>
 
 		</br> <hr>
 
@@ -427,7 +427,7 @@
 
 		</form>
 
-		{% if customer_flights and customer_flights != "No Results" %}
+		{% if customer_flights and customer_flights != "No Tickets Sold" %}
 			
 			</br>
 			<table>
@@ -446,6 +446,45 @@
 		{% elif customer_flights == "No Results" %}
 			<h4 style="color: red"> {{ reviews }}</h4>
 		{% endif %}
+
+		</br> <hr>
+
+		<h2> View Tickets Sold </h2>
+
+		{% if tickets_sold_month and tickets_sold_month != "No Tickets Sold" %}
+			
+			<h4> {{ tickets_sold_month}} Tickets Were Sold In the Past Month </h4>
+
+		{% elif tickets_sold_month == "No Tickets Sold" %}
+			<h4 style="color: red"> {{ tickets_sold_month }} In the Past Month </h4>
+		{% endif %}
+
+		{% if tickets_sold_year and tickets_sold_year != "No Tickets Sold" %}
+			
+			<h4> {{ tickets_sold_year }} Tickets Were Sold In the Past Year </h4>
+
+		{% elif tickets_sold_year == "No Tickets Sold" %}
+			<h4 style="color: red"> {{ tickets_sold_year }} In the Past Year </h4>
+		{% endif %}
+
+		<form action="/staffHome" method="POST">
+
+			Start Date: <input type="date" name="ticket_start_date" placeholder="Start Date" required/>
+			End Date: <input type="date" name="ticket_end_date" placeholder="End Date" required/>
+
+			<input type="submit" value="Find Tickets Sold" />
+
+		</form>
+
+		{% if tickets_sold and tickets_sold != "No Tickets Sold" %}
+			
+			<h4> {{ tickets_sold}} were sold between {{ ticket_start_date }} and {{ ticket_end_date }} </h4>
+
+		{% elif tickets_sold == "No Tickets Sold" %}
+			<h4 style="color: red"> {{ tickets_sold }} between {{ ticket_start_date }} and {{ ticket_end_date }}</h4>
+		{% endif %}
+
+		
 
 		<a href="/staffLogout">Logout</a>
 

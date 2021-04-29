@@ -900,10 +900,18 @@ def staffHome():
 		view_flight_review = True
 		review_flight_select = request.form['review_flight_select']
 
+
 	view_customer_flights = False
 	if ('cus_email' in request.form):
 		view_customer_flights = True
 		cus_email = request.form['cus_email']
+
+
+	view_tickets_sold = False
+	if ('ticket_start_date' in request.form and 'ticket_end_date' in request.form):
+		view_tickets_sold = True
+		ticket_start_date = request.form['ticket_start_date']
+		ticket_end_date = request.form['ticket_end_date']
 
 	cursor = conn.cursor()
 
@@ -956,6 +964,21 @@ def staffHome():
 	cursor.execute(find_customers, (airline_name))
 	top_customer = cursor.fetchone()
 
+	find_tickets_sold = 'SELECT COUNT(ticket_ID) as tickets_sold from Customer_Purchases WHERE purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 MONTH)'
+	cursor.execute(find_tickets_sold)
+	tickets_sold_month = cursor.fetchone()
+	tickets_sold_month = tickets_sold_month['tickets_sold']
+
+	if (not tickets_sold_month):
+		tickets_sold_month = "No Tickets Sold"
+
+	find_tickets_sold = 'SELECT COUNT(ticket_ID) as tickets_sold from Customer_Purchases WHERE purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR)'
+	cursor.execute(find_tickets_sold)
+	tickets_sold_year = cursor.fetchone()
+	tickets_sold_year = tickets_sold_year['tickets_sold']
+
+	if (not tickets_sold_year):
+		tickets_sold_year = "No Tickets Sold"
 
 	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
 	if (conduct_flight_search == True):
@@ -967,7 +990,7 @@ def staffHome():
 			query_flights = "No Results"
 
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, query_flights=query_flights)
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, query_flights=query_flights)
 
 
 	if (conduct_customer_search == True):
@@ -979,7 +1002,7 @@ def staffHome():
 			customers = "No Results"
 
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, customers=customers, customer_flight_select=customer_flight_select)
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, customers=customers, customer_flight_select=customer_flight_select)
 
 
 	if (add_flight == True):
@@ -1033,7 +1056,7 @@ def staffHome():
 			avg_rating = avg_rating['avg_rating']
 		
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, reviews=reviews, avg_rating=avg_rating)
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, reviews=reviews, avg_rating=avg_rating)
 
 	if (view_customer_flights == True):
 		find_customer_flights = 'SELECT Customer_Purchases.flight_num FROM Customer_Purchases, Flight WHERE cus_email = %s AND Customer_Purchases.flight_num = Flight.flight_num AND Flight.airline_name = %s'
@@ -1044,10 +1067,22 @@ def staffHome():
 			customer_flights = "No Results"
 		
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, customer_flights=customer_flights)
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, customer_flights=customer_flights)
+
+	if (view_tickets_sold == True):
+		find_tickets_sold = 'SELECT COUNT(ticket_ID) as tickets_sold from Customer_Purchases WHERE purchase_date >= %s AND purchase_date <= %s'
+		cursor.execute(find_tickets_sold, (ticket_start_date, ticket_end_date))
+		tickets_sold = cursor.fetchone()
+		tickets_sold = tickets_sold['tickets_sold']
+
+		if (not tickets_sold):
+			tickets_sold = "No Tickets Sold"
+		
+		cursor.close()
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, tickets_sold=tickets_sold, ticket_start_date=ticket_start_date, ticket_end_date=ticket_end_date)
 
 	cursor.close()
-	return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer)
+	return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year)
 
 
 @app.route('/staffConfirmation')
