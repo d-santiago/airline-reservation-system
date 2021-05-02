@@ -80,6 +80,7 @@
 					<td> {{ flight['flight_status'] }} </td>
 					<td>
 						<form action="/staffHome" method="POST">
+
 							<select name="flight_select" value={{ flight['flight_num'] }} required>
 								<option value={{ flight['flight_num'] }}> {{ flight['flight_num'] }} </option>
 							</select>
@@ -91,7 +92,9 @@
 									<option value="On Time"> On Time </option>
 								{% endif %}
 							</select>
+
 							<input type="submit" value="Change Flight Status" />
+
 						</form>
 					</td>	
 				<tr>
@@ -100,9 +103,12 @@
 
 		</table>
 
+
+
 		<h2> Search for Flights </h2>
 
 		<form action="/staffHome" method="POST">
+
 			Trip Type:
 			<select name="trip_type" required>
 				<option value="select"> Select </option>
@@ -137,87 +143,93 @@
 		<!-- Displays the flights generated from the 'Search for and Purchase Flights' form -->
 		{% if query_flights and query_flights != "No Results" %}
 		
-		</br>
-		<table>
+			</br>
+			<table>
 
-			<tr>
-				<td> Flight Number </td>
-				<td> Airline Name </td>
-				<td> Airplane ID </td>
-				<td> Departure Airport </td>
-				<td> Departure Date </td>
-				<td> Departure Time </td>
-				<td> Arrival Airport </td>
-				<td> Arrival Date </td>
-				<td> Arrival Time </td>
-				<td> Trip Type </td>
-				<td> Price </td>
-				<td> Flight Status </td>
-				<td> View Customers </td>
-				<td> View Ratings and Reviews </td>
-			</tr>
+				<tr>
+					<td> Flight Number </td>
+					<td> Airline Name </td>
+					<td> Airplane ID </td>
+					<td> Departure Airport </td>
+					<td> Departure Date </td>
+					<td> Departure Time </td>
+					<td> Arrival Airport </td>
+					<td> Arrival Date </td>
+					<td> Arrival Time </td>
+					<td> Trip Type </td>
+					<td> Price </td>
+					<td> Flight Status </td>
+					<td> View Customers </td>
+					<td> View Ratings and Reviews </td>
+				</tr>
 
 			{% for flight in query_flights %}
 
-			<tr>
-				<td> {{ flight['flight_num'] }} </td>
-				<td> {{ flight['airline_name'] }} </td>
-				<td> {{ flight['airplane_ID'] }} </td>
-				<td> {{ flight['departure_airport'] }} </td>
-				<td> {{ flight['departure_date'] }} </td>
-				<td> {{ flight['departure_time'] }} </td>
-				<td> {{ flight['arrival_airport'] }} </td>
-				<td> {{ flight['arrival_date'] }} </td>
-				<td> {{ flight['arrival_time'] }} </td>
-				<td> {{ flight['trip_type'] }} </td>	
-				<td> {{ flight['base_price'] }} </td>	
-				<td> {{ flight['flight_status'] }} </td>
-				<td>
-					<form action="/staffHome" method="POST">
-						<button type="submit" name="customer_flight_select" value= {{ flight['flight_num'] }} > Yes </button>
-					</form>
-				</td>
-				<td>
-					<form action="/staffHome" method="POST">
-						<button type="submit" name="review_flight_select" value= {{ flight['flight_num'] }} > Yes </button>
-					</form>
-				</td>		
-			</tr>
+				<tr>
+					<td> {{ flight['flight_num'] }} </td>
+					<td> {{ flight['airline_name'] }} </td>
+					<td> {{ flight['airplane_ID'] }} </td>
+					<td> {{ flight['departure_airport'] }} </td>
+					<td> {{ flight['departure_date'] }} </td>
+					<td> {{ flight['departure_time'] }} </td>
+					<td> {{ flight['arrival_airport'] }} </td>
+					<td> {{ flight['arrival_date'] }} </td>
+					<td> {{ flight['arrival_time'] }} </td>
+					<td> {{ flight['trip_type'] }} </td>	
+					<td> {{ flight['base_price'] }} </td>	
+					<td> {{ flight['flight_status'] }} </td>
+					<td>
+						<form action="/staffHome" method="POST">
+							<button type="submit" name="customer_flight_select" value= {{ flight['flight_num'] }} > Yes </button>
+						</form>
+					</td>
+					<td>
+						<form action="/staffHome" method="POST">
+							<button type="submit" name="review_flight_select" value= {{ flight['flight_num'] }} > Yes </button>
+						</form>
+					</td>		
+				</tr>
 
 			{% endfor %}	
 
 		</table> </br>
 
 		{% elif query_flights == "No Results" %}
+
 			<h4 style="color: red"> {{ query_flights }}</h4>
+
 		{% endif %}
 
 		{% if customers and customer != "No Results" %}
 			
 			</br>
 			<table>
+				
 				<tr>
 					<td> Flight Number </td>
 					<td> Customer Email </td>
 				</tr>
 
 			{% for customer in customers%}
+
 				<tr>
 					<td> {{ customer_flight_select }} </td>
 					<td> {{ customer['cus_email'] }} </td>
 				</tr>
+
 			{% endfor %}
 
 			</table>
 
 		{% elif customers == "No Results" %}
-			<h4 style="color: red"> {{ customers }}</h4>
-		{% endif %}
 
+			<h4 style="color: red"> {{ customers }}</h4>
+
+		{% endif %}
 
 		{% if reviews and reviews != "No Reviews" %}
 
-			<h4 style="color: green"> Average Rating: {{ avg_rating }}</h4>
+			<h4 style="color: green"> Average Rating: {{ avg_rating }} </h4>
 			
 			</br>
 			<table>
@@ -229,18 +241,24 @@
 				</tr>
 
 			{% for review in reviews %}
+
 				<tr>
 					<td> {{ review['cus_email'] }} </td>
 					<td> {{ review['rating'] }} </td>
 					<td> {{ review['comment'] }} </td>
 				</tr>
+
 			{% endfor %}
 
 			</table>
 
 		{% elif reviews == "No Results" %}
-			<h4 style="color: red"> {{ reviews }}</h4>
+
+			<h4 style="color: red"> {{ reviews }} </h4>
+
 		{% endif %}
+		
+
 
 		</br> <hr>
 
@@ -295,6 +313,8 @@
 
 			</form>
 
+
+
 		</br> <hr>
 
 		<h2> Add New Airplane </h2>
@@ -302,24 +322,25 @@
 			<form action="/staffHome" method="POST">
 
 				Seats: <input type="text" name="seats" placeholder="Seats" required/>
-
 				<input type="submit" value="Add Airplane" />
 
 			</form>
+		
 
-			</br> <hr>
+
+		</br> <hr>
 
 		<h2> Add New Airport </h2>
 
 		<form action="/staffHome" method="POST">
 
 			Airport Name: <input type="text" name="airport_name" placeholder="Airport Name" required/>
-
 			City: <input type="text" name="city" placeholder="City" required/>
-
 			<input type="submit" value="Add Airport" />
 
 		</form>
+
+
 
 		</br> <hr>
 
@@ -397,6 +418,8 @@
 			
 		{% endif %}
 
+
+
 		</br> <hr>
 
 		<h2> View Top Customer Within the Past Year </h2>
@@ -415,6 +438,8 @@
 
 		</table>
 
+
+
 		</br> <hr>
 
 		<h2> Find Customer Flights </h2>
@@ -422,7 +447,6 @@
 		<form action="/staffHome" method="POST">
 
 			Customer Email: <input type="text" name="cus_email" placeholder="Customer Email" required/>
-
 			<input type="submit" value="Find Customer's Flights" />
 
 		</form>
@@ -436,16 +460,22 @@
 				</tr>
 
 			{% for flight in customer_flights %}
+
 				<tr>
 					<td> {{ flight['flight_num'] }} </td>
 				</tr>
+
 			{% endfor %}
 
 			</table>
 
 		{% elif customer_flights == "No Results" %}
-			<h4 style="color: red"> {{ reviews }}</h4>
+
+			<h4 style="color: red"> {{ reviews }} </h4>
+
 		{% endif %}
+
+
 
 		</br> <hr>
 
@@ -456,7 +486,9 @@
 			<h4> {{ tickets_sold_month}} Tickets Were Sold In the Past Month </h4>
 
 		{% elif tickets_sold_month == "No Tickets Sold" %}
+
 			<h4 style="color: red"> {{ tickets_sold_month }} In the Past Month </h4>
+
 		{% endif %}
 
 		{% if tickets_sold_year and tickets_sold_year != "No Tickets Sold" %}
@@ -464,58 +496,81 @@
 			<h4> {{ tickets_sold_year }} Tickets Were Sold In the Past Year </h4>
 
 		{% elif tickets_sold_year == "No Tickets Sold" %}
+
 			<h4 style="color: red"> {{ tickets_sold_year }} In the Past Year </h4>
+
 		{% endif %}
 
 		<form action="/staffHome" method="POST">
 
 			Start Date: <input type="date" name="ticket_start_date" placeholder="Start Date" required/>
 			End Date: <input type="date" name="ticket_end_date" placeholder="End Date" required/>
-
 			<input type="submit" value="Find Tickets Sold" />
 
 		</form>
 
 		{% if tickets_sold and tickets_sold != "No Tickets Sold" %}
+
 			<h4> {{ tickets_sold}} were sold between {{ ticket_start_date }} and {{ ticket_end_date }} </h4>
 
 		{% elif tickets_sold == "No Tickets Sold" %}
+
 			<h4> {{ tickets_sold }} between {{ ticket_start_date }} and {{ ticket_end_date }} </h4>
+
 		{% endif %}
+
+
+		</br> <hr>
 
 		<h2> View Revenue Earned </h2>
 
 		<h3> Within the Past Month </h3>
 
 		{% if direct_revenue_month and direct_revenue_month != "No Direct Revenue" %}
+
 			<h4> Direct Revenue: ${{ direct_revenue_month }}0 </h4>
 
 		{% elif direct_revenue_month == "No Direct Revenue" %}
+
 			<h4> Direct Revenue: $0.00 </h4>
+
 		{% endif %}
 
 		{% if indirect_revenue_year and indirect_revenue_year != "No Indirect Revenue" %}
+
 			<h4> Indirect Revenue: ${{ indirect_revenue_year }}0 </h4>
 
 		{% elif indirect_revenue_year == "No Indirect Revenue" %}
+
 			<h4> Indirect Revenue: $0.00 </h4>
+
 		{% endif %}
 
 		<h3> Within the Past Year </h3>
 
 		{% if indirect_revenue_month and indirect_revenue_month != "No Indirect Revenue" %}
+
 			<h4> Indirect Revenue: ${{ indirect_revenue_month }}0 </h4>
 
 		{% elif indirect_revenue_month == "No Indirect Revenue" %}
+
 			<h4> Indirect Revenue: $0.00 </h4>
+
 		{% endif %}
 
 		{% if indirect_revenue_year and indirect_revenue_year != "No Indirect Revenue" %}
+
 			<h4> Indirect Revenue: ${{ indirect_revenue_year }}0 </h4>
 
 		{% elif indirect_revenue_year == "No Indirect Revenue" %}
+
 			<h4> Indirect Revenue: $0.00 </h4>
+
 		{% endif %}
+
+
+
+		<hr>
 
 		<h2> View Top 3 Destinations </h2>
 
@@ -566,6 +621,8 @@
 			</table>
 			
 		{% endif %}
+
+		</br> <hr>
 
 		<a href="/staffLogout">Logout</a>
 

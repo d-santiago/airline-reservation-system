@@ -46,7 +46,7 @@ def index():
 	cursor = conn.cursor()
 
 
-	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
+	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight search will be conducted (conduct_flight_search = True)
 	if (conduct_flight_search == True):
 		# search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s AND trip_type = %s AND departure_date >= DATE(NOW()) AND arrival_date >= DATE(NOW())'
 		# cursor.execute(search_flights, (source, destination, departure, arrival, trip_type))
@@ -293,7 +293,7 @@ def customerHome():
 	username = session['username']
 
 
-	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
+	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight search will be conducted (conduct_flight_search = True)
 	# We know when a customer clicks this button if we recieve 'trip_type', 'source', 'destination', 'departure', and 'arrival' in the the 'POST' Form
 	conduct_flight_search = False
 	if ('trip_type' in request.form and 'source' in request.form and 'destination' in request.form and 'departure' in request.form and 'arrival' in request.form):	
@@ -305,7 +305,7 @@ def customerHome():
 		arrival = request.form['arrival']
 
 
-	# When a customer clicks the "Yes" button under 'Check Availability' for a certain flight, a ticket serarch will be conducted (conduct_ticket_search = True) for that flight.
+	# When a customer clicks the "Yes" button under 'Check Availability' for a certain flight, a ticket search will be conducted (conduct_ticket_search = True) for that flight.
 	# A purchase form will be revealed if there are tickets avaiable.
 	# We know when a customer clicks this button if we recieve 'flight_select' in the the 'POST' Form
 	conduct_ticket_search = False
@@ -355,6 +355,7 @@ def customerHome():
 
 
 	######################################################################THIS CODE RUNS EVERYTIME THE PAGE IS LOADED OR REFRESHED######################################################################
+
 
 	# establish connection with PHPMyAdmin
 	cursor = conn.cursor()
@@ -426,10 +427,11 @@ def customerHome():
 	if (year_expenses == None):
 		year_expenses='0.0'
 		
+
 	######################################################################THIS CODE RUNS EVERYTIME THE PAGE IS LOADED OR REFRESHED######################################################################
 
 
-	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
+	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight search will be conducted (conduct_flight_search = True)
 	if (conduct_flight_search == True):
 		# search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s AND trip_type = %s AND departure_date >= DATE(NOW()) AND arrival_date >= DATE(NOW())'
 		# cursor.execute(search_flights, (source, destination, departure, arrival, trip_type))
@@ -445,7 +447,7 @@ def customerHome():
 								past_flights_info=past_flights_info, future_flights_info=future_flights_info, query_flights=query_flights, year_expenses=year_expenses)
 
 
-	# When a customer clicks the "Yes" button under 'Check Availability' for a certain flight, a ticket serarch will be conducted (conduct_ticket_search = True) for that flight.
+	# When a customer clicks the "Yes" button under 'Check Availability' for a certain flight, a ticket search will be conducted (conduct_ticket_search = True) for that flight.
 	# A purchase form will be revealed if there are tickets avaiable.
 	if (conduct_ticket_search == True):
 		search_tickets = 'SELECT ticket_ID FROM Ticket WHERE flight_num = %s AND is_purchased = "No"'
@@ -570,7 +572,7 @@ def customerHome():
 def agentHome():
 	username = session['username']
 
-	# When a booking agent clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
+	# When a booking agent clicks the "Search" button under 'Search for and Purchase Flights', a flight search will be conducted (conduct_flight_search = True)
 	# We know when a booking agent clicks this button if we recieve 'trip_type', 'source', 'destination', 'departure', and 'arrival' in the the 'POST' Form
 	conduct_flight_search = False
 	if ('trip_type' in request.form and 'source' in request.form and 'destination' in request.form and 'departure' in request.form and 'arrival' in request.form):	
@@ -582,7 +584,7 @@ def agentHome():
 		arrival = request.form['arrival']
 
 
-	# When a booking agent clicks the "Yes" button under 'Check Availability' for a certain flight, a ticket serarch will be conducted (conduct_ticket_search = True) for that flight.
+	# When a booking agent clicks the "Yes" button under 'Check Availability' for a certain flight, a ticket search will be conducted (conduct_ticket_search = True) for that flight.
 	# A purchase form will be revealed if there are tickets avaiable.
 	# We know when a booking agent clicks this button if we recieve 'flight_select' in the the 'POST' Form
 	conduct_ticket_search = False
@@ -707,10 +709,11 @@ def agentHome():
 	cursor.execute(find_customers, (agent_ID))
 	top_customers_year = cursor.fetchall()
 
+
 	######################################################################THIS CODE RUNS EVERYTIME THE PAGE IS LOADED OR REFRESHED######################################################################
 
 
-	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
+	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight search will be conducted (conduct_flight_search = True)
 	if (conduct_flight_search == True):
 		# search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s AND trip_type = %s AND departure_date >= DATE(NOW()) AND arrival_date >= DATE(NOW())'			
 		# cursor.execute(search_flights, (source, destination, departure, arrival, trip_type))
@@ -728,7 +731,7 @@ def agentHome():
 								top_customers_year=top_customers_year, query_flights=query_flights)
 
 
-	# When a booking agent clicks the "Yes" button under 'Check Availability' for a certain flight, a ticket serarch will be conducted (conduct_ticket_search = True) for that flight.
+	# When a booking agent clicks the "Yes" button under 'Check Availability' for a certain flight, a ticket search will be conducted (conduct_ticket_search = True) for that flight.
 	# A purchase form will be revealed if there are tickets avaiable.
 	if (conduct_ticket_search == True):
 		search_tickets = 'SELECT ticket_ID FROM Ticket WHERE flight_num = %s AND is_purchased = "No"'
@@ -841,6 +844,9 @@ def agentHome():
 def staffHome():
 	username = session['username']
 
+
+	# When an airline staff member clicks the "Search" button under 'Search for Flights', a flight search will be conducted (conduct_flight_search = True)
+	# We know when an airline staff member clicks this button if we recieve 'trip_type', 'source', 'destination', 'departure', and 'arrival' in the the 'POST' Form
 	conduct_flight_search = False
 	if ('trip_type' in request.form and 'source' in request.form and 'destination' in request.form and 'departure' in request.form and 'arrival' in request.form):	
 		conduct_flight_search = True
@@ -851,12 +857,16 @@ def staffHome():
 		arrival = request.form['arrival']
 
 
+	# After an airline staff member searches for flights, they can click the "Yes" button under 'View Customers' to view the customers who have purchased a ticket for that flight.
+	# We know when an airline staff member clicks this button if we recieve 'customer_flight_select' (i.e the flight that had been specified) in the the 'POST' Form
 	conduct_customer_search = False
 	if ('customer_flight_select' in request.form):
 		conduct_customer_search = True
 		customer_flight_select = request.form['customer_flight_select']
 
 
+	# When an airline staff member clicks the "Add Flight" button under 'Add New Flight', a flight will be added (add_flight = True)
+	# We know when an airline staff member clicks this button if we recieve 'airplane_ID', 'trip_type', 'departure_airport', etc. in the the 'POST' Form
 	add_flight = False
 	if ('airplane_ID' in request.form and 'trip_type' in request.form and 'departure_airport' in request.form and 'departure_date' in request.form \
 		and 'departure_time' in request.form and 'arrival_airport' in request.form and 'arrival_date' in request.form and 'arrival_time' in request.form \
@@ -875,19 +885,24 @@ def staffHome():
 		flight_status = request.form['flight_status']
 
 
+	# When an airline staff member clicks the "Change Flight Status" button under 'Future Flights (30 Days)', the flight status will be changed (change_flight_status = True)
+	# We know when an airline staff member clicks this button if we recieve 'flight_select' and 'flight_status' in the the 'POST' Form
 	change_flight_status = False
 	if ('flight_select' in request.form and 'flight_status' in request.form):
 		change_flight_status = True
 		flight_select = request.form['flight_select']
 		flight_status = request.form['flight_status']
 
-
+	# When an airline staff member clicks the "Add Airplane" button under 'Add New Airplane', an airplane will be added (add_airplane = True)
+	# We know when an airline staff member clicks this button if we recieve 'seats' in the the 'POST' Form
 	add_airplane = False
 	if ('seats' in request.form):
 		add_airplane = True
 		seats = request.form['seats']
 
 
+	# When an airline staff member clicks the "Add Airport" button under 'Add New Airport', an airport will be added (add_airport = True)
+	# We know when an airline staff member clicks this button if we recieve 'airport_name' and 'city' in the the 'POST' Form
 	add_airport = False
 	if ('airport_name' in request.form and 'city' in request.form):
 		add_airport = True
@@ -895,77 +910,96 @@ def staffHome():
 		city = request.form['city']
 
 
+	# After an airline staff member searches for flights, they can click the "Yes" button under 'View Ratings and Reviews', to find the flights avergae rating and all ratings/reviews
+	# We know when an airline staff member clicks this button if we recieve 'review_flight_select' in the the 'POST' Form
 	view_flight_review = False
 	if ('review_flight_select' in request.form):
 		view_flight_review = True
 		review_flight_select = request.form['review_flight_select']
 
 
+	# When an airline staff member clicks the "Find Customer's Flights" button under 'Find Customer Flights', all flights that a customer has purchased tickets for will be found
+	# We know when an airline staff member clicks this button if we recieve 'cus_email' in the the 'POST' Form
 	view_customer_flights = False
 	if ('cus_email' in request.form):
 		view_customer_flights = True
 		cus_email = request.form['cus_email']
 
 
+	# When an airline staff member clicks the "Find Tickets Sold" button under 'View Tickets Sold', all tickets purchased between two specified dates will be found.
+	# We know when an airline staff member clicks this button if we recieve 'cus_email' in the the 'POST' Form
 	view_tickets_sold = False
 	if ('ticket_start_date' in request.form and 'ticket_end_date' in request.form):
 		view_tickets_sold = True
 		ticket_start_date = request.form['ticket_start_date']
 		ticket_end_date = request.form['ticket_end_date']
 
+
+	######################################################################THIS CODE RUNS EVERYTIME THE PAGE IS LOADED OR REFRESHED######################################################################
+
+
 	cursor = conn.cursor()
 
+	# Finds the airline that the airline staff member works for
 	staff_airline = 'SELECT airline_name FROM Airline_Staff WHERE staff_username = %s'
 	cursor.execute(staff_airline, (username))
 	airline_name = cursor.fetchone()
 	airline_name = airline_name['airline_name']
 
 
+	# Finds all airplanes that belong to the airline
 	find_airplanes = 'SELECT * FROM Airplane WHERE airline_name = %s'
 	cursor.execute(find_airplanes, (airline_name))
 	airplanes = cursor.fetchall()
 	# later: what if they have no airplanes?
 
 
+	# Finds flights that have departed within the past 30 days
 	find_past_flights = 'SELECT * FROM Flight WHERE airline_name = %s AND departure_date >= DATE_SUB(DATE(NOW()), INTERVAL 30 DAY) AND departure_date <= DATE(NOW())'
 	cursor.execute(find_past_flights, (airline_name))
 	past_flights = cursor.fetchall()
 
 
+	# Finds flights that will depart within the next 30 days
 	find_future_flights = 'SELECT * FROM Flight WHERE airline_name = %s AND departure_date >= DATE(NOW()) AND departure_date <= DATE_ADD(DATE(NOW()), INTERVAL 30 DAY)'
 	cursor.execute(find_future_flights, (airline_name))
 	future_flights = cursor.fetchall()
 
 
+	# Finds the top 5 booking agents based on how many tickets that they have sold within the past month using the Customer_purchases Table
 	find_top_agents = 'SELECT Customer_Purchases.agent_ID, COUNT(purchase_ID) AS purchases FROM Customer_Purchases, Booking_Agent WHERE \
-						Customer_Purchases.agent_ID = Booking_Agent.agent_ID AND airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 MONTH) \
-						GROUP BY agent_ID ORDER BY purchases DESC LIMIT 0, 5'
+					   Customer_Purchases.agent_ID = Booking_Agent.agent_ID AND airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 MONTH) \
+					   GROUP BY agent_ID ORDER BY purchases DESC LIMIT 0, 5'
 	cursor.execute(find_top_agents, (airline_name))
 	top_agents_month = cursor.fetchall()
 
 
+	# Finds the top 5 booking agents based on how many tickets that they have sold within the past year using the Customer_Purchases Table
 	find_top_agents = 'SELECT Customer_Purchases.agent_ID, COUNT(purchase_ID) AS purchases FROM Customer_Purchases, Booking_Agent WHERE \
-						Customer_Purchases.agent_ID = Booking_Agent.agent_ID AND airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) \
-						GROUP BY agent_ID ORDER BY purchases DESC LIMIT 0, 5'
+					   Customer_Purchases.agent_ID = Booking_Agent.agent_ID AND airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) \
+					   GROUP BY agent_ID ORDER BY purchases DESC LIMIT 0, 5'
 	cursor.execute(find_top_agents, (airline_name))
 	top_agents_year = cursor.fetchall()
 
 
+	# Finds the top 5 booking agents based on how much commission they earened within the past year using the Customer_Purchases and booking_Agent Table
 	find_top_agents = 'SELECT Customer_Purchases.agent_ID, SUM(sold_price) * 0.1 AS commission FROM Customer_Purchases, Booking_Agent WHERE \
-						Customer_Purchases.agent_ID = Booking_Agent.agent_ID AND airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) \
-						GROUP BY agent_ID ORDER BY commission DESC LIMIT 0, 5'
+					   Customer_Purchases.agent_ID = Booking_Agent.agent_ID AND airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) \
+					   GROUP BY agent_ID ORDER BY commission DESC LIMIT 0, 5'
 	cursor.execute(find_top_agents, (airline_name))
 	top_agents_commission = cursor.fetchall()
 
 
-	# find_customers = 'SELECT SUM(sold_price) cus_email FROM Customer_Purchases WHERE agent_ID = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 6 MONTH)'
+	# Finds the most frequent customer within the past year based on how many tickets they have purchased using the Customer_Purchases and Flight Table
 	find_customers = 'SELECT cus_email, COUNT(purchase_ID) AS purchases FROM Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
-						AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) GROUP BY cus_email ORDER BY purchases DESC LIMIT 0, 1'
+					  AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) GROUP BY cus_email ORDER BY purchases DESC LIMIT 0, 1'
 	cursor.execute(find_customers, (airline_name))
 	top_customer = cursor.fetchone()
 
+
+	# Finds the number of tickets told within the past month using the Customer_Purchases and Flight Table
 	find_tickets_sold = 'SELECT COUNT(ticket_ID) AS tickets_sold from Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
-						AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 MONTH)'
+						 AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 MONTH)'
 	cursor.execute(find_tickets_sold, (airline_name))
 	tickets_sold_month = cursor.fetchone()
 	tickets_sold_month = tickets_sold_month['tickets_sold']
@@ -973,8 +1007,10 @@ def staffHome():
 	if (not tickets_sold_month):
 		tickets_sold_month = "No Tickets Sold"
 
+
+	# Finds the number of tickets told within the past year using the Customer_Purchases and Flight Table
 	find_tickets_sold = 'SELECT COUNT(ticket_ID) AS tickets_sold from Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
-						AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR)'
+						 AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR)'
 	cursor.execute(find_tickets_sold, (airline_name))
 	tickets_sold_year = cursor.fetchone()
 	tickets_sold_year = tickets_sold_year['tickets_sold']
@@ -982,9 +1018,10 @@ def staffHome():
 	if (not tickets_sold_year):
 		tickets_sold_year = "No Tickets Sold"
 
-	
+
+	# Finds the total amount of revenue earned from direct sales (customer bought tickets without booking agent) within the past month using the Customer_Purchases and Flight Table
 	find_direct_revenue_month = 'SELECT SUM(sold_price) AS direct_revenue from Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
-								AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 MONTH) AND agent_ID IS NULL'
+								 AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 MONTH) AND agent_ID IS NULL'
 	cursor.execute(find_direct_revenue_month, (airline_name))
 	direct_revenue_month = cursor.fetchone()
 	direct_revenue_month = direct_revenue_month['direct_revenue']
@@ -993,6 +1030,7 @@ def staffHome():
 		direct_revenue_month = "No Direct Revenue"
 
 
+	# Finds the total amount of revenue earned from direct sales (customer bought tickets without booking agent) within the past year using the Customer_Purchases and Flight Table
 	find_direct_revenue_year = 'SELECT SUM(sold_price) AS direct_revenue from Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
 								AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) AND agent_ID IS NULL '
 	cursor.execute(find_direct_revenue_year, (airline_name))
@@ -1003,9 +1041,9 @@ def staffHome():
 		direct_revenue_year = "No Direct Revenue"
 		
 
-
+	# Finds the total amount of revenue earned from indirect sales (customer bought tickets with booking agent) within the past month using the Customer_Purchases and Flight Table
 	find_indirect_revenue_month = 'SELECT SUM(sold_price) AS indirect_revenue from Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
-								AND Flight.airline_name = %s  AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 MONTH) AND agent_ID IS NOT NULL'
+								   AND Flight.airline_name = %s  AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 MONTH) AND agent_ID IS NOT NULL'
 	cursor.execute(find_indirect_revenue_month, (airline_name))
 	indirect_revenue_month = cursor.fetchone()
 	indirect_revenue_month = indirect_revenue_month['indirect_revenue']
@@ -1014,8 +1052,9 @@ def staffHome():
 		indirect_revenue_month = "No Indirect Revenue"
 
 
+	# Finds the total amount of revenue earned from indirect sales (customer bought tickets with booking agent) within the past year using the Customer_Purchases and Flight Table
 	find_indirect_revenue_year = 'SELECT SUM(sold_price) AS indirect_revenue from Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
-								AND Flight.airline_name = %s  AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) AND agent_ID IS NOT NULL'
+								  AND Flight.airline_name = %s  AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) AND agent_ID IS NOT NULL'
 	cursor.execute(find_indirect_revenue_year, (airline_name))
 	indirect_revenue_year = cursor.fetchone()
 	indirect_revenue_year = indirect_revenue_year['indirect_revenue']
@@ -1024,20 +1063,26 @@ def staffHome():
 		indirect_revenue_year = "No Indirect Revenue"
 
 	
+	# Finds the top 3 destinations within last 3 months (based on tickets already sold) using the Customer_Purchases and Flight Table
 	find_top_destinations_month = 'SELECT Flight.arrival_airport, COUNT(Flight.arrival_airport) AS tickets FROM Flight, Customer_Purchases WHERE \
-									Flight.flight_num = Customer_Purchases.flight_num AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 3 MONTH) \
-									GROUP BY Flight.arrival_airport ORDER BY tickets DESC LIMIT 0, 3'
+								   Flight.flight_num = Customer_Purchases.flight_num AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 3 MONTH) \
+								   GROUP BY Flight.arrival_airport ORDER BY tickets DESC LIMIT 0, 3'
 	cursor.execute(find_top_destinations_month, (airline_name))
 	top_destinations_month = cursor.fetchall()
 
 
+	# Finds the top 3 destinations within past year (based on tickets already sold) using the Customer_Purchases and Flight Table
 	find_top_destinations_year = 'SELECT Flight.arrival_airport, COUNT(Flight.arrival_airport) AS tickets FROM Flight, Customer_Purchases WHERE \
-									Flight.flight_num = Customer_Purchases.flight_num AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) \
-									GROUP BY Flight.arrival_airport ORDER BY tickets DESC LIMIT 0, 3'
+								  Flight.flight_num = Customer_Purchases.flight_num AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) \
+								  GROUP BY Flight.arrival_airport ORDER BY tickets DESC LIMIT 0, 3'
 	cursor.execute(find_top_destinations_year, (airline_name))
 	top_destinations_year = cursor.fetchall()
 
-	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
+
+	######################################################################THIS CODE RUNS EVERYTIME THE PAGE IS LOADED OR REFRESHED######################################################################
+
+
+	# When a customer clicks the "Search" button under 'Search for Flights', a flight search will be conducted (conduct_flight_search = True)
 	if (conduct_flight_search == True):
 		search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND trip_type = %s AND departure_date >= %s AND arrival_date <= %s'				
 		cursor.execute(search_flights, (source, destination, trip_type, departure, arrival))
@@ -1056,6 +1101,7 @@ def staffHome():
 								query_flights=query_flights)
 
 
+	# After an airline staff member searches for flights, they can click the "Yes" button under 'View Customers' to view the customers who have purchased a ticket for that flight.
 	if (conduct_customer_search == True):
 		search_flights = 'SELECT cus_email FROM Customer_Purchases WHERE flight_num = %s'				
 		cursor.execute(search_flights, (customer_flight_select))
@@ -1074,37 +1120,38 @@ def staffHome():
 								customers=customers, customer_flight_select=customer_flight_select)
 
 
+	# When an airline staff member clicks the "Add Flight" button under 'Add New Flight', a flight will be added (add_flight = True)
 	if (add_flight == True):
 		insert_flight = 'INSERT INTO Flight (airline_name, airplane_ID, departure_airport, departure_date, departure_time, \
-						arrival_airport, arrival_date, arrival_time, base_price, flight_status, trip_type) \
-						VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+						 arrival_airport, arrival_date, arrival_time, base_price, flight_status, trip_type) \
+						 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 		cursor.execute(insert_flight, (airline_name, airplane_ID, departure_airport, departure_date, departure_time, arrival_airport, arrival_date, arrival_time, base_price, flight_status, trip_type))
 		conn.commit()
 		cursor.close()
-		# return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, add_flight="Complete")
 		return redirect(url_for('staffHome'))
 
 
+	# When an airline staff member clicks the "Change Flight Status" button under 'Future Flights (30 Days)', the flight status will be changed (change_flight_status = True)
 	if (change_flight_status == True):
 		update_flight = 'UPDATE Flight SET flight_status = %s WHERE flight_num = %s'
 		cursor.execute(update_flight, (flight_status, flight_select))
 		conn.commit()
 		
 		cursor.close()
-		# return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, change_flight_status="Complete", flight_selct=flight_select)
 		return redirect(url_for('staffHome'))
 
 
+	# When an airline staff member clicks the "Add Airplane" button under 'Add New Airplane', an airplane will be added (add_airplane = True)
 	if (add_airplane == True):
 		insert_airplane = 'INSERT INTO AIRPLANE (airline_name, seats) VALUES (%s, %s)'
 		cursor.execute(insert_airplane, (airline_name, seats))
 		conn.commit()
 		
 		cursor.close()
-		# return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, add_airplane="Complete")
 		return redirect(url_for('staffConfirmation'))
 
 
+	# When an airline staff member clicks the "Add Airport" button under 'Add New Airport', an airport will be added (add_airport = True)
 	if (add_airport == True):
 		insert_airport = 'INSERT INTO AIRPORT (airport_name, city) VALUES (%s, %s)'
 		cursor.execute(insert_airport, (airport_name, city))
@@ -1114,6 +1161,7 @@ def staffHome():
 		return redirect(url_for('staffHome'))
 
 
+	# After an airline staff member searches for flights, they can click the "Yes" button under 'View Ratings and Reviews', to find the flights avergae rating and all ratings/reviews
 	if (view_flight_review == True):
 		find_flight_review = 'SELECT * FROM REVIEW WHERE flight_num = %s'
 		cursor.execute(find_flight_review, (review_flight_select))
@@ -1137,6 +1185,7 @@ def staffHome():
 								reviews=reviews, avg_rating=avg_rating)
 
 
+	# When an airline staff member clicks the "Find Customer's Flights" button under 'Find Customer Flights', all flights that a customer has purchased tickets for will be found
 	if (view_customer_flights == True):
 		find_customer_flights = 'SELECT Customer_Purchases.flight_num FROM Customer_Purchases, Flight WHERE cus_email = %s AND Customer_Purchases.flight_num = Flight.flight_num AND Flight.airline_name = %s'
 		cursor.execute(find_customer_flights, (cus_email, airline_name))
@@ -1155,6 +1204,7 @@ def staffHome():
 								customer_flights=customer_flights)
 
 
+	# When an airline staff member clicks the "Find Tickets Sold" button under 'View Tickets Sold', all tickets purchased between two specified dates will be found.
 	if (view_tickets_sold == True):
 		find_tickets_sold = 'SELECT COUNT(ticket_ID) as tickets_sold from Customer_Purchases WHERE purchase_date >= %s AND purchase_date <= %s'
 		cursor.execute(find_tickets_sold, (ticket_start_date, ticket_end_date))
@@ -1172,6 +1222,7 @@ def staffHome():
 								indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year, \
 								top_destinations_month=top_destinations_month, top_destinations_year=top_destinations_year, \
 								tickets_sold=tickets_sold, ticket_start_date=ticket_start_date, ticket_end_date=ticket_end_date)
+
 
 	cursor.close()
 	return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
