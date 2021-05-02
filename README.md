@@ -54,8 +54,8 @@
 1. View Top Customer
 1. View Ticket Sales
 1. Comparison of Revenue Earned
+1. View Top Destinations
 
 ### To Do
-1. View Top Destinations
 1. View Ticket Sales: Bar Charts
 1. Comparison of Revenue Earned: Pie Charts

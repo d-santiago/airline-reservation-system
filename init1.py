@@ -1023,6 +1023,20 @@ def staffHome():
 	if (indirect_revenue_year == None):
 		indirect_revenue_year = "No Indirect Revenue"
 
+	
+	find_top_destinations_month = 'SELECT Flight.arrival_airport, COUNT(Flight.arrival_airport) AS tickets FROM Flight, Customer_Purchases WHERE \
+									Flight.flight_num = Customer_Purchases.flight_num AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 3 MONTH) \
+									GROUP BY Flight.arrival_airport ORDER BY tickets DESC LIMIT 0, 3'
+	cursor.execute(find_top_destinations_month, (airline_name))
+	top_destinations_month = cursor.fetchall()
+
+
+	find_top_destinations_year = 'SELECT Flight.arrival_airport, COUNT(Flight.arrival_airport) AS tickets FROM Flight, Customer_Purchases WHERE \
+									Flight.flight_num = Customer_Purchases.flight_num AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) \
+									GROUP BY Flight.arrival_airport ORDER BY tickets DESC LIMIT 0, 3'
+	cursor.execute(find_top_destinations_year, (airline_name))
+	top_destinations_year = cursor.fetchall()
+
 	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
 	if (conduct_flight_search == True):
 		search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND trip_type = %s AND departure_date >= %s AND arrival_date <= %s'				
@@ -1038,6 +1052,7 @@ def staffHome():
 								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, \
 								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
 								indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year, \
+								top_destinations_month=top_destinations_month, top_destinations_year=top_destinations_year, \
 								query_flights=query_flights)
 
 
@@ -1055,6 +1070,7 @@ def staffHome():
 								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, \
 								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
 								indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year, \
+								top_destinations_month=top_destinations_month, top_destinations_year=top_destinations_year, \
 								customers=customers, customer_flight_select=customer_flight_select)
 
 
@@ -1117,6 +1133,7 @@ def staffHome():
 								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, \
 								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
 								indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year, \
+								top_destinations_month=top_destinations_month, top_destinations_year=top_destinations_year, \
 								reviews=reviews, avg_rating=avg_rating)
 
 
@@ -1134,6 +1151,7 @@ def staffHome():
 								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, \
 								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
 								indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year, \
+								top_destinations_month=top_destinations_month, top_destinations_year=top_destinations_year, \
 								customer_flights=customer_flights)
 
 
@@ -1152,6 +1170,7 @@ def staffHome():
 								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, \
 								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
 								indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year, \
+								top_destinations_month=top_destinations_month, top_destinations_year=top_destinations_year, \
 								tickets_sold=tickets_sold, ticket_start_date=ticket_start_date, ticket_end_date=ticket_end_date)
 
 	cursor.close()
@@ -1159,7 +1178,8 @@ def staffHome():
 							top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, \
 							top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, \
 							direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
-							indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year)
+							indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year, \
+							top_destinations_month=top_destinations_month, top_destinations_year=top_destinations_year)
 
 
 @app.route('/staffConfirmation')

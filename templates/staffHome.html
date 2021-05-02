@@ -517,12 +517,55 @@
 			<h4> Indirect Revenue: $0.00 </h4>
 		{% endif %}
 
+		<h2> View Top 3 Destinations </h2>
 
+		<h3> Within the Past Month </h3>
 
+		{% if top_destinations_month %}
 
+			<table>
 
+				<tr>
+					<td> Destination </td>
+					<td> Tickets Sold </td>
+				</tr>
 
-		
+				{% for destination in top_destinations_month %}
+
+				<tr>
+					<td> {{ destination['arrival_airport'] }} </td>
+					<td> {{ destination['tickets'] }} </td>
+				</tr>
+
+				{% endfor %}	
+
+			</table>
+			
+		{% endif %}
+
+		<h3> Within the Past Year </h3>
+
+		{% if top_destinations_year %}
+
+			<table>
+
+				<tr>
+					<td> Destination </td>
+					<td> Tickets Sold </td>
+				</tr>
+
+				{% for destination in top_destinations_year %}
+
+				<tr>
+					<td> {{ destination['arrival_airport'] }} </td>
+					<td> {{ destination['tickets'] }} </td>
+				</tr>
+
+				{% endfor %}	
+
+			</table>
+			
+		{% endif %}
 
 		<a href="/staffLogout">Logout</a>
 
