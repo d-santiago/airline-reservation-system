@@ -477,12 +477,50 @@
 		</form>
 
 		{% if tickets_sold and tickets_sold != "No Tickets Sold" %}
-			
 			<h4> {{ tickets_sold}} were sold between {{ ticket_start_date }} and {{ ticket_end_date }} </h4>
 
 		{% elif tickets_sold == "No Tickets Sold" %}
-			<h4 style="color: red"> {{ tickets_sold }} between {{ ticket_start_date }} and {{ ticket_end_date }}</h4>
+			<h4> {{ tickets_sold }} between {{ ticket_start_date }} and {{ ticket_end_date }} </h4>
 		{% endif %}
+
+		<h2> View Revenue Earned </h2>
+
+		<h3> Within the Past Month </h3>
+
+		{% if direct_revenue_month and direct_revenue_month != "No Direct Revenue" %}
+			<h4> Direct Revenue: ${{ direct_revenue_month }}0 </h4>
+
+		{% elif direct_revenue_month == "No Direct Revenue" %}
+			<h4> Direct Revenue: $0.00 </h4>
+		{% endif %}
+
+		{% if indirect_revenue_year and indirect_revenue_year != "No Indirect Revenue" %}
+			<h4> Indirect Revenue: ${{ indirect_revenue_year }}0 </h4>
+
+		{% elif indirect_revenue_year == "No Indirect Revenue" %}
+			<h4> Indirect Revenue: $0.00 </h4>
+		{% endif %}
+
+		<h3> Within the Past Year </h3>
+
+		{% if indirect_revenue_month and indirect_revenue_month != "No Indirect Revenue" %}
+			<h4> Indirect Revenue: ${{ indirect_revenue_month }}0 </h4>
+
+		{% elif indirect_revenue_month == "No Indirect Revenue" %}
+			<h4> Indirect Revenue: $0.00 </h4>
+		{% endif %}
+
+		{% if indirect_revenue_year and indirect_revenue_year != "No Indirect Revenue" %}
+			<h4> Indirect Revenue: ${{ indirect_revenue_year }}0 </h4>
+
+		{% elif indirect_revenue_year == "No Indirect Revenue" %}
+			<h4> Indirect Revenue: $0.00 </h4>
+		{% endif %}
+
+
+
+
+
 
 		
 

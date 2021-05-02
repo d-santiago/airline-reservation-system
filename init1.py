@@ -937,21 +937,21 @@ def staffHome():
 	future_flights = cursor.fetchall()
 
 
-	find_top_agents = 'SELECT Customer_Purchases.agent_ID, COUNT(purchase_ID) as purchases FROM Customer_Purchases, Booking_Agent WHERE \
+	find_top_agents = 'SELECT Customer_Purchases.agent_ID, COUNT(purchase_ID) AS purchases FROM Customer_Purchases, Booking_Agent WHERE \
 						Customer_Purchases.agent_ID = Booking_Agent.agent_ID AND airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 MONTH) \
 						GROUP BY agent_ID ORDER BY purchases DESC LIMIT 0, 5'
 	cursor.execute(find_top_agents, (airline_name))
 	top_agents_month = cursor.fetchall()
 
 
-	find_top_agents = 'SELECT Customer_Purchases.agent_ID, COUNT(purchase_ID) as purchases FROM Customer_Purchases, Booking_Agent WHERE \
+	find_top_agents = 'SELECT Customer_Purchases.agent_ID, COUNT(purchase_ID) AS purchases FROM Customer_Purchases, Booking_Agent WHERE \
 						Customer_Purchases.agent_ID = Booking_Agent.agent_ID AND airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) \
 						GROUP BY agent_ID ORDER BY purchases DESC LIMIT 0, 5'
 	cursor.execute(find_top_agents, (airline_name))
 	top_agents_year = cursor.fetchall()
 
 
-	find_top_agents = 'SELECT Customer_Purchases.agent_ID, SUM(sold_price) * 0.1 as commission FROM Customer_Purchases, Booking_Agent WHERE \
+	find_top_agents = 'SELECT Customer_Purchases.agent_ID, SUM(sold_price) * 0.1 AS commission FROM Customer_Purchases, Booking_Agent WHERE \
 						Customer_Purchases.agent_ID = Booking_Agent.agent_ID AND airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) \
 						GROUP BY agent_ID ORDER BY commission DESC LIMIT 0, 5'
 	cursor.execute(find_top_agents, (airline_name))
@@ -959,26 +959,69 @@ def staffHome():
 
 
 	# find_customers = 'SELECT SUM(sold_price) cus_email FROM Customer_Purchases WHERE agent_ID = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 6 MONTH)'
-	find_customers = 'SELECT cus_email, COUNT(purchase_ID) as purchases FROM Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
+	find_customers = 'SELECT cus_email, COUNT(purchase_ID) AS purchases FROM Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
 						AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) GROUP BY cus_email ORDER BY purchases DESC LIMIT 0, 1'
 	cursor.execute(find_customers, (airline_name))
 	top_customer = cursor.fetchone()
 
-	find_tickets_sold = 'SELECT COUNT(ticket_ID) as tickets_sold from Customer_Purchases WHERE purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 MONTH)'
-	cursor.execute(find_tickets_sold)
+	find_tickets_sold = 'SELECT COUNT(ticket_ID) AS tickets_sold from Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
+						AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 MONTH)'
+	cursor.execute(find_tickets_sold, (airline_name))
 	tickets_sold_month = cursor.fetchone()
 	tickets_sold_month = tickets_sold_month['tickets_sold']
 
 	if (not tickets_sold_month):
 		tickets_sold_month = "No Tickets Sold"
 
-	find_tickets_sold = 'SELECT COUNT(ticket_ID) as tickets_sold from Customer_Purchases WHERE purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR)'
-	cursor.execute(find_tickets_sold)
+	find_tickets_sold = 'SELECT COUNT(ticket_ID) AS tickets_sold from Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
+						AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR)'
+	cursor.execute(find_tickets_sold, (airline_name))
 	tickets_sold_year = cursor.fetchone()
 	tickets_sold_year = tickets_sold_year['tickets_sold']
 
 	if (not tickets_sold_year):
 		tickets_sold_year = "No Tickets Sold"
+
+	
+	find_direct_revenue_month = 'SELECT SUM(sold_price) AS direct_revenue from Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
+								AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 MONTH) AND agent_ID IS NULL'
+	cursor.execute(find_direct_revenue_month, (airline_name))
+	direct_revenue_month = cursor.fetchone()
+	direct_revenue_month = direct_revenue_month['direct_revenue']
+
+	if (direct_revenue_month == None):
+		direct_revenue_month = "No Direct Revenue"
+
+
+	find_direct_revenue_year = 'SELECT SUM(sold_price) AS direct_revenue from Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
+								AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) AND agent_ID IS NULL '
+	cursor.execute(find_direct_revenue_year, (airline_name))
+	direct_revenue_year = cursor.fetchone()
+	direct_revenue_year = direct_revenue_year['direct_revenue']
+
+	if (direct_revenue_year == None):
+		direct_revenue_year = "No Direct Revenue"
+		
+
+
+	find_indirect_revenue_month = 'SELECT SUM(sold_price) AS indirect_revenue from Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
+								AND Flight.airline_name = %s  AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 MONTH) AND agent_ID IS NOT NULL'
+	cursor.execute(find_indirect_revenue_month, (airline_name))
+	indirect_revenue_month = cursor.fetchone()
+	indirect_revenue_month = indirect_revenue_month['indirect_revenue']
+
+	if (indirect_revenue_month == None):
+		indirect_revenue_month = "No Indirect Revenue"
+
+
+	find_indirect_revenue_year = 'SELECT SUM(sold_price) AS indirect_revenue from Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
+								AND Flight.airline_name = %s  AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) AND agent_ID IS NOT NULL'
+	cursor.execute(find_indirect_revenue_year, (airline_name))
+	indirect_revenue_year = cursor.fetchone()
+	indirect_revenue_year = indirect_revenue_year['indirect_revenue']
+
+	if (indirect_revenue_year == None):
+		indirect_revenue_year = "No Indirect Revenue"
 
 	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight serarch will be conducted (conduct_flight_search = True)
 	if (conduct_flight_search == True):
@@ -990,7 +1033,12 @@ def staffHome():
 			query_flights = "No Results"
 
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, query_flights=query_flights)
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
+								top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, \
+								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, \
+								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
+								indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year, \
+								query_flights=query_flights)
 
 
 	if (conduct_customer_search == True):
@@ -1002,7 +1050,12 @@ def staffHome():
 			customers = "No Results"
 
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, customers=customers, customer_flight_select=customer_flight_select)
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
+								top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, \
+								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, \
+								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
+								indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year, \
+								customers=customers, customer_flight_select=customer_flight_select)
 
 
 	if (add_flight == True):
@@ -1025,6 +1078,7 @@ def staffHome():
 		# return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, change_flight_status="Complete", flight_selct=flight_select)
 		return redirect(url_for('staffHome'))
 
+
 	if (add_airplane == True):
 		insert_airplane = 'INSERT INTO AIRPLANE (airline_name, seats) VALUES (%s, %s)'
 		cursor.execute(insert_airplane, (airline_name, seats))
@@ -1034,6 +1088,7 @@ def staffHome():
 		# return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, add_airplane="Complete")
 		return redirect(url_for('staffConfirmation'))
 
+
 	if (add_airport == True):
 		insert_airport = 'INSERT INTO AIRPORT (airport_name, city) VALUES (%s, %s)'
 		cursor.execute(insert_airport, (airport_name, city))
@@ -1041,6 +1096,7 @@ def staffHome():
 		
 		cursor.close()
 		return redirect(url_for('staffHome'))
+
 
 	if (view_flight_review == True):
 		find_flight_review = 'SELECT * FROM REVIEW WHERE flight_num = %s'
@@ -1056,7 +1112,13 @@ def staffHome():
 			avg_rating = avg_rating['avg_rating']
 		
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, reviews=reviews, avg_rating=avg_rating)
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
+								top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, \
+								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, \
+								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
+								indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year, \
+								reviews=reviews, avg_rating=avg_rating)
+
 
 	if (view_customer_flights == True):
 		find_customer_flights = 'SELECT Customer_Purchases.flight_num FROM Customer_Purchases, Flight WHERE cus_email = %s AND Customer_Purchases.flight_num = Flight.flight_num AND Flight.airline_name = %s'
@@ -1067,7 +1129,13 @@ def staffHome():
 			customer_flights = "No Results"
 		
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, customer_flights=customer_flights)
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
+								top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, \
+								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, \
+								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
+								indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year, \
+								customer_flights=customer_flights)
+
 
 	if (view_tickets_sold == True):
 		find_tickets_sold = 'SELECT COUNT(ticket_ID) as tickets_sold from Customer_Purchases WHERE purchase_date >= %s AND purchase_date <= %s'
@@ -1079,10 +1147,19 @@ def staffHome():
 			tickets_sold = "No Tickets Sold"
 		
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, tickets_sold=tickets_sold, ticket_start_date=ticket_start_date, ticket_end_date=ticket_end_date)
+		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
+								top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, \
+								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, \
+								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
+								indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year, \
+								tickets_sold=tickets_sold, ticket_start_date=ticket_start_date, ticket_end_date=ticket_end_date)
 
 	cursor.close()
-	return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year)
+	return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
+							top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, \
+							top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, \
+							direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
+							indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year)
 
 
 @app.route('/staffConfirmation')
