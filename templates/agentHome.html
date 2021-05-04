@@ -193,10 +193,10 @@
 			</select>
 
 			Departure Date:
-			<input type="date" min="2021-04-20" name="departure" required>
+			<input type="date" name="departure" required>
 
 			Arrival Date:
-			<input type="date" min="2021-04-20" name="arrival" required>
+			<input type="date" name="arrival" required>
 
 			<input type="submit" value=Search />
 			
@@ -298,7 +298,7 @@
 				<input type="text" name="name" placeholder="Card Name" required/>
 				
 				Card Expiration Date:
-				<input type="date" min="2021-04-17" name="exp" placeholder="Card Expiration Date" required/> </br>  </br>
+				<input type="date" name="exp" placeholder="Card Expiration Date" required/> </br>  </br>
 
 				<input type="submit" value="Purchase" />
 			</form>
@@ -312,12 +312,12 @@
 
 		
 		<!-- If the purchase is complete, notify the user -->
-		{% if purchase == "Complete" %}
+		<!-- {% if purchase == "Complete" %}
 			<hr>
 			<h2> Purchase Tickets </h2>
 			<h4 style="color: green"> Purchase Complete </h4>
 
-		{% endif %}
+		{% endif %} -->
 
 		</br>
 
@@ -326,20 +326,19 @@
 		<h2> My Commission </h2>
 
 		<!-- The booking agent's expenses within the past year is displayed -->
-		{% if month_commission and month_tickets_sold and month_comm_per_ticket %}
+		{% if month_commission and month_tickets_sold and month_comm_per_ticket or (date_commission == '0.0' and date_tickets_sold == 0 and date_comm_per_ticket == '0.0') %}
 			<h4> You Have Made ${{month_commission}}0 Within the Past 30 Days </h4>
 			<h4> You Have Sold {{month_tickets_sold}} Tickets Within the Past 30 Days </h4>
 			<h4> You Have Made An Average Commission of ${{month_comm_per_ticket}}0 Per Ticket Within the Past 30 Days </h4>
-			<h4> Use the Filter to Track your Commission Across Different Dates </h4>	
+			<h4> Use the Filter to Track your Commission Across Different Dates </h4>
 		{% endif %}
 
 		<!-- If the booking agent submits the 'My Commission' form, their expenses within the past year will be displayed -->
-		{% if date_commission and month_tickets_sold and month_comm_per_ticket%}
+		{% if (date_commission and date_tickets_sold and date_comm_per_ticket) or (date_commission == '0.0' and date_tickets_sold == 0 and date_comm_per_ticket == '0.0') %}
 			</br>
 			<h4> You Have Made ${{date_commission}}0 Between {{start_date}} and {{end_date}} </h4>
 			<h4> You Have Sold {{date_tickets_sold}} Tickets Between {{start_date}} and {{end_date}} </h4>
 			<h4> You Have Made An Average Commission of ${{date_comm_per_ticket}}0 Per Ticket Between {{start_date}} and {{end_date}} </h4>
-			<h4> Use the Filter to Track your Commission Across Different Dates </h4>
 		{% endif %}
 
 		<form action="/agentHome" method="POST">
@@ -359,20 +358,20 @@
 
 		<!-- The customer's expenses within the past year is displayed -->
 		{% if top_customers_month %}
-			<h4> Top Customers Within the Past 6 Months </h4>
+			<h4> Top 5 Customers Within the Past 6 Months Based on Tickets </h4>
 
 			<table>
 
 				<tr>
 					<td> Customer Email </td>
-					<td> Commission </td>
+					<td> Tickets Sold </td>
 				</tr>
 
 				{% for customer in top_customers_month %}
 
 				<tr>
 					<td> {{ customer['cus_email'] }} </td>
-					<td> {{ customer['cus_commission'] }} </td>
+					<td> {{ customer['tickets'] }} </td>
 				</tr>
 
 				{% endfor %}	
@@ -382,7 +381,7 @@
 		{% endif %}
 
 		{% if top_customers_year %}
-			<h4> Top Customers Within the Past Year </h4>
+			<h4> Top 5 Customers Within the Past Year Based on Commission </h4>
 
 			<table>
 
@@ -395,7 +394,7 @@
 
 				<tr>
 					<td> {{ customer['cus_email'] }} </td>
-					<td> {{ customer['cus_commission'] }} </td>
+					<td> ${{ customer['cus_commission'] }}.0 </td>
 				</tr>
 
 				{% endfor %}	

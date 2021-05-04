@@ -46,6 +46,12 @@ def index():
 	cursor = conn.cursor()
 
 
+	# Finds all flights that belong to the airline
+	find_flights = 'SELECT * FROM Flight'
+	cursor.execute(find_flights)
+	flights = cursor.fetchall()
+
+
 	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight search will be conducted (conduct_flight_search = True)
 	if (conduct_flight_search == True):
 		# search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s AND trip_type = %s AND departure_date >= DATE(NOW()) AND arrival_date >= DATE(NOW())'
@@ -58,7 +64,7 @@ def index():
 			query_flights = "No Results"
 
 		cursor.close()
-		return render_template('index.html', query_flights=query_flights)
+		return render_template('index.html', flights=flights, query_flights=query_flights)
 
 
 	# When a customer clicks the "Search" button under 'Get Flight Status', a flight status search will be conducted (conduct_get_status = True)
@@ -73,10 +79,10 @@ def index():
 			flight_status = flight_status['flight_status']
 
 		cursor.close()
-		return render_template('index.html', flight_num=flight_num, flight_status=flight_status)
+		return render_template('index.html', flights=flights, flight_num=flight_num, flight_status=flight_status)
 
 
-	return render_template('index.html')
+	return render_template('index.html', flights=flights)
 
 #Define route for the Customer's login
 @app.route('/customerLogin')
@@ -361,7 +367,7 @@ def customerHome():
 	cursor = conn.cursor()
 	
 	# When the page is loaded or refreshed, the program finds all flights that a customer has purchased from Customer_Purchases Table using their email
-	find_flights = 'SELECT flight_num, ticket_ID FROM Customer_Purchases WHERE cus_email = %s'
+	find_flights = 'SELECT flight_num, ticket_ID, sold_price FROM Customer_Purchases WHERE cus_email = %s'
 	cursor.execute(find_flights, (username))
 	all_flights = cursor.fetchall()
 
@@ -514,9 +520,9 @@ def customerHome():
 				conn.commit()
 
 		cursor.close()
-		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-								past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses=year_expenses, purchase="Complete")
-
+		# return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+								# past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses=year_expenses, purchase="Complete")
+		return redirect(url_for('customerHome'))
 
 	# When a customer clicks the "Yes" button under 'Rate and Review', a form will be revealed to the user under 'Review Previously Taken Flights' (reveal_review_form = True)
 	# A customer who has already reviewed a flight will not be able to review it again
@@ -595,7 +601,7 @@ def agentHome():
 
 	# When a booking agent clicks the "Purchase" button under 'Purchase Tickets', a ticket purchase will be conducted (conduct_ticket_purchase = True)
 	# We know when a booking agent clicks this button if we recieve 'flight_purchase', 'ticket', 'type', 'num', 'name', and 'exp' in the the 'POST' Form
-	conduct_ticket_purchase = False;
+	conduct_ticket_purchase = False
 	if ('flight_purchase' in request.form and 'cus_email' in request.form and 'ticket' in request.form and 'type' in request.form and 'num' in request.form and 'name' in request.form and 'exp' in request.form):	
 		conduct_ticket_purchase = True
 		flight_purchase = request.form['flight_purchase']
@@ -608,9 +614,9 @@ def agentHome():
 
 	# When a customer clicks the "Search" button under 'My Spending', the program will determine how much money that customer spent between two user-specified dates (track_spending = True)
 	# We know when a customer clicks this button if we recieve 'start_date' and 'end_date' in the the 'POST' Form
-	track_commission = False;
+	track_commission = False
 	if ('start_date' in request.form and 'end_date' in request.form):	
-		track_commission = True;
+		track_commission = True
 		start_date = request.form['start_date']
 		end_date = request.form['end_date']
 
@@ -700,7 +706,7 @@ def agentHome():
 		comm_per_ticket = commission / tickets_sold
 
 	# find_customers = 'SELECT SUM(sold_price) cus_email FROM Customer_Purchases WHERE agent_ID = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 6 MONTH)'
-	find_customers = 'SELECT cus_email, SUM(sold_price) * 0.1 as cus_commission FROM Customer_Purchases WHERE agent_ID = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 6 MONTH) GROUP BY cus_email ORDER BY cus_commission DESC LIMIT 0, 5'
+	find_customers = 'SELECT cus_email, COUNT(ticket_ID) as tickets FROM Customer_Purchases WHERE agent_ID = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 6 MONTH) GROUP BY cus_email ORDER BY tickets DESC LIMIT 0, 5'
 	cursor.execute(find_customers, (agent_ID))
 	top_customers_month = cursor.fetchall()
 
@@ -726,9 +732,10 @@ def agentHome():
 
 		cursor.close()
 		return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-								past_flights_info=past_flights_info, future_flights_info=future_flights_info, month_commission=month_commission, \
-								month_tickets_sold=tickets_sold, month_comm_per_ticket=comm_per_ticket, top_customers_month=top_customers_month, \
-								top_customers_year=top_customers_year, query_flights=query_flights)
+								past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
+								month_commission=commission, month_tickets_sold=tickets_sold, month_comm_per_ticket=comm_per_ticket, \
+								top_customers_month=top_customers_month, top_customers_year=top_customers_year, \
+								query_flights=query_flights)
 
 
 	# When a booking agent clicks the "Yes" button under 'Check Availability' for a certain flight, a ticket search will be conducted (conduct_ticket_search = True) for that flight.
@@ -743,9 +750,10 @@ def agentHome():
 
 		cursor.close()
 		return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-								past_flights_info=past_flights_info, future_flights_info=future_flights_info, month_commission=month_commission, \
-								month_tickets_sold=tickets_sold, month_comm_per_ticket=comm_per_ticket, top_customers_month=top_customers_month, \
-								top_customers_year=top_customers_year, flight_select=flight_select, tickets=tickets)
+								past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
+								month_commission=commission, month_tickets_sold=tickets_sold, month_comm_per_ticket=comm_per_ticket, \
+								top_customers_month=top_customers_month, top_customers_year=top_customers_year, \
+								flight_select=flight_select, tickets=tickets)
 
 
 	# When a booking agent clicks the "Purchase" button under 'Purchase Tickets', a ticket purchase will be conducted (conduct_ticket_purchase = True)
@@ -800,10 +808,11 @@ def agentHome():
 				conn.commit()
 
 		cursor.close()
-		return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-								past_flights_info=past_flights_info, future_flights_info=future_flights_info, month_commission=month_commission, \
-								month_tickets_sold=tickets_sold, month_comm_per_ticket=comm_per_ticket, top_customers_month=top_customers_month, \
-								top_customers_year=top_customers_year, purchase="Complete")
+		# return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+		# 						past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
+		# 						month_commission=commission, month_tickets_sold=tickets_sold, month_comm_per_ticket=comm_per_ticket, \
+		# 						top_customers_month=top_customers_month, top_customers_year=top_customers_year, purchase="Complete")
+		return redirect(url_for('agentHome'))
 
 
 	# When a customer clicks the "Search" button under 'My Spending', the program will determine how much money that customer spent between two user-specified dates (track_spending = True)
@@ -811,30 +820,30 @@ def agentHome():
 		calc_commission = 'SELECT SUM(sold_price) AS commission, COUNT(ticket_ID) as tickets_sold FROM Customer_Purchases WHERE agent_ID = %s AND purchase_date >= %s AND purchase_date <= %s'
 		cursor.execute(calc_commission, (agent_ID, start_date, end_date))
 		commission_info = cursor.fetchone()
-		commission = commission_info['commission']
+		date_commission = commission_info['commission']
 
-		if (commission == None):
-			commission='0.0'
-			comm_per_ticket = '0.0'
-			tickets_sold = 0
+		if (date_commission == None):
+			date_commission='0.0'
+			date_comm_per_ticket = '0.0'
+			date_tickets_sold = 0
 		else:
-			commission = int(commission) * 0.1
-			tickets_sold = int(commission_info['tickets_sold'])
-			comm_per_ticket = commission / tickets_sold
+			date_commission = int(date_commission) * 0.1
+			date_tickets_sold = int(commission_info['tickets_sold'])
+			date_comm_per_ticket = date_commission / date_tickets_sold
 
 		cursor.close()
 		return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-								past_flights_info=past_flights_info, future_flights_info=future_flights_info, month_commission=commission, \
-								month_tickets_sold=tickets_sold, month_comm_per_ticket=comm_per_ticket, top_customers_month=top_customers_month, \
-								top_customers_year=top_customers_year, date_commission=commission, date_tickets_sold=tickets_sold, \
-								date_comm_per_ticket=comm_per_ticket, start_date=start_date, end_date=end_date)
+								past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
+								month_commission=commission, month_tickets_sold=tickets_sold, month_comm_per_ticket=comm_per_ticket, \
+								top_customers_month=top_customers_month, top_customers_year=top_customers_year, \
+								date_commission=date_commission, date_tickets_sold=date_tickets_sold, date_comm_per_ticket=date_comm_per_ticket, start_date=start_date, end_date=end_date)
 
 	# Returns default information that is displayed each time the page is loaded or refreshed
 	cursor.close()
 	return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-							past_flights_info=past_flights_info, future_flights_info=future_flights_info, month_commission=commission, \
-							month_tickets_sold=tickets_sold, month_comm_per_ticket=comm_per_ticket, top_customers_month=top_customers_month, \
-							top_customers_year=top_customers_year)
+							past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
+							month_commission=commission, month_tickets_sold=tickets_sold, month_comm_per_ticket=comm_per_ticket, \
+							top_customers_month=top_customers_month, top_customers_year=top_customers_year)
 		
 
 	######################################################################THIS CODE RUNS EVERYTIME THE PAGE IS LOADED OR REFRESHED######################################################################
@@ -968,7 +977,7 @@ def staffHome():
 
 	# Finds the top 5 booking agents based on how many tickets that they have sold within the past month using the Customer_purchases Table
 	find_top_agents = 'SELECT Customer_Purchases.agent_ID, COUNT(purchase_ID) AS purchases FROM Customer_Purchases, Booking_Agent WHERE \
-					   Customer_Purchases.agent_ID = Booking_Agent.agent_ID AND airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 MONTH) \
+					   Customer_Purchases.agent_ID = Booking_Agent.agent_ID AND Booking_Agent.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 MONTH) \
 					   GROUP BY agent_ID ORDER BY purchases DESC LIMIT 0, 5'
 	cursor.execute(find_top_agents, (airline_name))
 	top_agents_month = cursor.fetchall()
@@ -976,7 +985,7 @@ def staffHome():
 
 	# Finds the top 5 booking agents based on how many tickets that they have sold within the past year using the Customer_Purchases Table
 	find_top_agents = 'SELECT Customer_Purchases.agent_ID, COUNT(purchase_ID) AS purchases FROM Customer_Purchases, Booking_Agent WHERE \
-					   Customer_Purchases.agent_ID = Booking_Agent.agent_ID AND airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) \
+					   Customer_Purchases.agent_ID = Booking_Agent.agent_ID AND Booking_Agent.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) \
 					   GROUP BY agent_ID ORDER BY purchases DESC LIMIT 0, 5'
 	cursor.execute(find_top_agents, (airline_name))
 	top_agents_year = cursor.fetchall()
@@ -984,7 +993,7 @@ def staffHome():
 
 	# Finds the top 5 booking agents based on how much commission they earened within the past year using the Customer_Purchases and booking_Agent Table
 	find_top_agents = 'SELECT Customer_Purchases.agent_ID, SUM(sold_price) * 0.1 AS commission FROM Customer_Purchases, Booking_Agent WHERE \
-					   Customer_Purchases.agent_ID = Booking_Agent.agent_ID AND airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) \
+					   Customer_Purchases.agent_ID = Booking_Agent.agent_ID AND Booking_Agent.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) \
 					   GROUP BY agent_ID ORDER BY commission DESC LIMIT 0, 5'
 	cursor.execute(find_top_agents, (airline_name))
 	top_agents_commission = cursor.fetchall()
@@ -1169,6 +1178,7 @@ def staffHome():
 
 		if (reviews == ()):
 			reviews = "No Reviews"
+			avg_rating = 0
 		else:
 			find_avg_rating = 'SELECT AVG(rating) as avg_rating FROM REVIEW WHERE flight_num = %s'
 			cursor.execute(find_avg_rating, (review_flight_select))
@@ -1187,7 +1197,8 @@ def staffHome():
 
 	# When an airline staff member clicks the "Find Customer's Flights" button under 'Find Customer Flights', all flights that a customer has purchased tickets for will be found
 	if (view_customer_flights == True):
-		find_customer_flights = 'SELECT Customer_Purchases.flight_num FROM Customer_Purchases, Flight WHERE cus_email = %s AND Customer_Purchases.flight_num = Flight.flight_num AND Flight.airline_name = %s'
+		find_customer_flights = 'SELECT Customer_Purchases.flight_num FROM Customer_Purchases, Flight WHERE cus_email = %s AND Customer_Purchases.flight_num = Flight.flight_num \
+								 AND Flight.airline_name = %s'
 		cursor.execute(find_customer_flights, (cus_email, airline_name))
 		customer_flights = cursor.fetchall()
 
@@ -1206,8 +1217,9 @@ def staffHome():
 
 	# When an airline staff member clicks the "Find Tickets Sold" button under 'View Tickets Sold', all tickets purchased between two specified dates will be found.
 	if (view_tickets_sold == True):
-		find_tickets_sold = 'SELECT COUNT(ticket_ID) as tickets_sold from Customer_Purchases WHERE purchase_date >= %s AND purchase_date <= %s'
-		cursor.execute(find_tickets_sold, (ticket_start_date, ticket_end_date))
+		find_tickets_sold = 'SELECT COUNT(ticket_ID) as tickets_sold from Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
+							 AND Flight.airline_name = %s AND purchase_date >= %s AND purchase_date <= %s'
+		cursor.execute(find_tickets_sold, (airline_name, ticket_start_date, ticket_end_date))
 		tickets_sold = cursor.fetchone()
 		tickets_sold = tickets_sold['tickets_sold']
 

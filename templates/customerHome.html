@@ -25,6 +25,7 @@
 				<td> Arrival Date </td>
 				<td> Arrival Time </td>
 				<td> Trip Type </td>
+				<td> Sold Price </td>
 			</tr>
 
 			{% for flight in all_flights %}
@@ -45,6 +46,7 @@
 						<td> {{ flight_info['arrival_date'] }} </td>
 						<td> {{ flight_info['arrival_time'] }} </td>
 						<td> {{ flight_info['trip_type'] }} </td>
+						<td> {{ flight['sold_price'] }} </td>
 					<tr>
 
 					{% endif %}
@@ -195,10 +197,10 @@
 			</select>
 
 			Departure Date:
-			<input type="date" min="2021-04-20" name="departure" required>
+			<input type="date" name="departure" required>
 
 			Arrival Date:
-			<input type="date" min="2021-04-20" name="arrival" required>
+			<input type="date" name="arrival" required>
 
 			<input type="submit" value=Search />
 			
@@ -222,7 +224,7 @@
 				<td> Arrival Date </td>
 				<td> Arrival Time </td>
 				<td> Trip Type </td>
-				<td> Price </td>
+				<td> Base Price </td>
 				<td> Flight Status </td>
 				<td> Check Availability? </td>
 			</tr>
@@ -297,7 +299,7 @@
 				<input type="text" name="name" placeholder="Card Name" required/>
 				
 				Card Expiration Date:
-				<input type="date" min="2021-04-17" name="exp" placeholder="Card Expiration Date" required/> </br>  </br>
+				<input type="date" name="exp" placeholder="Card Expiration Date" required/> </br>  </br>
 
 				<input type="submit" value="Purchase" />
 			</form>
@@ -311,12 +313,12 @@
 
 		
 		<!-- If the purchase is complete, notify the user -->
-		{% if purchase == "Complete" %}
+		<!-- {% if purchase == "Complete" %}
 			<hr>
 			<h2> Purchase Tickets </h2>
 			<h4 style="color: green"> Purchase Complete </h4>
 
-		{% endif %}
+		{% endif %} -->
 
 
 		<!-- When a customer clicks the "Yes" button under 'Rate and Review', a form will be revealed to the user -->
@@ -359,7 +361,7 @@
 
 		<!-- The customer's expenses within the past year is displayed -->
 		{% if year_expenses %}
-			<h4> You Have Spent ${{year_expenses}}0 Within the Past Year. Use the Filter to Track your Spending Across Different Dates </h4>	
+			<h4> You Have Spent ${{year_expenses}}0 Within the Past Year. Use the Filter to Track your Spending Across Different Dates. </h4>	
 		{% endif %}
 
 		<!-- If the customer submits the 'My Spending' form, their expenses within the past year will be displayed -->

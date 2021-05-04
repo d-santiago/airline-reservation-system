@@ -105,9 +105,9 @@
 			Flight Number:
 			<select name="flight_num" required>
 				<option value="select"> Select </option>
-				<option value="FN-1"> FN-1 </option>
-				<option value="FN-2"> FN-2 </option>
-				<option value="FN-3"> FN-3 </option>
+				{% for flight in flights %}
+					<option value={{ flight['flight_num'] }}> {{ flight['flight_num'] }} </option>
+				{% endfor %}
 			</select>
 
 			Departure Date:

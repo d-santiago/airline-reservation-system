@@ -131,10 +131,10 @@
 			</select>
 
 			Departure Date:
-			<input type="date" min="2021-04-20" name="departure" required>
+			<input type="date" name="departure" required>
 
 			Arrival Date:
-			<input type="date" min="2021-04-20" name="arrival" required>
+			<input type="date" name="arrival" required>
 
 			<input type="submit" value=Search />
 			
@@ -200,7 +200,7 @@
 
 		{% endif %}
 
-		{% if customers and customer != "No Results" %}
+		{% if customers and customers != "No Results" %}
 			
 			</br>
 			<table>
@@ -252,7 +252,7 @@
 
 			</table>
 
-		{% elif reviews == "No Results" %}
+		{% elif reviews == "No Reviews" %}
 
 			<h4 style="color: red"> {{ reviews }} </h4>
 
@@ -451,7 +451,7 @@
 
 		</form>
 
-		{% if customer_flights and customer_flights != "No Tickets Sold" %}
+		{% if customer_flights and customer_flights != "No Results" %}
 			
 			</br>
 			<table>
@@ -471,7 +471,7 @@
 
 		{% elif customer_flights == "No Results" %}
 
-			<h4 style="color: red"> {{ reviews }} </h4>
+			<h4 style="color: red"> {{ customer_flights }} </h4>
 
 		{% endif %}
 
@@ -536,23 +536,26 @@
 
 		{% endif %}
 
-		{% if indirect_revenue_year and indirect_revenue_year != "No Indirect Revenue" %}
-
-			<h4> Indirect Revenue: ${{ indirect_revenue_year }}0 </h4>
-
-		{% elif indirect_revenue_year == "No Indirect Revenue" %}
-
-			<h4> Indirect Revenue: $0.00 </h4>
-
-		{% endif %}
-
-		<h3> Within the Past Year </h3>
-
 		{% if indirect_revenue_month and indirect_revenue_month != "No Indirect Revenue" %}
 
 			<h4> Indirect Revenue: ${{ indirect_revenue_month }}0 </h4>
 
 		{% elif indirect_revenue_month == "No Indirect Revenue" %}
+
+			<h4> Indirect Revenue: $0.00 </h4>
+
+		{% endif %}
+
+		
+
+		<h3> Within the Past Year </h3>
+
+
+		{% if indirect_revenue_year and indirect_revenue_year != "No Indirect Revenue" %}
+
+			<h4> Indirect Revenue: ${{ indirect_revenue_year }}0 </h4>
+
+		{% elif indirect_revenue_year == "No Indirect Revenue" %}
 
 			<h4> Indirect Revenue: $0.00 </h4>
 
