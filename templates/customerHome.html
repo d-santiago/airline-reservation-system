@@ -311,11 +311,11 @@
 
 		{% endif %}
 
-		
-
+	
 
 		<!-- When a customer clicks the "Yes" button under 'Rate and Review', a form will be revealed to the user -->
 		{% if flight_to_rate %}
+
 			<hr>
 			<h2> Review Previously Taken Flights  </h2>
 
@@ -343,6 +343,7 @@
 
 		<!-- If the customer already reviewed the flight, they will notified -->
 		{% if review == "Already Complete"%}
+
 			<hr>
 			<h2> Review Previously Taken Flights </h2>
 			<h4 style="color: green"> You Have Already Reviewed This Flight </h4>
@@ -355,83 +356,18 @@
 		<!-- Displays customer's expenses within the past 6 months -->
 		{% if year_expenses %}
 
-			<h4> You Have Spent ${{year_expenses}}0 Within the Past Year. Use the Filter to Track your Spending Across Different Dates. </h4>	
+			<p> You Have Spent ${{year_expenses}}0 Within the Past Year. </p>	
 		
-			{% endif %}
-
-
-
-		<!-- 6 MONTH BAR CHART -->
-		{% if six_month_expenses %}
-
-			<script> var six_month_expenses_sum = 0; var month_percent = 0; var month_percents = Array(); </script>
-
-			{% for month in six_month_expenses %}
-				<script>
-					six_month_expenses_sum += parseInt('{{ month['month_expense'] }}');
-				</script>
-			{% endfor %}
-
-			{% for month in six_month_expenses %}
-				<script>
-					month_percent = ( parseInt('{{ month['month_expense'] }}') / six_month_expenses_sum ) * 95;
-					month_percents.push(month_percent);
-				</script>
-
-				<div class="bar1"> {{month['month']}}: ${{month['month_expense']}}0 </div>
-			{% endfor %}
-
-			<script>
-				bars = document.querySelectorAll('.bar1')
-				for(i = 0; i < bars.length; i++){
-					bars[i].style.width = String(month_percents[i]) + 'vw';
-				}
-			</script>
-
 		{% endif %}
-
-
 
 		<!-- If the customer submits the 'My Spending' form, their expenses within the past year will be displayed -->
 		{% if date_expenses %}
 
-			</br>
-			<h4> You Have Spent ${{date_expenses}}0 Between {{start_date}} and {{end_date}} </h4>
+			<p> You Have Spent ${{date_expenses}}0 Between {{start_date}} and {{end_date}}. </p>
 
 		{% endif %}
 
-
-
-		<!-- RANGE MONTH BAR CHART -->
-		{% if range_month_expenses %}
-
-			<script> var range_month_expenses_sum = 0; var month_percent = 0; var month_percents = Array(); var bars = Array(); </script>
-
-			{% for month in range_month_expenses %}
-				<script>
-					range_month_expenses_sum += parseInt('{{ month['month_expense'] }}');
-				</script>
-			{% endfor %}
-
-			{% for month in range_month_expenses %}
-				<script>
-					month_percent = ( parseInt('{{ month['month_expense'] }}') / range_month_expenses_sum ) * 95;
-					month_percents.push(month_percent);
-				</script>
-
-				<div class="bar2"> {{month['month']}}: ${{month['month_expense']}}0 </div>
-			{% endfor %}
-
-			<script>
-				bars = document.querySelectorAll('.bar2')
-				for(i = 0; i < bars.length; i++){
-					bars[i].style.width = String(month_percents[i]) + 'vw';
-				}
-			</script>
-
-		{% endif %}
-
-		
+		<p> Use the Filter to Track your Spending Across Different Dates. </p>
 
 		<form action="/customerHome" method="POST">
 			Start Date:
@@ -442,6 +378,102 @@
 
 			<input type="submit" value=Search />		
 		</form> </br>
+
+
+
+		<!-- Bar Chart 1 Info -->
+		<script> var tickets1 = Array(); var months1 = Array(); </script>
+
+		{% for month in six_month_expenses %}
+			<script>
+				tickets1.push(parseInt("{{ month['month_expense'] }}"));
+				months1.push("{{ month['month'] }}");
+			</script>
+		{% endfor %}
+
+		<!-- Bar Chart 2 Info -->
+		<script> var tickets2 = Array(); var months2 = Array(); </script>
+
+		{% for month in range_month_expenses %}
+			<script>
+				tickets2.push(parseInt("{{ month['month_expense'] }}"));
+				months2.push("{{ month['month'] }}");
+			</script>
+		{% endfor %}
+
+
+
+		<script>
+			
+			window.onload = function () {
+
+				// Bar Chart 1 Info
+				var chart1 = new CanvasJS.Chart("chartContainer1", {
+				animationEnabled: true,
+				theme: "light2", // "light1", "light2", "dark1", "dark2"
+				title:{
+					text: "Expenses Within the Last 6 Months"
+				},
+				axisY: {
+					title: "Tickets"
+				},
+				data: [{        
+					type: "column",  
+					showInLegend: true, 
+					legendMarkerColor: "grey",
+					legendText: "Months",
+					dataPoints: [
+						{ y: tickets1[0], label: months1[0]},
+						{ y: tickets1[1], label: months1[1]},
+						{ y: tickets1[2], label: months1[2]},
+						{ y: tickets1[3], label: months1[3]},
+						{ y: tickets1[4], label: months1[4]}
+					]
+				}]
+			});
+			chart1.render();
+
+			// Bar Chart 2 Info
+			var chart2 = new CanvasJS.Chart("chartContainer2", {
+				animationEnabled: true,
+				theme: "light2", // "light1", "light2", "dark1", "dark2"
+				title:{
+					text: "Expenses Within the Specified Range"
+				},
+				axisY: {
+					title: "Tickets"
+				},
+				data: [{        
+					type: "column",  
+					showInLegend: true, 
+					legendMarkerColor: "grey",
+					legendText: "Months",
+					dataPoints: [
+						{ y: tickets2[0], label: months2[0]},
+						{ y: tickets2[1], label: months2[1]},
+						{ y: tickets2[2], label: months2[2]},
+						{ y: tickets2[3], label: months2[3]},
+						{ y: tickets2[4], label: months2[4]}
+					]
+				}]
+			});
+			chart2.render();
+			}
+
+		</script>
+
+		<div id="chartContainer1" style="height: 300px; width: 100%;"></div>
+		<div id="chartContainer2" style="height: 300px; width: 100%;"></div>
+		<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+		
+
+
+
+		
+
+		
+		
 		
 		<hr>
 		<a href="/customerLogout">Logout</a>
