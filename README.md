@@ -26,9 +26,6 @@
 1. Review Previously Taken Flights
 1. Track My Spending
 
-### To Do
-1. Track My Spending: Bar Graphs
-
 ## Booking Agent Use Cases
 
 ### Complete

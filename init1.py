@@ -432,8 +432,14 @@ def customerHome():
 
 	if (year_expenses == None):
 		year_expenses='0.0'
-		
 
+	calc_six_month_expenses = 'SELECT SUM(sold_price) AS month_expense, MONTHNAME(purchase_date) AS month FROM Customer_Purchases WHERE cus_email = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 6 MONTH) GROUP BY month'
+	cursor.execute(calc_six_month_expenses, (username))
+	six_month_expenses = cursor.fetchall()
+
+	if (six_month_expenses == None):
+		six_month_expenses="0.0"
+		
 	######################################################################THIS CODE RUNS EVERYTIME THE PAGE IS LOADED OR REFRESHED######################################################################
 
 
@@ -450,7 +456,9 @@ def customerHome():
 
 		cursor.close()
 		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-								past_flights_info=past_flights_info, future_flights_info=future_flights_info, query_flights=query_flights, year_expenses=year_expenses)
+								past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
+								year_expenses=year_expenses, six_month_expenses=six_month_expenses, \
+								query_flights=query_flights)
 
 
 	# When a customer clicks the "Yes" button under 'Check Availability' for a certain flight, a ticket search will be conducted (conduct_ticket_search = True) for that flight.
@@ -465,7 +473,9 @@ def customerHome():
 
 		cursor.close()
 		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-								past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses=year_expenses, flight_select=flight_select, tickets=tickets)
+								past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
+								year_expenses=year_expenses, six_month_expenses=six_month_expenses, \
+								flight_select=flight_select, tickets=tickets)
 
 
 	# When a customer clicks the "Purchase" button under 'Purchase Tickets', a ticket purchase will be conducted (conduct_ticket_purchase = True)
@@ -534,11 +544,15 @@ def customerHome():
 		if (not isFlightRated):
 			cursor.close()
 			return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-									past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses=year_expenses, flight_to_rate=flight_to_rate)
+									past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
+									year_expenses=year_expenses, six_month_expenses=six_month_expenses, \
+									flight_to_rate=flight_to_rate)
 		else:
 			cursor.close()
 			return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-									past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses=year_expenses, flight_rated=flight_to_rate, review="Already Complete")
+									past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
+									year_expenses=year_expenses, six_month_expenses=six_month_expenses, \
+									flight_rated=flight_to_rate, review="Already Complete")
 
 
 	# When a customer clicks the "Submit" button under 'Review Previously Taken Flights', their review will be submitted (submit_rating = True)
@@ -563,16 +577,27 @@ def customerHome():
 		if (date_expenses == None):
 			date_expenses="0.0"
 
+		calc_range_month_expenses = 'SELECT SUM(sold_price) AS month_expense, MONTHNAME(purchase_date) AS month FROM Customer_Purchases WHERE cus_email = %s AND purchase_date >= %s AND purchase_date <= %s GROUP BY month'
+		cursor.execute(calc_range_month_expenses, (username, start_date, end_date))
+		range_month_expenses = cursor.fetchall()
+		print(range_month_expenses)
+
+		if (range_month_expenses == None):
+			range_month_expenses="0.0"
+
 		cursor.close()
 		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-								past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses=year_expenses, \
-								date_expenses=date_expenses, start_date=start_date, end_date=end_date)
+								past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
+								year_expenses=year_expenses, six_month_expenses=six_month_expenses, \
+								date_expenses=date_expenses, range_month_expenses=range_month_expenses, start_date=start_date, end_date=end_date)
 
 
 	# Returns default information that is displayed each time the page is loaded or refreshed
 	cursor.close()
 	return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-							past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses=year_expenses)
+							past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
+							year_expenses=year_expenses, six_month_expenses=six_month_expenses)
+
 
 @app.route('/agentHome', methods=['GET', 'POST'])
 def agentHome():
