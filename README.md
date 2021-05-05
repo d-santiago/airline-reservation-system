@@ -35,9 +35,6 @@
 1. View my Commission
 1. View Top Customers
 
-### To Do
-1. View Top Customers: Bar Charts
-
 ## Airline Staff Use Cases
 
 ### Complete
@@ -52,7 +49,3 @@
 1. View Ticket Sales
 1. Comparison of Revenue Earned
 1. View Top Destinations
-
-### To Do
-1. View Ticket Sales: Bar Charts
-1. Comparison of Revenue Earned: Pie Charts

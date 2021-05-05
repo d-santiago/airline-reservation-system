@@ -435,7 +435,7 @@ def customerHome():
 
 
 	# When the page is loaded or refreshed, the program calculates the customer's expenses within the past 6 months by finding the sum of the sold_prices for the tickets in the Customer_Purchases table using their email
-	calc_six_month_expenses = 'SELECT SUM(sold_price) AS month_expense, MONTHNAME(purchase_date) AS month FROM Customer_Purchases WHERE cus_email = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 6 MONTH) GROUP BY month'
+	calc_six_month_expenses = 'SELECT SUM(sold_price) AS month_expense, MONTHNAME(purchase_date) AS month FROM Customer_Purchases WHERE cus_email = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 6 MONTH) GROUP BY month ORDER BY DATE(NOW())'
 	cursor.execute(calc_six_month_expenses, (username))
 	six_month_expenses = cursor.fetchall()
 
@@ -575,7 +575,7 @@ def customerHome():
 		if (date_expenses == None):
 			date_expenses="0.0"
 
-		calc_range_month_expenses = 'SELECT SUM(sold_price) AS month_expense, MONTHNAME(purchase_date) AS month FROM Customer_Purchases WHERE cus_email = %s AND purchase_date >= %s AND purchase_date <= %s GROUP BY month'
+		calc_range_month_expenses = 'SELECT SUM(sold_price) AS month_expense, MONTHNAME(purchase_date) AS month FROM Customer_Purchases WHERE cus_email = %s AND purchase_date >= %s AND purchase_date <= %s GROUP BY month ORDER BY DATE(NOW())'
 		cursor.execute(calc_range_month_expenses, (username, start_date, end_date))
 		range_month_expenses = cursor.fetchall()
 		print(range_month_expenses)
@@ -1047,6 +1047,19 @@ def staffHome():
 		tickets_sold_year = "No Tickets Sold"
 
 
+
+	# Finds the number of tickets told within the past year, BY MONTH, using the Customer_Purchases and Flight Table
+	find_tickets_sold = 'SELECT COUNT(ticket_ID) AS tickets_sold, MONTHNAME(purchase_date) AS month FROM Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
+						 AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) GROUP BY month ORDER BY DATE(NOW())'
+	cursor.execute(find_tickets_sold, (airline_name))
+	tickets_sold_yearly_graph = cursor.fetchall()
+	print(tickets_sold_yearly_graph)
+
+	if (tickets_sold_yearly_graph == ()):
+		tickets_sold_yearly_graph = "No Tickets Sold"
+
+
+
 	# Finds the total amount of revenue earned from direct sales (customer bought tickets without booking agent) within the past month using the Customer_Purchases and Flight Table
 	find_direct_revenue_month = 'SELECT SUM(sold_price) AS direct_revenue from Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
 								 AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 MONTH) AND agent_ID IS NULL'
@@ -1056,6 +1069,7 @@ def staffHome():
 
 	if (direct_revenue_month == None):
 		direct_revenue_month = "No Direct Revenue"
+		# direct_revenue_month = 0
 
 
 	# Finds the total amount of revenue earned from direct sales (customer bought tickets without booking agent) within the past year using the Customer_Purchases and Flight Table
@@ -1067,6 +1081,7 @@ def staffHome():
 
 	if (direct_revenue_year == None):
 		direct_revenue_year = "No Direct Revenue"
+		# direct_revenue_year = 0
 		
 
 	# Finds the total amount of revenue earned from indirect sales (customer bought tickets with booking agent) within the past month using the Customer_Purchases and Flight Table
@@ -1078,6 +1093,8 @@ def staffHome():
 
 	if (indirect_revenue_month == None):
 		indirect_revenue_month = "No Indirect Revenue"
+		# indirect_revenue_month = 0
+
 
 
 	# Finds the total amount of revenue earned from indirect sales (customer bought tickets with booking agent) within the past year using the Customer_Purchases and Flight Table
@@ -1089,6 +1106,7 @@ def staffHome():
 
 	if (indirect_revenue_year == None):
 		indirect_revenue_year = "No Indirect Revenue"
+		# indirect_revenue_year = 0
 
 	
 	# Finds the top 3 destinations within last 3 months (based on tickets already sold) using the Customer_Purchases and Flight Table
@@ -1122,7 +1140,7 @@ def staffHome():
 		cursor.close()
 		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
 								top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, \
-								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, \
+								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, tickets_sold_yearly_graph=tickets_sold_yearly_graph, \
 								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
 								indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year, \
 								top_destinations_month=top_destinations_month, top_destinations_year=top_destinations_year, \
@@ -1141,7 +1159,7 @@ def staffHome():
 		cursor.close()
 		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
 								top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, \
-								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, \
+								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, tickets_sold_yearly_graph=tickets_sold_yearly_graph, \
 								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
 								indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year, \
 								top_destinations_month=top_destinations_month, top_destinations_year=top_destinations_year, \
@@ -1207,7 +1225,7 @@ def staffHome():
 		cursor.close()
 		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
 								top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, \
-								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, \
+								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, tickets_sold_yearly_graph=tickets_sold_yearly_graph, \
 								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
 								indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year, \
 								top_destinations_month=top_destinations_month, top_destinations_year=top_destinations_year, \
@@ -1227,7 +1245,7 @@ def staffHome():
 		cursor.close()
 		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
 								top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, \
-								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, \
+								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, tickets_sold_yearly_graph=tickets_sold_yearly_graph, \
 								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
 								indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year, \
 								top_destinations_month=top_destinations_month, top_destinations_year=top_destinations_year, \
@@ -1248,7 +1266,7 @@ def staffHome():
 		cursor.close()
 		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
 								top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, \
-								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, \
+								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, tickets_sold_yearly_graph=tickets_sold_yearly_graph, \
 								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
 								indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year, \
 								top_destinations_month=top_destinations_month, top_destinations_year=top_destinations_year, \
@@ -1258,7 +1276,7 @@ def staffHome():
 	cursor.close()
 	return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
 							top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, \
-							top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, \
+							top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, tickets_sold_yearly_graph=tickets_sold_yearly_graph, \
 							direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
 							indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year, \
 							top_destinations_month=top_destinations_month, top_destinations_year=top_destinations_year)

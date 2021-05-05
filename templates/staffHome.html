@@ -483,21 +483,21 @@
 
 		{% if tickets_sold_month and tickets_sold_month != "No Tickets Sold" %}
 			
-			<h4> {{ tickets_sold_month}} Tickets Were Sold In the Past Month </h4>
+			<p> {{ tickets_sold_month}} Tickets Were Sold In the Past Month </p>
 
 		{% elif tickets_sold_month == "No Tickets Sold" %}
 
-			<h4 style="color: red"> {{ tickets_sold_month }} In the Past Month </h4>
+			<p style="color: red"> {{ tickets_sold_month }} In the Past Month </p>
 
 		{% endif %}
 
 		{% if tickets_sold_year and tickets_sold_year != "No Tickets Sold" %}
 			
-			<h4> {{ tickets_sold_year }} Tickets Were Sold In the Past Year </h4>
+			<p> {{ tickets_sold_year }} Tickets Were Sold In the Past Year </p>
 
 		{% elif tickets_sold_year == "No Tickets Sold" %}
 
-			<h4 style="color: red"> {{ tickets_sold_year }} In the Past Year </h4>
+			<p style="color: red"> {{ tickets_sold_year }} In the Past Year </p>
 
 		{% endif %}
 
@@ -508,69 +508,177 @@
 			<input type="submit" value="Find Tickets Sold" />
 
 		</form>
+		</br>
 
 		{% if tickets_sold and tickets_sold != "No Tickets Sold" %}
 
-			<h4> {{ tickets_sold}} were sold between {{ ticket_start_date }} and {{ ticket_end_date }} </h4>
+			<p> {{ tickets_sold}} were sold between {{ ticket_start_date }} and {{ ticket_end_date }} </p>
 
 		{% elif tickets_sold == "No Tickets Sold" %}
 
-			<h4> {{ tickets_sold }} between {{ ticket_start_date }} and {{ ticket_end_date }} </h4>
+			<p style="color: red"> {{ tickets_sold }} between {{ ticket_start_date }} and {{ ticket_end_date }} </p>
 
 		{% endif %}
+
+
+
+		<!-- Bar Chart 1 Info -->
+		<script> var tickets = Array(); var months = Array(); </script>
+
+		{% for month in tickets_sold_yearly_graph %}
+			<script>
+				tickets.push(parseInt("{{ month['tickets_sold'] }}"));
+				months.push("{{ month['month'] }}");
+			</script>
+		{% endfor %}
+
+		<!-- Bar Chart 2 Info -->
+		<script>
+			var month = Array();
+			var year = Array();
+			month.push(parseInt("{{direct_revenue_month}}"));
+			month.push(parseInt("{{indirect_revenue_month}}"));
+			year.push(parseInt("{{direct_revenue_year}}"));
+			year.push(parseInt("{{indirect_revenue_year}}"));
+		</script>
+
+		<script>
+			
+			window.onload = function () {
+
+				console.log(month);
+				console.log(year);
+
+				// Bar Chart 1 Info
+				var chart1 = new CanvasJS.Chart("chartContainer1", {
+				animationEnabled: true,
+				theme: "light2", // "light1", "light2", "dark1", "dark2"
+				title:{
+					text: "Tickets Sold Within the Last Year"
+				},
+				axisY: {
+					title: "Tickets"
+				},
+				data: [{        
+					type: "column",  
+					showInLegend: true, 
+					legendMarkerColor: "grey",
+					legendText: "Months",
+					dataPoints: [
+						{ y: tickets[0], label: months[0]},
+						{ y: tickets[1], label: months[1]},
+						{ y: tickets[2], label: months[2]},
+						{ y: tickets[3], label: months[3]},
+						{ y: tickets[4], label: months[4]},
+						{ y: tickets[5], label: months[5]},
+						{ y: tickets[6], label: months[6]},
+						{ y: tickets[7], label: months[7]},
+						{ y: tickets[8], label: months[8]},
+						{ y: tickets[9], label: months[9]},
+						{ y: tickets[10], label: months[10]},
+						{ y: tickets[11], label: months[11]}
+					]
+				}]
+			});
+			chart1.render();
+
+			var chart2 = new CanvasJS.Chart("chartContainer2", {
+					animationEnabled: true,
+					title: {
+						text: "Direct vs Indirect Revenue Within the Last Month"
+					},
+					data: [{
+						type: "pie",
+						startAngle: 240,
+						yValueFormatString: "$##0.00",
+						indexLabel: "{label} {y}",
+						dataPoints: [
+							{y: month[0], label: "Direct"},
+							{y: month[1], label: "Indirect"}
+						]
+					}]
+				});
+				chart2.render();
+
+				var chart3 = new CanvasJS.Chart("chartContainer3", {
+					animationEnabled: true,
+					title: {
+						text: "Direct vs Indirect Revenue Within the Last Year"
+					},
+					data: [{
+						type: "pie",
+						startAngle: 240,
+						yValueFormatString: "$##0.00",
+						indexLabel: "{label} {y}",
+						dataPoints: [
+							{y: year[0], label: "Direct"},
+							{y: year[1], label: "Indirect"}
+						]
+					}]
+				});
+				chart3.render();
+			}
+
+		</script>
+
+		<div id="chartContainer1" style="height: 300px; width: 100%;"></div>
 
 
 		</br> <hr>
 
 		<h2> View Revenue Earned </h2>
 
+
 		<h3> Within the Past Month </h3>
 
 		{% if direct_revenue_month and direct_revenue_month != "No Direct Revenue" %}
 
-			<h4> Direct Revenue: ${{ direct_revenue_month }}0 </h4>
+			<p> Direct Revenue: ${{ direct_revenue_month }}0 </p>
 
 		{% elif direct_revenue_month == "No Direct Revenue" %}
 
-			<h4> Direct Revenue: $0.00 </h4>
+			<p> Direct Revenue: $0.00 </p>
 
 		{% endif %}
 
 		{% if indirect_revenue_month and indirect_revenue_month != "No Indirect Revenue" %}
 
-			<h4> Indirect Revenue: ${{ indirect_revenue_month }}0 </h4>
+			<p> Indirect Revenue: ${{ indirect_revenue_month }}0 </p>
 
 		{% elif indirect_revenue_month == "No Indirect Revenue" %}
 
-			<h4> Indirect Revenue: $0.00 </h4>
+			<p> Indirect Revenue: $0.00 </p>
 
 		{% endif %}
 
-		
+		<div id="chartContainer2" style="height: 300px; width: 100%;"></div>
+
 
 		<h3> Within the Past Year </h3>
 
 
 		{% if indirect_revenue_year and indirect_revenue_year != "No Indirect Revenue" %}
 
-			<h4> Indirect Revenue: ${{ indirect_revenue_year }}0 </h4>
+			<p> Indirect Revenue: ${{ indirect_revenue_year }}0 </p>
 
 		{% elif indirect_revenue_year == "No Indirect Revenue" %}
 
-			<h4> Indirect Revenue: $0.00 </h4>
+			<p> Indirect Revenue: $0.00 </p>
 
 		{% endif %}
 
 		{% if indirect_revenue_year and indirect_revenue_year != "No Indirect Revenue" %}
 
-			<h4> Indirect Revenue: ${{ indirect_revenue_year }}0 </h4>
+			<p> Indirect Revenue: ${{ indirect_revenue_year }}0 </p>
 
 		{% elif indirect_revenue_year == "No Indirect Revenue" %}
 
-			<h4> Indirect Revenue: $0.00 </h4>
+			<p> Indirect Revenue: $0.00 </p>
 
 		{% endif %}
 
+		
+		<div id="chartContainer3" style="height: 300px; width: 100%;"></div>
 
 
 		<hr>
@@ -628,6 +736,7 @@
 		</br> <hr>
 
 		<a href="/staffLogout">Logout</a>
+		<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
 	</body>
 
