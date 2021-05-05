@@ -312,13 +312,6 @@
 		{% endif %}
 
 		
-		<!-- If the purchase is complete, notify the user -->
-		<!-- {% if purchase == "Complete" %}
-			<hr>
-			<h2> Purchase Tickets </h2>
-			<h4 style="color: green"> Purchase Complete </h4>
-
-		{% endif %} -->
 
 
 		<!-- When a customer clicks the "Yes" button under 'Rate and Review', a form will be revealed to the user -->
@@ -359,7 +352,7 @@
 		<hr>
 		<h2> My Spending </h2>
 
-		<!-- 6 MONTH BAR CHART -->
+		<!-- Displays customer's expenses within the past 6 months -->
 		{% if year_expenses %}
 
 			<h4> You Have Spent ${{year_expenses}}0 Within the Past Year. Use the Filter to Track your Spending Across Different Dates. </h4>	
@@ -368,7 +361,7 @@
 
 
 
-
+		<!-- 6 MONTH BAR CHART -->
 		{% if six_month_expenses %}
 
 			<script> var six_month_expenses_sum = 0; var month_percent = 0; var month_percents = Array(); </script>
@@ -409,7 +402,7 @@
 
 
 
-
+		<!-- RANGE MONTH BAR CHART -->
 		{% if range_month_expenses %}
 
 			<script> var range_month_expenses_sum = 0; var month_percent = 0; var month_percents = Array(); var bars = Array(); </script>

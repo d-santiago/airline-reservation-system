@@ -433,6 +433,8 @@ def customerHome():
 	if (year_expenses == None):
 		year_expenses='0.0'
 
+
+	# When the page is loaded or refreshed, the program calculates the customer's expenses within the past 6 months by finding the sum of the sold_prices for the tickets in the Customer_Purchases table using their email
 	calc_six_month_expenses = 'SELECT SUM(sold_price) AS month_expense, MONTHNAME(purchase_date) AS month FROM Customer_Purchases WHERE cus_email = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 6 MONTH) GROUP BY month'
 	cursor.execute(calc_six_month_expenses, (username))
 	six_month_expenses = cursor.fetchall()
@@ -530,8 +532,6 @@ def customerHome():
 				conn.commit()
 
 		cursor.close()
-		# return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-								# past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses=year_expenses, purchase="Complete")
 		return redirect(url_for('customerHome'))
 
 	# When a customer clicks the "Yes" button under 'Rate and Review', a form will be revealed to the user under 'Review Previously Taken Flights' (reveal_review_form = True)
@@ -562,8 +562,6 @@ def customerHome():
 		conn.commit()
 
 		cursor.close()
-		# return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-							# past_flights_info=past_flights_info, future_flights_info=future_flights_info, year_expenses=year_expenses, review="Complete")
 		return redirect(url_for('customerHome'))
 
 	
@@ -833,10 +831,6 @@ def agentHome():
 				conn.commit()
 
 		cursor.close()
-		# return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
-		# 						past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
-		# 						month_commission=commission, month_tickets_sold=tickets_sold, month_comm_per_ticket=comm_per_ticket, \
-		# 						top_customers_month=top_customers_month, top_customers_year=top_customers_year, purchase="Complete")
 		return redirect(url_for('agentHome'))
 
 
