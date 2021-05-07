@@ -116,18 +116,20 @@
 				<option value="Round Trip"> Round Trip </option>
 			</select>
 
-			Departure City:
+			Departure Airport:
 			<select name="source" required>
 				<option value="select"> Select </option>
-				<option value="JFK"> New York / JFK </option>
-				<option value="PVG"> Shanghai / PVG </option>
+				{% for airport in airports %}
+					<option value={{ airport['airport_name'] }}> {{ airport['airport_name'] }} </option>
+				{% endfor %}
 			</select>
 
-			Destination City:
+			Destination Airport:
 			<select name="destination" required>
 				<option value="select"> Select </option>
-				<option value="JFK"> New York / JFK </option>
-				<option value="PVG"> Shanghai / PVG </option>
+				{% for airport in airports %}
+					<option value={{ airport['airport_name'] }}> {{ airport['airport_name'] }} </option>
+				{% endfor %}
 			</select>
 
 			Departure Date:
@@ -284,8 +286,9 @@
 				Departure Airport:
 				<select name="departure_airport" required>
 					<option value="select"> Select </option>
-					<option value="JFK"> New York / JFK </option>
-					<option value="PVG"> Shanghai / PVG </option>
+					{% for airport in airports %}
+						<option value={{ airport['airport_name'] }}> {{ airport['airport_name'] }} </option>
+					{% endfor %}
 				</select>
 
 				Departure Date: <input type="date" name="departure_date" placeholder="Departure Date" required/>
@@ -294,8 +297,9 @@
 				Arrival Airport:
 				<select name="arrival_airport" required>
 					<option value="select"> Select </option>
-					<option value="JFK"> New York / JFK </option>
-					<option value="PVG"> Shanghai / PVG </option>
+					{% for airport in airports %}
+						<option value={{ airport['airport_name'] }}> {{ airport['airport_name'] }} </option>
+					{% endfor %}
 				</select>
 
 				Arrival Date: <input type="date" name="arrival_date" placeholder="Arrival Date" required/>

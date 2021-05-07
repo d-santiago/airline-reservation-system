@@ -45,6 +45,15 @@ def index():
 	# establish connection with PHPMyAdmin
 	cursor = conn.cursor()
 
+	# Finds all airports that belong to the airline
+	find_airports = 'SELECT * FROM airport'
+	cursor.execute(find_airports)
+	airports = cursor.fetchall()
+
+	# Finds all airlines that belong to the airline
+	find_airlines = 'SELECT * FROM airline'
+	cursor.execute(find_airlines)
+	airlines = cursor.fetchall()
 
 	# Finds all flights that belong to the airline
 	find_flights = 'SELECT * FROM Flight'
@@ -64,7 +73,7 @@ def index():
 			query_flights = "No Results"
 
 		cursor.close()
-		return render_template('index.html', flights=flights, query_flights=query_flights)
+		return render_template('index.html', airports=airports, airlines=airlines, flights=flights, query_flights=query_flights)
 
 
 	# When a customer clicks the "Search" button under 'Get Flight Status', a flight status search will be conducted (conduct_get_status = True)
@@ -79,10 +88,10 @@ def index():
 			flight_status = flight_status['flight_status']
 
 		cursor.close()
-		return render_template('index.html', flights=flights, flight_num=flight_num, flight_status=flight_status)
+		return render_template('index.html', airports=airports, airlines=airlines, flights=flights, flight_num=flight_num, flight_status=flight_status)
 
 
-	return render_template('index.html', flights=flights)
+	return render_template('index.html', airports=airports, airlines=airlines, flights=flights)
 
 #Define route for the Customer's login
 @app.route('/customerLogin')
@@ -365,6 +374,11 @@ def customerHome():
 
 	# establish connection with PHPMyAdmin
 	cursor = conn.cursor()
+
+	# Finds all airports that belong to the airline
+	find_airports = 'SELECT * FROM airport'
+	cursor.execute(find_airports)
+	airports = cursor.fetchall()
 	
 	# When the page is loaded or refreshed, the program finds all flights that a customer has purchased from Customer_Purchases Table using their email
 	find_flights = 'SELECT flight_num, ticket_ID, sold_price FROM Customer_Purchases WHERE cus_email = %s'
@@ -457,7 +471,7 @@ def customerHome():
 			query_flights = "No Results"
 
 		cursor.close()
-		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+		return render_template('customerHome.html', username=username, airports=airports, all_flights=all_flights, all_flights_info=all_flights_info, \
 								past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
 								year_expenses=year_expenses, six_month_expenses=six_month_expenses, \
 								query_flights=query_flights)
@@ -474,7 +488,7 @@ def customerHome():
 			tickets = "No Tickets"
 
 		cursor.close()
-		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+		return render_template('customerHome.html', username=username, airports=airports, all_flights=all_flights, all_flights_info=all_flights_info, \
 								past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
 								year_expenses=year_expenses, six_month_expenses=six_month_expenses, \
 								flight_select=flight_select, tickets=tickets)
@@ -543,13 +557,13 @@ def customerHome():
 
 		if (not isFlightRated):
 			cursor.close()
-			return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+			return render_template('customerHome.html', username=username, airports=airports, all_flights=all_flights, all_flights_info=all_flights_info, \
 									past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
 									year_expenses=year_expenses, six_month_expenses=six_month_expenses, \
 									flight_to_rate=flight_to_rate)
 		else:
 			cursor.close()
-			return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+			return render_template('customerHome.html', username=username, airports=airports, all_flights=all_flights, all_flights_info=all_flights_info, \
 									past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
 									year_expenses=year_expenses, six_month_expenses=six_month_expenses, \
 									flight_rated=flight_to_rate, review="Already Complete")
@@ -584,7 +598,7 @@ def customerHome():
 			range_month_expenses="0.0"
 
 		cursor.close()
-		return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+		return render_template('customerHome.html', username=username, airports=airports, all_flights=all_flights, all_flights_info=all_flights_info, \
 								past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
 								year_expenses=year_expenses, six_month_expenses=six_month_expenses, \
 								date_expenses=date_expenses, range_month_expenses=range_month_expenses, start_date=start_date, end_date=end_date)
@@ -592,7 +606,7 @@ def customerHome():
 
 	# Returns default information that is displayed each time the page is loaded or refreshed
 	cursor.close()
-	return render_template('customerHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+	return render_template('customerHome.html', username=username, airports=airports, all_flights=all_flights, all_flights_info=all_flights_info, \
 							past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
 							year_expenses=year_expenses, six_month_expenses=six_month_expenses)
 
@@ -648,6 +662,11 @@ def agentHome():
 
 	# establish connection with PHPMyAdmin
 	cursor = conn.cursor()
+
+	# Finds all airports that belong to the airline
+	find_airports = 'SELECT * FROM airport'
+	cursor.execute(find_airports)
+	airports = cursor.fetchall()
 	
 	# When the page is loaded or refreshed, the program finds the agent_ID of the booking agent using their email in the Customer_Purchases Table
 	find_agent_ID = 'SELECT agent_ID FROM Booking_Agent WHERE agent_email = %s'
@@ -754,7 +773,7 @@ def agentHome():
 			query_flights = "No Results"
 
 		cursor.close()
-		return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+		return render_template('agentHome.html', username=username, airports=airports, all_flights=all_flights, all_flights_info=all_flights_info, \
 								past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
 								month_commission=commission, month_tickets_sold=tickets_sold, month_comm_per_ticket=comm_per_ticket, \
 								top_customers_month=top_customers_month, top_customers_year=top_customers_year, \
@@ -772,7 +791,7 @@ def agentHome():
 			tickets = "No Tickets"
 
 		cursor.close()
-		return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+		return render_template('agentHome.html', username=username, airports=airports, all_flights=all_flights, all_flights_info=all_flights_info, \
 								past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
 								month_commission=commission, month_tickets_sold=tickets_sold, month_comm_per_ticket=comm_per_ticket, \
 								top_customers_month=top_customers_month, top_customers_year=top_customers_year, \
@@ -851,7 +870,7 @@ def agentHome():
 			date_comm_per_ticket = date_commission / date_tickets_sold
 
 		cursor.close()
-		return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+		return render_template('agentHome.html', username=username, airports=airports, all_flights=all_flights, all_flights_info=all_flights_info, \
 								past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
 								month_commission=commission, month_tickets_sold=tickets_sold, month_comm_per_ticket=comm_per_ticket, \
 								top_customers_month=top_customers_month, top_customers_year=top_customers_year, \
@@ -859,7 +878,7 @@ def agentHome():
 
 	# Returns default information that is displayed each time the page is loaded or refreshed
 	cursor.close()
-	return render_template('agentHome.html', username=username, all_flights=all_flights, all_flights_info=all_flights_info, \
+	return render_template('agentHome.html', username=username, airports=airports, all_flights=all_flights, all_flights_info=all_flights_info, \
 							past_flights_info=past_flights_info, future_flights_info=future_flights_info, \
 							month_commission=commission, month_tickets_sold=tickets_sold, month_comm_per_ticket=comm_per_ticket, \
 							top_customers_month=top_customers_month, top_customers_year=top_customers_year)
@@ -967,6 +986,11 @@ def staffHome():
 
 
 	cursor = conn.cursor()
+
+	# Finds all airports that belong to the airline
+	find_airports = 'SELECT * FROM airport'
+	cursor.execute(find_airports)
+	airports = cursor.fetchall()
 
 	# Finds the airline that the airline staff member works for
 	staff_airline = 'SELECT airline_name FROM Airline_Staff WHERE staff_username = %s'
@@ -1135,7 +1159,7 @@ def staffHome():
 			query_flights = "No Results"
 
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
+		return render_template('staffHome.html', username=username, airports=airports, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
 								top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, \
 								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, tickets_sold_yearly_graph=tickets_sold_yearly_graph, \
 								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
@@ -1154,7 +1178,7 @@ def staffHome():
 			customers = "No Results"
 
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
+		return render_template('staffHome.html', username=username, airports=airports, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
 								top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, \
 								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, tickets_sold_yearly_graph=tickets_sold_yearly_graph, \
 								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
@@ -1220,7 +1244,7 @@ def staffHome():
 			avg_rating = avg_rating['avg_rating']
 		
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
+		return render_template('staffHome.html', username=username, airports=airports, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
 								top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, \
 								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, tickets_sold_yearly_graph=tickets_sold_yearly_graph, \
 								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
@@ -1240,7 +1264,7 @@ def staffHome():
 			customer_flights = "No Results"
 		
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
+		return render_template('staffHome.html', username=username, airports=airports, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
 								top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, \
 								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, tickets_sold_yearly_graph=tickets_sold_yearly_graph, \
 								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
@@ -1270,7 +1294,7 @@ def staffHome():
 			tickets_sold_range_graph = "No Tickets Sold"
 		
 		cursor.close()
-		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
+		return render_template('staffHome.html', username=username, airports=airports, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
 								top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, \
 								top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, tickets_sold_yearly_graph=tickets_sold_yearly_graph, \
 								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
@@ -1280,7 +1304,7 @@ def staffHome():
 
 
 	cursor.close()
-	return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
+	return render_template('staffHome.html', username=username, airports=airports, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
 							top_agents_month=top_agents_month, top_agents_year=top_agents_year, top_agents_commission=top_agents_commission, \
 							top_customer=top_customer, tickets_sold_month=tickets_sold_month, tickets_sold_year=tickets_sold_year, tickets_sold_yearly_graph=tickets_sold_yearly_graph, \
 							direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
