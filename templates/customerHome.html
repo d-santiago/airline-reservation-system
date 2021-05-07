@@ -259,7 +259,7 @@
 		</table> </br>
 
 		{% elif query_flights == "No Results" %}
-			<h4 style="color: red"> {{ query_flights }}</h4>
+			<p style="color: red"> {{ query_flights }}</p>
 		{% endif %}
 
 		
@@ -309,7 +309,7 @@
 		<!-- If there are no tickets avaiable, notify the user -->
 		{% elif tickets == "No Tickets" %}
 
-			<h4 style="color: red"> No Tickets Avaiable for Flight: {{flight_select}} </h4>
+			<p style="color: red"> No Tickets Avaiable for Flight: {{flight_select}} </p>
 
 		{% endif %}
 
@@ -348,7 +348,7 @@
 
 			<hr>
 			<h2> Review Previously Taken Flights </h2>
-			<h4 style="color: green"> You Have Already Reviewed This Flight </h4>
+			<p style="color: green"> You Have Already Reviewed This Flight </p>
 
 		{% endif %}
 
