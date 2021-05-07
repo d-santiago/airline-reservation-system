@@ -1033,7 +1033,7 @@ def staffHome():
 	tickets_sold_month = tickets_sold_month['tickets_sold']
 
 	if (not tickets_sold_month):
-		tickets_sold_month = "No Tickets Sold"
+		tickets_sold_month = 0
 
 
 	# Finds the number of tickets told within the past year using the Customer_Purchases and Flight Table
@@ -1044,8 +1044,7 @@ def staffHome():
 	tickets_sold_year = tickets_sold_year['tickets_sold']
 
 	if (not tickets_sold_year):
-		tickets_sold_year = "No Tickets Sold"
-
+		tickets_sold_year = 0
 
 
 	# Finds the number of tickets told within the past year, BY MONTH, using the Customer_Purchases and Flight Table
@@ -1067,7 +1066,7 @@ def staffHome():
 	direct_revenue_month = direct_revenue_month['direct_revenue']
 
 	if (direct_revenue_month == None):
-		direct_revenue_month = "No Direct Revenue"
+		direct_revenue_month = 0.0
 		# direct_revenue_month = 0
 
 
@@ -1079,7 +1078,7 @@ def staffHome():
 	direct_revenue_year = direct_revenue_year['direct_revenue']
 
 	if (direct_revenue_year == None):
-		direct_revenue_year = "No Direct Revenue"
+		direct_revenue_year = 0.0
 		# direct_revenue_year = 0
 		
 
@@ -1091,9 +1090,8 @@ def staffHome():
 	indirect_revenue_month = indirect_revenue_month['indirect_revenue']
 
 	if (indirect_revenue_month == None):
-		indirect_revenue_month = "No Indirect Revenue"
+		indirect_revenue_month = 0.0
 		# indirect_revenue_month = 0
-
 
 
 	# Finds the total amount of revenue earned from indirect sales (customer bought tickets with booking agent) within the past year using the Customer_Purchases and Flight Table
@@ -1104,7 +1102,7 @@ def staffHome():
 	indirect_revenue_year = indirect_revenue_year['indirect_revenue']
 
 	if (indirect_revenue_year == None):
-		indirect_revenue_year = "No Indirect Revenue"
+		indirect_revenue_year = 0.0
 		# indirect_revenue_year = 0
 
 	
@@ -1260,7 +1258,7 @@ def staffHome():
 		tickets_sold = tickets_sold['tickets_sold']
 
 		if (not tickets_sold):
-			tickets_sold = "No Tickets Sold"
+			tickets_sold = 0
 
 		# When an airline staff member clicks the "Find Tickets Sold" button under 'View Tickets Sold', all tickets purchased between two specified dates will be found, ordered BY MONTH.
 		find_tickets_sold = 'SELECT COUNT(ticket_ID) AS tickets_sold, MONTHNAME(purchase_date) AS month FROM Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \

@@ -196,7 +196,7 @@
 
 		{% elif query_flights == "No Results" %}
 
-			<h4 style="color: red"> {{ query_flights }}</h4>
+			<p style="color: red"> {{ query_flights }}</p>
 
 		{% endif %}
 
@@ -223,7 +223,7 @@
 
 		{% elif customers == "No Results" %}
 
-			<h4 style="color: red"> {{ customers }}</h4>
+			<p style="color: red"> {{ customers }}</p>
 
 		{% endif %}
 
@@ -254,7 +254,7 @@
 
 		{% elif reviews == "No Reviews" %}
 
-			<h4 style="color: red"> {{ reviews }} </h4>
+			<p style="color: red"> {{ reviews }} </p>
 
 		{% endif %}
 		
@@ -471,7 +471,7 @@
 
 		{% elif customer_flights == "No Results" %}
 
-			<h4 style="color: red"> {{ customer_flights }} </h4>
+			<p style="color: red"> {{ customer_flights }} </p>
 
 		{% endif %}
 
@@ -481,33 +481,21 @@
 
 		<h2> View Tickets Sold </h2>
 
-		{% if tickets_sold_month and tickets_sold_month != "No Tickets Sold" %}
+		{% if tickets_sold_month or tickets_sold_month == 0 %}
 			
-			<p> {{ tickets_sold_month}} Tickets Were Sold in the Past Month </p>
-
-		{% elif tickets_sold_month == "No Tickets Sold" %}
-
-			<p style="color: red"> {{ tickets_sold_month }} in the Past Month </p>
+			<p> Ticket(s) Sold in the Past Month: {{ tickets_sold_month}} </p>
 
 		{% endif %}
 
-		{% if tickets_sold_year and tickets_sold_year != "No Tickets Sold" %}
+		{% if tickets_sold_year or tickets_sold_year == 0 %}
 			
-			<p> {{ tickets_sold_year }} Tickets Were Sold in the Past Year </p>
-
-		{% elif tickets_sold_year == "No Tickets Sold" %}
-
-			<p style="color: red"> {{ tickets_sold_year }} in the Past Year </p>
+			<p> Ticket(s) Sold in the Past Year: {{ tickets_sold_year }}  </p>
 
 		{% endif %}
 
-		{% if tickets_sold and tickets_sold != "No Tickets Sold" %}
+		{% if tickets_sold or tickets_sold == 0 %}
 
-			<p style="color: green"> {{ tickets_sold }} were sold between {{ ticket_start_date }} and {{ ticket_end_date }} </p>
-
-		{% elif tickets_sold == "No Tickets Sold" %}
-
-			<p style="color: red"> {{ tickets_sold }} between {{ ticket_start_date }} and {{ ticket_end_date }} </p>
+			<p style="color: green"> Ticket(s) sold between {{ ticket_start_date }} and {{ ticket_end_date }}: {{ tickets_sold }}  </p>
 
 		{% endif %}
 
@@ -644,47 +632,30 @@
 
 		<h3> Within the Past Month </h3>
 
-		{% if direct_revenue_month and direct_revenue_month != "No Direct Revenue" %}
+		{% if direct_revenue_month or direct_revenue_month == 0.0 %}
 
 			<p> Direct Revenue: ${{ direct_revenue_month }}0 </p>
 
-		{% elif direct_revenue_month == "No Direct Revenue" %}
-
-			<p> Direct Revenue: $0.00 </p>
-
 		{% endif %}
 
-		{% if indirect_revenue_month and indirect_revenue_month != "No Indirect Revenue" %}
+		{% if indirect_revenue_month or indirect_revenue_month == 0.0 %}
 
 			<p> Indirect Revenue: ${{ indirect_revenue_month }}0 </p>
-
-		{% elif indirect_revenue_month == "No Indirect Revenue" %}
-
-			<p> Indirect Revenue: $0.00 </p>
 
 		{% endif %}
 
 
 		<h3> Within the Past Year </h3>
 
-
-		{% if direct_revenue_year and direct_revenue_year != "No Indirect Revenue" %}
+		{% if direct_revenue_year or direct_revenue_year == 0.0 %}
 
 			<p> Direct Revenue: ${{ direct_revenue_year }}0 </p>
 
-		{% elif indirect_revenue_year == "No Indirect Revenue" %}
-
-			<p> Direct Revenue: $0.00 </p>
-
 		{% endif %}
 
-		{% if indirect_revenue_year and indirect_revenue_year != "No Indirect Revenue" %}
+		{% if indirect_revenue_year or indirect_revenue_year == 0.0 %}
 
 			<p> Indirect Revenue: ${{ indirect_revenue_year }}0 </p>
-
-		{% elif indirect_revenue_year == "No Indirect Revenue" %}
-
-			<p> Indirect Revenue: $0.00 </p>
 
 		{% endif %}
 
