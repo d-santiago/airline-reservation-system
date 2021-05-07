@@ -1053,7 +1053,6 @@ def staffHome():
 						 AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) GROUP BY month ORDER BY DATE(NOW())'
 	cursor.execute(find_tickets_sold, (airline_name))
 	tickets_sold_yearly_graph = cursor.fetchall()
-	print(tickets_sold_yearly_graph)
 
 	if (tickets_sold_yearly_graph == ()):
 		tickets_sold_yearly_graph = "No Tickets Sold"
@@ -1262,6 +1261,15 @@ def staffHome():
 
 		if (not tickets_sold):
 			tickets_sold = "No Tickets Sold"
+
+		# When an airline staff member clicks the "Find Tickets Sold" button under 'View Tickets Sold', all tickets purchased between two specified dates will be found, ordered BY MONTH.
+		find_tickets_sold = 'SELECT COUNT(ticket_ID) AS tickets_sold, MONTHNAME(purchase_date) AS month FROM Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
+							AND Flight.airline_name = %s AND purchase_date >= %s AND purchase_date <= %s GROUP BY month ORDER BY DATE(NOW())'
+		cursor.execute(find_tickets_sold, (airline_name, ticket_start_date, ticket_end_date))
+		tickets_sold_range_graph = cursor.fetchall()
+
+		if (tickets_sold_range_graph == ()):
+			tickets_sold_range_graph = "No Tickets Sold"
 		
 		cursor.close()
 		return render_template('staffHome.html', username=username, past_flights=past_flights, future_flights=future_flights, airplanes=airplanes, \
@@ -1270,7 +1278,7 @@ def staffHome():
 								direct_revenue_month=direct_revenue_month, direct_revenue_year=direct_revenue_year, \
 								indirect_revenue_month=indirect_revenue_month, indirect_revenue_year=indirect_revenue_year, \
 								top_destinations_month=top_destinations_month, top_destinations_year=top_destinations_year, \
-								tickets_sold=tickets_sold, ticket_start_date=ticket_start_date, ticket_end_date=ticket_end_date)
+								tickets_sold=tickets_sold, ticket_start_date=ticket_start_date, ticket_end_date=ticket_end_date, tickets_sold_range_graph=tickets_sold_range_graph)
 
 
 	cursor.close()

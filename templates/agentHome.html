@@ -406,22 +406,19 @@
 
 
 		<!-- Bar Chart 1 Info -->
-		<script> var tickets = Array(); var customers1 = Array(); </script>
+		<script> var data1 = Array(); var data2 = Array() </script>
 
 		{% for customer in top_customers_month %}
 			<script>
-				tickets.push(parseInt("{{ customer['tickets'] }}"));
-				customers1.push("{{ customer['cus_email'] }}");
+				data1.push({ y: parseInt("{{ customer['tickets'] }}") , label: "{{ customer['cus_email'] }}" });
 			</script>
 		{% endfor %}
 
 		<!-- Bar Chart 2 Info -->
-		<script> var commission = Array(); var customers2 = Array(); </script>
 
 		{% for customer in top_customers_year %}
 			<script>
-				commission.push(parseInt("{{ customer['cus_commission'] }}"));
-				customers2.push("{{ customer['cus_email'] }}");
+				data2.push({ y: parseInt("{{ customer['cus_commission'] }}") , label: "{{ customer['cus_email'] }}" });
 			</script>
 		{% endfor %}
 
@@ -444,13 +441,7 @@
 					showInLegend: true, 
 					legendMarkerColor: "grey",
 					legendText: "Customers",
-					dataPoints: [
-						{ y: tickets[0], label: customers1[0]},
-						{ y: tickets[1], label: customers1[1]},
-						{ y: tickets[2], label: customers1[2]},
-						{ y: tickets[3], label: customers1[3]},
-						{ y: tickets[4], label: customers1[4]}
-					]
+					dataPoints: data1
 				}]
 			});
 			chart1.render();
@@ -470,13 +461,7 @@
 					showInLegend: true, 
 					legendMarkerColor: "grey",
 					legendText: "Customers",
-					dataPoints: [
-						{ y: commission[0], label: customers2[0]},
-						{ y: commission[1], label: customers2[1]},
-						{ y: commission[2], label: customers2[2]},
-						{ y: commission[3], label: customers2[3]},
-						{ y: commission[4], label: customers2[4]}
-					]
+					dataPoints: data2
 				}]
 			});
 			chart2.render();

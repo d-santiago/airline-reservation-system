@@ -382,26 +382,21 @@
 
 
 		<!-- Bar Chart 1 Info -->
-		<script> var tickets1 = Array(); var months1 = Array(); </script>
+		<script> var data1 = Array(); var data2 = Array(); </script>
 
 		{% for month in six_month_expenses %}
 			<script>
-				tickets1.push(parseInt("{{ month['month_expense'] }}"));
-				months1.push("{{ month['month'] }}");
+				data1.push({ y: parseInt("{{ month['month_expense'] }}") , label: "{{ month['month'] }}" });
 			</script>
 		{% endfor %}
 
 		<!-- Bar Chart 2 Info -->
-		<script> var tickets2 = Array(); var months2 = Array(); </script>
 
 		{% for month in range_month_expenses %}
 			<script>
-				tickets2.push(parseInt("{{ month['month_expense'] }}"));
-				months2.push("{{ month['month'] }}");
+				data2.push({ y: parseInt("{{ month['month_expense'] }}") , label: "{{ month['month'] }}" });
 			</script>
 		{% endfor %}
-
-
 
 		<script>
 			
@@ -422,14 +417,7 @@
 					showInLegend: true, 
 					legendMarkerColor: "grey",
 					legendText: "Months",
-					dataPoints: [
-						{ y: tickets1[0], label: months1[0]},
-						{ y: tickets1[1], label: months1[1]},
-						{ y: tickets1[2], label: months1[2]},
-						{ y: tickets1[3], label: months1[3]},
-						{ y: tickets1[4], label: months1[4]},
-						{ y: tickets1[5], label: months1[5]}
-					]
+						dataPoints: data1
 				}]
 			});
 			chart1.render();
@@ -449,20 +437,7 @@
 					showInLegend: true, 
 					legendMarkerColor: "grey",
 					legendText: "Months",
-					dataPoints: [
-						{ y: tickets2[0], label: months2[0]},
-						{ y: tickets2[1], label: months2[1]},
-						{ y: tickets2[2], label: months2[2]},
-						{ y: tickets2[3], label: months2[3]},
-						{ y: tickets2[4], label: months2[4]},
-						{ y: tickets2[5], label: months2[5]},
-						{ y: tickets2[6], label: months2[6]},
-						{ y: tickets2[7], label: months2[7]},
-						{ y: tickets2[8], label: months2[8]},
-						{ y: tickets2[9], label: months2[9]},
-						{ y: tickets2[10], label: months2[10]},
-						{ y: tickets2[11], label: months2[11]}
-					]
+					dataPoints: data2
 				}]
 			});
 			chart2.render();
@@ -472,19 +447,10 @@
 
 		<div id="chartContainer1" style="height: 300px; width: 100%;"></div>
 		<div id="chartContainer2" style="height: 300px; width: 100%;"></div>
-		<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-
-		
-
-
-
-		
-
-		
-		
 		
 		<hr>
 		<a href="/customerLogout">Logout</a>
+		<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>	
 
 	</body>
 

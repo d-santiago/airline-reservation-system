@@ -483,23 +483,34 @@
 
 		{% if tickets_sold_month and tickets_sold_month != "No Tickets Sold" %}
 			
-			<p> {{ tickets_sold_month}} Tickets Were Sold In the Past Month </p>
+			<p> {{ tickets_sold_month}} Tickets Were Sold in the Past Month </p>
 
 		{% elif tickets_sold_month == "No Tickets Sold" %}
 
-			<p style="color: red"> {{ tickets_sold_month }} In the Past Month </p>
+			<p style="color: red"> {{ tickets_sold_month }} in the Past Month </p>
 
 		{% endif %}
 
 		{% if tickets_sold_year and tickets_sold_year != "No Tickets Sold" %}
 			
-			<p> {{ tickets_sold_year }} Tickets Were Sold In the Past Year </p>
+			<p> {{ tickets_sold_year }} Tickets Were Sold in the Past Year </p>
 
 		{% elif tickets_sold_year == "No Tickets Sold" %}
 
-			<p style="color: red"> {{ tickets_sold_year }} In the Past Year </p>
+			<p style="color: red"> {{ tickets_sold_year }} in the Past Year </p>
 
 		{% endif %}
+
+		{% if tickets_sold and tickets_sold != "No Tickets Sold" %}
+
+			<p style="color: green"> {{ tickets_sold }} were sold between {{ ticket_start_date }} and {{ ticket_end_date }} </p>
+
+		{% elif tickets_sold == "No Tickets Sold" %}
+
+			<p style="color: red"> {{ tickets_sold }} between {{ ticket_start_date }} and {{ ticket_end_date }} </p>
+
+		{% endif %}
+
 
 		<form action="/staffHome" method="POST">
 
@@ -510,27 +521,22 @@
 		</form>
 		</br>
 
-		{% if tickets_sold and tickets_sold != "No Tickets Sold" %}
-
-			<p> {{ tickets_sold}} were sold between {{ ticket_start_date }} and {{ ticket_end_date }} </p>
-
-		{% elif tickets_sold == "No Tickets Sold" %}
-
-			<p style="color: red"> {{ tickets_sold }} between {{ ticket_start_date }} and {{ ticket_end_date }} </p>
-
-		{% endif %}
-
-
-
+		
 		<!-- Bar Chart 1 Info -->
-		<script> var tickets = Array(); var months = Array(); </script>
+		<script> var data1 = Array(); data2 = Array(); var month = Array(); var year = Array();</script>
 
 		{% for month in tickets_sold_yearly_graph %}
 			<script>
-				tickets.push(parseInt("{{ month['tickets_sold'] }}"));
-				months.push("{{ month['month'] }}");
+				data1.push({ y: parseInt("{{ month['tickets_sold'] }}") , label: "{{ month['month'] }}" });
 			</script>
 		{% endfor %}
+
+		{% for month in tickets_sold_range_graph %}
+			<script>
+				data2.push({ y: parseInt("{{ month['tickets_sold'] }}") , label: "{{ month['month'] }}" });
+			</script>
+		{% endfor %}
+
 
 		<!-- Bar Chart 2 Info -->
 		<script>
@@ -546,43 +552,48 @@
 			
 			window.onload = function () {
 
-				console.log(month);
-				console.log(year);
-
 				// Bar Chart 1 Info
 				var chart1 = new CanvasJS.Chart("chartContainer1", {
-				animationEnabled: true,
-				theme: "light2", // "light1", "light2", "dark1", "dark2"
-				title:{
-					text: "Tickets Sold Within the Last Year"
-				},
-				axisY: {
-					title: "Tickets"
-				},
-				data: [{        
-					type: "column",  
-					showInLegend: true, 
-					legendMarkerColor: "grey",
-					legendText: "Months",
-					dataPoints: [
-						{ y: tickets[0], label: months[0]},
-						{ y: tickets[1], label: months[1]},
-						{ y: tickets[2], label: months[2]},
-						{ y: tickets[3], label: months[3]},
-						{ y: tickets[4], label: months[4]},
-						{ y: tickets[5], label: months[5]},
-						{ y: tickets[6], label: months[6]},
-						{ y: tickets[7], label: months[7]},
-						{ y: tickets[8], label: months[8]},
-						{ y: tickets[9], label: months[9]},
-						{ y: tickets[10], label: months[10]},
-						{ y: tickets[11], label: months[11]}
-					]
-				}]
-			});
-			chart1.render();
+					animationEnabled: true,
+					theme: "light2", // "light1", "light2", "dark1", "dark2"
+					title:{
+						text: "Tickets Sold Within the Last Year"
+					},
+					axisY: {
+						title: "Tickets"
+					},
+					data: [{        
+						type: "column",  
+						showInLegend: true, 
+						legendMarkerColor: "grey",
+						legendText: "Months",
+						dataPoints: data1
+					}]
+				});
+				chart1.render();
 
-			var chart2 = new CanvasJS.Chart("chartContainer2", {
+				// Bar Chart 1 Info
+				var chart2 = new CanvasJS.Chart("chartContainer2", {
+					animationEnabled: true,
+					theme: "light2", // "light1", "light2", "dark1", "dark2"
+					title:{
+						text: "Tickets Sold Within the Specified Range"
+					},
+					axisY: {
+						title: "Tickets"
+					},
+					data: [{        
+						type: "column",  
+						showInLegend: true, 
+						legendMarkerColor: "grey",
+						legendText: "Months",
+						dataPoints: data2
+					}]
+				});
+				chart2.render();
+
+				// Bar Chart 2 Info
+				var chart3 = new CanvasJS.Chart("chartContainer3", {
 					animationEnabled: true,
 					title: {
 						text: "Direct vs Indirect Revenue Within the Last Month"
@@ -598,9 +609,10 @@
 						]
 					}]
 				});
-				chart2.render();
+				chart3.render();
 
-				var chart3 = new CanvasJS.Chart("chartContainer3", {
+				// Bar Chart 3 Info
+				var chart4 = new CanvasJS.Chart("chartContainer4", {
 					animationEnabled: true,
 					title: {
 						text: "Direct vs Indirect Revenue Within the Last Year"
@@ -616,12 +628,13 @@
 						]
 					}]
 				});
-				chart3.render();
+				chart4.render();
 			}
 
 		</script>
 
 		<div id="chartContainer1" style="height: 300px; width: 100%;"></div>
+		<div id="chartContainer2" style="height: 300px; width: 100%;"></div>
 
 
 		</br> <hr>
@@ -651,19 +664,17 @@
 
 		{% endif %}
 
-		<div id="chartContainer2" style="height: 300px; width: 100%;"></div>
-
 
 		<h3> Within the Past Year </h3>
 
 
-		{% if indirect_revenue_year and indirect_revenue_year != "No Indirect Revenue" %}
+		{% if direct_revenue_year and direct_revenue_year != "No Indirect Revenue" %}
 
-			<p> Indirect Revenue: ${{ indirect_revenue_year }}0 </p>
+			<p> Direct Revenue: ${{ direct_revenue_year }}0 </p>
 
 		{% elif indirect_revenue_year == "No Indirect Revenue" %}
 
-			<p> Indirect Revenue: $0.00 </p>
+			<p> Direct Revenue: $0.00 </p>
 
 		{% endif %}
 
@@ -677,8 +688,9 @@
 
 		{% endif %}
 
-		
-		<div id="chartContainer3" style="height: 300px; width: 100%;"></div>
+
+		<div id="chartContainer3" style="height: 300px; width: 45%; display: inline-block;"></div>
+		<div id="chartContainer4" style="height: 300px; width: 45%; display: inline-block;"></div>
 
 
 		<hr>
