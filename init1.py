@@ -50,10 +50,12 @@ def index():
 	cursor.execute(find_airports)
 	airports = cursor.fetchall()
 
+
 	# Finds all airlines that belong to the airline
 	find_airlines = 'SELECT * FROM airline'
 	cursor.execute(find_airlines)
 	airlines = cursor.fetchall()
+
 
 	# Finds all flights that belong to the airline
 	find_flights = 'SELECT * FROM Flight'
@@ -373,11 +375,13 @@ def customerHome():
 	# establish connection with PHPMyAdmin
 	cursor = conn.cursor()
 
+
 	# Finds all airports that belong to the airline
 	find_airports = 'SELECT * FROM airport'
 	cursor.execute(find_airports)
 	airports = cursor.fetchall()
 	
+
 	# When the page is loaded or refreshed, the program finds all flights that a customer has purchased from Customer_Purchases Table using their email
 	find_flights = 'SELECT flight_num, ticket_ID, sold_price FROM Customer_Purchases WHERE cus_email = %s'
 	cursor.execute(find_flights, (username))
@@ -389,7 +393,7 @@ def customerHome():
 
 	flightsOccured = []
 
-	# When the page is loaded or refreshed, the program finds additinoal information about each flight that isn't stored in the Cutomer_Purchases Table using the Flight Table
+	# When the page is loaded or refreshed, the program finds additional information about each flight that is not stored in the Cutomer_Purchases Table using the Flight Table
 	for flight in all_flights:
 
 		# Prevents duplicate flight information from being selected
@@ -459,8 +463,6 @@ def customerHome():
 
 	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight search will be conducted (conduct_flight_search = True)
 	if (conduct_flight_search == True):
-		# search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s AND trip_type = %s AND departure_date >= DATE(NOW()) AND arrival_date >= DATE(NOW())'
-		# cursor.execute(search_flights, (source, destination, departure, arrival, trip_type))
 		search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND trip_type = %s AND departure_date >= DATE(NOW()) AND arrival_date >= DATE(NOW()) AND departure_date >= %s AND arrival_date <= %s'
 		cursor.execute(search_flights, (source, destination, trip_type, departure, arrival))
 		query_flights = cursor.fetchall()
@@ -543,14 +545,15 @@ def customerHome():
 				cursor.execute(insert_purchase, (username, ticket_ID, flight_purchase, sold_price, card_type, card_num, card_name, card_exp))
 				conn.commit()
 
+
 		cursor.close()
 		return redirect(url_for('customerHome'))
 
 	# When a customer clicks the "Yes" button under 'Rate and Review', a form will be revealed to the user under 'Review Previously Taken Flights' (reveal_review_form = True)
 	# A customer who has already reviewed a flight will not be able to review it again
 	if (reveal_review_form == True):
-		search_tickets = 'SELECT * FROM Review WHERE flight_num = %s AND cus_email = %s'
-		cursor.execute(search_tickets, (flight_to_rate, username))
+		search_reviews = 'SELECT * FROM Review WHERE flight_num = %s AND cus_email = %s'
+		cursor.execute(search_reviews, (flight_to_rate, username))
 		isFlightRated = cursor.fetchall()
 
 		if (not isFlightRated):
@@ -569,8 +572,8 @@ def customerHome():
 
 	# When a customer clicks the "Submit" button under 'Review Previously Taken Flights', their review will be submitted (submit_rating = True)
 	if (submit_rating == True):
-		change_ticket_status = 'INSERT INTO Review(cus_email, flight_num, rating, comment) VALUES(%s, %s, %s, %s)'
-		cursor.execute(change_ticket_status, (username, flight_rated, rating, comment))
+		submit_flight_rating = 'INSERT INTO Review(cus_email, flight_num, rating, comment) VALUES(%s, %s, %s, %s)'
+		cursor.execute(submit_flight_rating, (username, flight_rated, rating, comment))
 		conn.commit()
 
 		cursor.close()
@@ -590,7 +593,6 @@ def customerHome():
 		calc_range_month_expenses = 'SELECT SUM(sold_price) AS month_expense, MONTHNAME(purchase_date) AS month FROM Customer_Purchases WHERE cus_email = %s AND purchase_date >= %s AND purchase_date <= %s GROUP BY month ORDER BY DATE(NOW())'
 		cursor.execute(calc_range_month_expenses, (username, start_date, end_date))
 		range_month_expenses = cursor.fetchall()
-		print(range_month_expenses)
 
 		if (range_month_expenses == None):
 			range_month_expenses="0.0"
@@ -647,6 +649,7 @@ def agentHome():
 		card_name = request.form['name']
 		card_exp = request.form['exp']
 
+
 	# When a customer clicks the "Search" button under 'My Spending', the program will determine how much money that customer spent between two user-specified dates (track_spending = True)
 	# We know when a customer clicks this button if we recieve 'start_date' and 'end_date' in the the 'POST' Form
 	track_commission = False
@@ -666,13 +669,15 @@ def agentHome():
 	cursor.execute(find_airports)
 	airports = cursor.fetchall()
 	
+
 	# When the page is loaded or refreshed, the program finds the agent_ID of the booking agent using their email in the Customer_Purchases Table
 	find_agent_ID = 'SELECT agent_ID FROM Booking_Agent WHERE agent_email = %s'
 	cursor.execute(find_agent_ID, (username))
 	agent_ID = cursor.fetchone()
 	agent_ID = agent_ID['agent_ID']	
 
-	# When the page is loaded or refreshed, the program finds all flights that a booking agent has purchased from Customer_Purchases Table using their email
+
+	# When the page is loaded or refreshed, the program finds all flights that a booking agent has purchased from Customer_Purchases Table using their agent_ID
 	find_flights = 'SELECT cus_email, flight_num, ticket_ID FROM Customer_Purchases WHERE agent_ID = %s'
 	cursor.execute(find_flights, (agent_ID))
 	all_flights = cursor.fetchall()
@@ -683,7 +688,7 @@ def agentHome():
 
 	flightsOccured = []
 
-	# When the page is loaded or refreshed, the program finds additinoal information about each flight that isn't stored in the Cutomer_Purchases Table using the Flight Table
+	# When the page is loaded or refreshed, the program finds additional information about each flight that isn't stored in the Cutomer_Purchases Table using the Flight Table
 	for flight in all_flights:
 
 		# Prevents duplicate flight information from being selected
@@ -698,7 +703,7 @@ def agentHome():
 			flightsOccured.append(flight['flight_num'])
 
 
-	# When the page is loaded or refreshed, the program finds additinoal information about each PAST flight that isn't stored in the Cutomer_Purchases Table using the Flight Table
+	# When the page is loaded or refreshed, the program finds additional information about each PAST flight that isn't stored in the Cutomer_Purchases Table using the Flight Table
 	flightsOccured = []
 	for flight in all_flights:
 
@@ -714,7 +719,7 @@ def agentHome():
 			flightsOccured.append(flight['flight_num'])
 
 
-	# When the page is loaded or refreshed, the program finds additinoal information about each FUTURE flight that isn't stored in the Cutomer_Purchases Table using the Flight Table
+	# When the page is loaded or refreshed, the program finds additional information about each FUTURE flight that isn't stored in the Cutomer_Purchases Table using the Flight Table
 	flightsOccured = []
 	for flight in all_flights:
 
@@ -745,12 +750,10 @@ def agentHome():
 		tickets_sold = int(commission_info['tickets_sold'])
 		comm_per_ticket = commission / tickets_sold
 
-	# find_customers = 'SELECT SUM(sold_price) cus_email FROM Customer_Purchases WHERE agent_ID = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 6 MONTH)'
 	find_customers = 'SELECT cus_email, COUNT(ticket_ID) as tickets FROM Customer_Purchases WHERE agent_ID = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 6 MONTH) GROUP BY cus_email ORDER BY tickets DESC LIMIT 0, 5'
 	cursor.execute(find_customers, (agent_ID))
 	top_customers_month = cursor.fetchall()
 
-	# find_customers = 'SELECT SUM(sold_price) cus_email FROM Customer_Purchases WHERE agent_ID = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 6 MONTH)'
 	find_customers = 'SELECT cus_email, SUM(sold_price) * 0.1 as cus_commission FROM Customer_Purchases WHERE agent_ID = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 YEAR) GROUP BY cus_email ORDER BY cus_commission DESC LIMIT 0, 5'
 	cursor.execute(find_customers, (agent_ID))
 	top_customers_year = cursor.fetchall()
@@ -761,8 +764,6 @@ def agentHome():
 
 	# When a customer clicks the "Search" button under 'Search for and Purchase Flights', a flight search will be conducted (conduct_flight_search = True)
 	if (conduct_flight_search == True):
-		# search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND departure_date = %s AND arrival_date = %s AND trip_type = %s AND departure_date >= DATE(NOW()) AND arrival_date >= DATE(NOW())'			
-		# cursor.execute(search_flights, (source, destination, departure, arrival, trip_type))
 		search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND trip_type = %s AND departure_date >= DATE(NOW()) AND arrival_date >= DATE(NOW()) AND departure_date >= %s AND arrival_date <= %s'				
 		cursor.execute(search_flights, (source, destination, trip_type, departure, arrival))
 		query_flights = cursor.fetchall()
@@ -874,6 +875,7 @@ def agentHome():
 								top_customers_month=top_customers_month, top_customers_year=top_customers_year, \
 								date_commission=date_commission, date_tickets_sold=date_tickets_sold, date_comm_per_ticket=date_comm_per_ticket, start_date=start_date, end_date=end_date)
 
+
 	# Returns default information that is displayed each time the page is loaded or refreshed
 	cursor.close()
 	return render_template('agentHome.html', username=username, airports=airports, all_flights=all_flights, all_flights_info=all_flights_info, \
@@ -938,6 +940,7 @@ def staffHome():
 		flight_select = request.form['flight_select']
 		flight_status = request.form['flight_status']
 
+
 	# When an airline staff member clicks the "Add Airplane" button under 'Add New Airplane', an airplane will be added (add_airplane = True)
 	# We know when an airline staff member clicks this button if we recieve 'seats' in the the 'POST' Form
 	add_airplane = False
@@ -989,6 +992,7 @@ def staffHome():
 	find_airports = 'SELECT * FROM airport'
 	cursor.execute(find_airports)
 	airports = cursor.fetchall()
+
 
 	# Finds the airline that the airline staff member works for
 	staff_airline = 'SELECT airline_name FROM Airline_Staff WHERE staff_username = %s'
@@ -1079,7 +1083,6 @@ def staffHome():
 		tickets_sold_yearly_graph = "No Tickets Sold"
 
 
-
 	# Finds the total amount of revenue earned from direct sales (customer bought tickets without booking agent) within the past month using the Customer_Purchases and Flight Table
 	find_direct_revenue_month = 'SELECT SUM(sold_price) AS direct_revenue from Customer_Purchases, Flight WHERE Customer_Purchases.flight_num = Flight.flight_num \
 								 AND Flight.airline_name = %s AND purchase_date >= DATE_SUB(DATE(NOW()), INTERVAL 1 MONTH) AND agent_ID IS NULL'
@@ -1089,7 +1092,6 @@ def staffHome():
 
 	if (direct_revenue_month == None):
 		direct_revenue_month = 0.0
-		# direct_revenue_month = 0
 
 
 	# Finds the total amount of revenue earned from direct sales (customer bought tickets without booking agent) within the past year using the Customer_Purchases and Flight Table
@@ -1101,7 +1103,6 @@ def staffHome():
 
 	if (direct_revenue_year == None):
 		direct_revenue_year = 0.0
-		# direct_revenue_year = 0
 		
 
 	# Finds the total amount of revenue earned from indirect sales (customer bought tickets with booking agent) within the past month using the Customer_Purchases and Flight Table
@@ -1113,7 +1114,6 @@ def staffHome():
 
 	if (indirect_revenue_month == None):
 		indirect_revenue_month = 0.0
-		# indirect_revenue_month = 0
 
 
 	# Finds the total amount of revenue earned from indirect sales (customer bought tickets with booking agent) within the past year using the Customer_Purchases and Flight Table
@@ -1125,7 +1125,6 @@ def staffHome():
 
 	if (indirect_revenue_year == None):
 		indirect_revenue_year = 0.0
-		# indirect_revenue_year = 0
 
 	
 	# Finds the top 3 destinations within last 3 months (based on tickets already sold) using the Customer_Purchases and Flight Table
