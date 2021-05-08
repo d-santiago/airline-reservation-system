@@ -120,7 +120,7 @@
 			<select name="source" required>
 				<option value="select"> Select </option>
 				{% for airport in airports %}
-					<option value={{ airport['airport_name'] }}> {{ airport['airport_name'] }} </option>
+					<option value="{{ airport['airport_name'] }}"> {{ airport['airport_name'] }} </option>
 				{% endfor %}
 			</select>
 
@@ -128,7 +128,7 @@
 			<select name="destination" required>
 				<option value="select"> Select </option>
 				{% for airport in airports %}
-					<option value={{ airport['airport_name'] }}> {{ airport['airport_name'] }} </option>
+					<option value="{{ airport['airport_name'] }}"> {{ airport['airport_name'] }} </option>
 				{% endfor %}
 			</select>
 
@@ -287,7 +287,7 @@
 				<select name="departure_airport" required>
 					<option value="select"> Select </option>
 					{% for airport in airports %}
-						<option value={{ airport['airport_name'] }}> {{ airport['airport_name'] }} </option>
+						<option value="{{ airport['airport_name'] }}"> {{ airport['airport_name'] }} </option>
 					{% endfor %}
 				</select>
 
@@ -298,7 +298,7 @@
 				<select name="arrival_airport" required>
 					<option value="select"> Select </option>
 					{% for airport in airports %}
-						<option value={{ airport['airport_name'] }}> {{ airport['airport_name'] }} </option>
+						<option value="{{ airport['airport_name'] }}"> {{ airport['airport_name'] }} </option>
 					{% endfor %}
 				</select>
 
@@ -672,7 +672,7 @@
 
 		<h2> View Top 3 Destinations </h2>
 
-		<h3> Within the Past Month </h3>
+		<h3> Within the Past 3 Months </h3>
 
 		{% if top_destinations_month %}
 

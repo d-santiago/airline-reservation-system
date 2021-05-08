@@ -186,7 +186,7 @@
 			<select name="source" required>
 				<option value="select"> Select </option>
 				{% for airport in airports %}
-					<option value={{ airport['airport_name'] }}> {{ airport['airport_name'] }} </option>
+					<option value="{{ airport['airport_name'] }}"> {{ airport['airport_name'] }} </option>
 				{% endfor %}
 			</select>
 
@@ -194,7 +194,7 @@
 			<select name="destination" required>
 				<option value="select"> Select </option>
 				{% for airport in airports %}
-					<option value={{ airport['airport_name'] }}> {{ airport['airport_name'] }} </option>
+					<option value="{{ airport['airport_name'] }}"> {{ airport['airport_name'] }} </option>
 				{% endfor %}
 			</select>
 

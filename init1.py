@@ -1148,7 +1148,7 @@ def staffHome():
 
 	# When a customer clicks the "Search" button under 'Search for Flights', a flight search will be conducted (conduct_flight_search = True)
 	if (conduct_flight_search == True):
-		search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND trip_type = %s AND departure_date >= DATE(NOW()) AND arrival_date >= DATE(NOW()) AND departure_date >= %s AND arrival_date <= %s'				
+		search_flights = 'SELECT * FROM Flight WHERE departure_airport = %s AND arrival_airport = %s AND trip_type = %s AND departure_date >= %s AND arrival_date <= %s'				
 		cursor.execute(search_flights, (source, destination, trip_type, departure, arrival))
 		query_flights = cursor.fetchall()
 
