@@ -535,7 +535,7 @@ def customerHome():
 
 				# If the capacity of the flight> 70, the sold price is 1.2 * base_price
 				if(capacity > 70):
-					sold_price = base_price * 1.2
+					sold_price = float(base_price) * 1.2
 				else:
 					sold_price = base_price
 
@@ -838,7 +838,7 @@ def agentHome():
 
 				# If the capacity of the flight> 70, the sold price is 1.2 * base_price
 				if(capacity > 70):
-					sold_price = base_price * 1.2
+					sold_price = float(base_price) * 1.2
 				else:
 					sold_price = base_price
 
