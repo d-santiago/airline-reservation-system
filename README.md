@@ -1,8 +1,31 @@
-# Air Ticket Reservation System
+# Air Ticket Reservation System (2021)
+
+## Technologies
+- Python
+- Flask
+- SQL
+- PHPMyAdmin
+- HTML
+- CSS
+
+## Process
+
+Developed an airline web application that allows customers,
+booking agents, and airline staff administrators to perform
+user-specific tasks including purchasing tickets, creating
+flights, and viewing revenue metrics.
+
+- Designed a relational
+  schema for the SQL database.
+  
+- Built an API to execute requests sent by the client to store,
+  modify, and retrieve data in the database, using Python and SQL.
+
+- Created a front-end user interface to communicate with the API,
+  using HTML and CSS.
+
 
 ## General Use Cases
-
-### Complete
 
 1. Customer Login
 1. Booking Agent Login
@@ -18,8 +41,6 @@
 
 ## Customer Use Cases
 
-### Complete
-
 1. View My Flights
 1. Search for Flights
 1. Purchase Tickets
@@ -28,7 +49,6 @@
 
 ## Booking Agent Use Cases
 
-### Complete
 1. View My Flights
 1. Search for Flights
 1. Purchase Tickets
@@ -37,7 +57,6 @@
 
 ## Airline Staff Use Cases
 
-### Complete
 1. View Flights
 1. Add New Flight
 1. Change Flight Status
