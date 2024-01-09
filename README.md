@@ -15,7 +15,7 @@ booking agents, and airline staff administrators to perform
 user-specific tasks including purchasing tickets, creating
 flights, and viewing revenue metrics.
 
-- Designed a relational
+- Designed an ER diagram and relational
   schema for the SQL database.
   
 - Built an API to execute requests sent by the client to store,
